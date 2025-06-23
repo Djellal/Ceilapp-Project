@@ -1,0 +1,218 @@
+@page "/appsettings"
+
+@attribute [Authorize]
+
+<PageTitle>App Settings</PageTitle>
+
+<RadzenCard class="rz-p-4 rz-mb-4">
+    <RadzenText TextStyle="TextStyle.H4" class="rz-mb-4">
+        <RadzenIcon Icon="settings" class="rz-mr-2" />
+        Application Settings
+    </RadzenText>
+    <RadzenText TextStyle="TextStyle.Body1" class="rz-text-secondary-color rz-mb-6">
+        Configure your organization's information and application preferences
+    </RadzenText>
+
+    <RadzenTemplateForm TItem="Ceilapp.Models.ceilapp.AppSetting" Data="@appSetting">
+        
+        <!-- Organization Information Section -->
+        <RadzenFieldset Text="Organization Information" class="rz-mb-6" Icon="info">
+            <RadzenRow Gap="1rem" class="rz-mb-4">
+                <RadzenColumn Size="6">
+                    <RadzenFormField Text="Organization Name" Variant="Variant.Outlined" Style="width: 100%">
+                        <RadzenTextBox @bind-Value="appSetting.OrganizationName" Name="OrganizationName" 
+                                     Placeholder="Enter organization name" class="w-100" />
+                        <RadzenRequiredValidator Component="OrganizationName" Text="Organization name is required" />
+                    </RadzenFormField>
+                </RadzenColumn>
+                <RadzenColumn SizeMD="6">
+                    <RadzenFormField Text="Email Address" Variant="Variant.Outlined" Style="width: 100%">
+                        <RadzenTextBox @bind-Value="appSetting.Email" Name="Email" 
+                                     Placeholder="contact@organization.com" class="w-100" />
+                        <RadzenRequiredValidator Component="Email" Text="Email is required" />
+                    </RadzenFormField>
+                </RadzenColumn>
+            </RadzenRow>
+
+            <RadzenRow Gap="1rem" class="rz-mb-4">
+                <RadzenColumn SizeMD="6">
+                    <RadzenFormField Text="Phone Number" Variant="Variant.Outlined" Style="width: 100%">
+                        <RadzenTextBox @bind-Value="appSetting.Tel" Name="Tel" 
+                                     Placeholder="+1 (555) 123-4567" class="w-100" />
+                        <RadzenRequiredValidator Component="Tel" Text="Phone number is required" />
+                    </RadzenFormField>
+                </RadzenColumn>
+                <RadzenColumn SizeMD="6">
+                    <RadzenFormField Text="Website URL" Variant="Variant.Outlined" Style="width: 100%">
+                        <RadzenTextBox @bind-Value="appSetting.WebSite" Name="WebSite" 
+                                     Placeholder="https://www.organization.com" class="w-100" />
+                        <RadzenRequiredValidator Component="WebSite" Text="Website is required" />
+                    </RadzenFormField>
+                </RadzenColumn>
+            </RadzenRow>
+
+            <RadzenRow Gap="1rem" class="rz-mb-4">
+                <RadzenColumn Size="12">
+                    <RadzenFormField Text="Address" Variant="Variant.Outlined" Style="width: 100%">
+                        <RadzenTextArea @bind-Value="appSetting.Address" Name="Address" 
+                                      Placeholder="Enter complete address" Rows="3" class="w-100" />
+                        <RadzenRequiredValidator Component="Address" Text="Address is required" />
+                    </RadzenFormField>
+                </RadzenColumn>
+            </RadzenRow>
+        </RadzenFieldset>
+
+        <!-- Social Media Section -->
+        <RadzenFieldset Text="Social Media Links" class="rz-mb-6" Icon="switch_account">
+            <RadzenRow Gap="1rem" class="rz-mb-4">
+                <RadzenColumn SizeMD="6">
+                    <RadzenFormField Text="Facebook" Variant="Variant.Outlined" Style="width: 100%">
+                        <RadzenTextBox @bind-Value="appSetting.Fb" Name="Fb" 
+                                     Placeholder="https://facebook.com/yourpage" class="w-100" />
+                        <RadzenRequiredValidator Component="Fb" Text="Facebook URL is required" />
+                    </RadzenFormField>
+                </RadzenColumn>
+                <RadzenColumn SizeMD="6">
+                    <RadzenFormField Text="LinkedIn" Variant="Variant.Outlined" Style="width: 100%">
+                        <RadzenTextBox @bind-Value="appSetting.LinkredIn" Name="LinkredIn" 
+                                     Placeholder="https://linkedin.com/company/yourcompany" class="w-100" />
+                        <RadzenRequiredValidator Component="LinkredIn" Text="LinkedIn URL is required" />
+                    </RadzenFormField>
+                </RadzenColumn>
+            </RadzenRow>
+
+            <RadzenRow Gap="1rem" class="rz-mb-4">
+                <RadzenColumn SizeMD="4" Style="width: 100%">
+                    <RadzenFormField Text="YouTube" Variant="Variant.Outlined" Style="width: 100%">
+                        <RadzenTextBox @bind-Value="appSetting.Youtube" Name="Youtube" 
+                                     Placeholder="https://youtube.com/yourchannel" class="w-100" />
+                        <RadzenRequiredValidator Component="Youtube" Text="YouTube URL is required" />
+                    </RadzenFormField>
+                </RadzenColumn>
+                <RadzenColumn SizeMD="4">
+                    <RadzenFormField Text="Instagram" Variant="Variant.Outlined" Style="width: 100%">
+                        <RadzenTextBox @bind-Value="appSetting.Instagram" Name="Instagram" 
+                                     Placeholder="https://instagram.com/yourprofile" class="w-100" />
+                        <RadzenRequiredValidator Component="Instagram" Text="Instagram URL is required" />
+                    </RadzenFormField>
+                </RadzenColumn>
+                <RadzenColumn SizeMD="4">
+                    <RadzenFormField Text="X (Twitter)" Variant="Variant.Outlined" Style="width: 100%">
+                        <RadzenTextBox @bind-Value="appSetting.X" Name="X" 
+                                     Placeholder="https://x.com/yourhandle" class="w-100" />
+                        <RadzenRequiredValidator Component="X" Text="X URL is required" />
+                    </RadzenFormField>
+                </RadzenColumn>
+            </RadzenRow>
+        </RadzenFieldset>
+
+        <!-- Branding & Content Section -->
+        <RadzenFieldset Text="Branding & Content" class="rz-mb-6">
+            <RadzenRow Gap="1rem" class="rz-mb-4">
+                <RadzenColumn SizeMD="6">
+                    <RadzenFormField Text="Logo URL" Variant="Variant.Outlined" Style="width: 100%">
+                        <RadzenTextBox @bind-Value="appSetting.Logo" Name="Logo" 
+                                     Placeholder="https://yoursite.com/logo.png" class="w-100" />
+                        <RadzenRequiredValidator Component="Logo" Text="Logo URL is required" />
+                    </RadzenFormField>
+                </RadzenColumn>
+            </RadzenRow>
+<RadzenRow Gap="1rem" class="rz-mb-4">
+                <RadzenColumn Size="12">
+                    <RadzenFormField Text="Terms & Conditions URL" Variant="Variant.Outlined" Style="width: 100%">
+                        <RadzenHtmlEditor @bind-Value="@appSetting.TermsAndConditions" Style="height: 400px"></RadzenHtmlEditor>
+                    </RadzenFormField>
+                </RadzenColumn>
+            </RadzenRow>
+        </RadzenFieldset>
+
+        <!-- Registration Settings Section -->
+        <RadzenFieldset Text="Registration Settings" class="rz-mb-6">
+            <RadzenRow Gap="1rem" class="rz-mb-4">
+                <RadzenColumn SizeMD="6">
+                    <RadzenFormField Text="Current Session" Variant="Variant.Outlined" Style="width: 100%">
+                        <RadzenDropDown TextProperty="SessionNameAr" ValueProperty="Id" 
+                                      Placeholder="Select current session" 
+                                      @bind-Value="appSetting.CurrentSessionId" Name="CurrentSessionId" 
+                                      class="w-100" />
+                    </RadzenFormField>
+                </RadzenColumn>
+                <RadzenColumn SizeMD="6">
+                    <RadzenFormField Text="Max Registrations Per Session" Variant="Variant.Outlined" Style="width: 100%">
+                        <RadzenNumeric @bind-Value="appSetting.MaxRegistrationPerSession" 
+                                     Name="MaxRegistrationPerSession" Min="1" Max="10000" 
+                                     class="w-100" />
+                        <RadzenRequiredValidator Component="MaxRegistrationPerSession" 
+                                               Text="Maximum registrations is required" />
+                    </RadzenFormField>
+                </RadzenColumn>
+            </RadzenRow>
+
+            <RadzenRow Gap="1rem" class="rz-mb-4">
+                <RadzenColumn Size="12">
+                    <RadzenCard Variant="Variant.Outlined" class="rz-p-4">
+                        <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="1rem">
+                            <RadzenCheckBox @bind-Value="appSetting.IsRegistrationOpened" 
+                                          Name="IsRegistrationOpened" />
+                            <RadzenStack Orientation="Orientation.Vertical" Gap="0.25rem">
+                                <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.Div">
+                                    Enable Registration
+                                </RadzenText>
+                                <RadzenText TextStyle="TextStyle.Caption" class="rz-text-secondary-color">
+                                    Allow new users to register for the current session
+                                </RadzenText>
+                            </RadzenStack>
+                        </RadzenStack>
+                    </RadzenCard>
+                </RadzenColumn>
+            </RadzenRow>
+        </RadzenFieldset>
+
+        <!-- Action Buttons -->
+        <RadzenStack Orientation="Orientation.Horizontal" 
+                   AlignItems="AlignItems.Center" 
+                   JustifyContent="JustifyContent.End" 
+                   Gap="1rem" 
+                   class="rz-mt-6">
+            <RadzenButton ButtonStyle="ButtonStyle.Light" 
+                        Icon="cancel" 
+                        Text="Cancel" 
+                        Variant="Variant.Outlined" 
+                        Size="ButtonSize.Large" />
+            <RadzenButton ButtonStyle="ButtonStyle.Primary" 
+                        ButtonType="ButtonType.Submit" 
+                        Icon="save" 
+                        Text="Save Settings" 
+                        Variant="Variant.Filled" 
+                        Size="ButtonSize.Large" Click="@SaveButtonClick" />
+        </RadzenStack>
+    </RadzenTemplateForm>
+</RadzenCard>
+
+<style>
+    .w-100 {
+        width: 100% !important;
+    }
+    
+    .rz-fieldset {
+        border: 1px solid var(--rz-border-color);
+        border-radius: var(--rz-border-radius);
+        padding: 1.5rem;
+        background: var(--rz-base-50);
+    }
+    
+    .rz-fieldset legend {
+        font-weight: 600;
+        color: var(--rz-primary);
+        padding: 0 0.5rem;
+    }
+    
+    .rz-form-field {
+        margin-bottom: 0 !important;
+    }
+    
+    .rz-card {
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        border: 1px solid var(--rz-border-color);
+    }
+</style>
