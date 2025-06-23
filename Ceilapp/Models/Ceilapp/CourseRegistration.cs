@@ -80,5 +80,7 @@ namespace Ceilapp.Models.ceilapp
         public bool RegistrationTermsAccepted { get; set; }
 
         public bool RegistrationValidated { get; set; }
+
+        public bool IsReregistration { get; set; }
     }
 }

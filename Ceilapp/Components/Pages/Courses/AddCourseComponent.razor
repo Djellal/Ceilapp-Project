@@ -1,0 +1,39 @@
+@page "/add-course-component"
+@attribute [Authorize]
+
+<PageTitle>Add CourseComponent</PageTitle>
+    <RadzenColumn SizeMD=12>
+        <RadzenAlert Shade="Shade.Lighter" Variant="Variant.Flat" Size="AlertSize.Small" AlertStyle="AlertStyle.Danger" Visible="@errorVisible">Cannot save CourseComponent</RadzenAlert>
+        <RadzenTemplateForm TItem="Ceilapp.Models.ceilapp.CourseComponent" Data="@(courseComponent)" Visible="@(courseComponent != null)" Submit="@FormSubmit">
+          <RadzenStack>
+            <RadzenFormField Text="Name" Variant="Variant.Filled">
+                  <ChildContent>
+                    <RadzenTextBox style="display: block; width: 100%" @bind-Value="@(courseComponent.Name)" Name="Name" />
+                  </ChildContent>    
+                  <Helper>
+                    <RadzenRequiredValidator Component="Name" Text="Name is required" />
+                  </Helper>
+            </RadzenFormField>
+            <RadzenFormField Text="Coeff" Variant="Variant.Filled">
+                  <ChildContent>
+                    <RadzenNumeric style="display: block; width: 100%" @bind-Value="@(courseComponent.Coeff)" Name="Coeff" />
+                  </ChildContent>    
+                  <Helper>
+                    <RadzenRequiredValidator Component="Coeff" Text="Coeff is required" />
+                  </Helper>
+            </RadzenFormField>
+            <RadzenFormField Text="Course" Variant="Variant.Filled">
+                  <ChildContent>
+                    <RadzenDropDown Data="@(coursesForCourseId)" TextProperty="Image" ValueProperty="Id" AllowClear=true
+                        Disabled=@(hasCourseIdValue)  style="display: block; width: 100%" @bind-Value="@(courseComponent.CourseId)" Name="CourseId"
+                           />
+              </ChildContent>
+            </RadzenFormField>
+          </RadzenStack>
+          <RadzenStack style="margin-top:1rem;" Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.End" Gap="0.5rem">
+                    <RadzenButton ButtonStyle="ButtonStyle.Primary" ButtonType="ButtonType.Submit" Icon="save" Text="Save" Variant="Variant.Flat" />
+                    <RadzenButton ButtonStyle="ButtonStyle.Light" Text="Cancel" Variant="Variant.Flat" Click="@CancelButtonClick"  />
+          </RadzenStack>
+        </RadzenTemplateForm>
+    </RadzenColumn>
+

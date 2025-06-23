@@ -1,0 +1,62 @@
+@page "/add-course-level"
+@attribute [Authorize]
+
+<PageTitle>Add CourseLevel</PageTitle>
+    <RadzenColumn SizeMD=12>
+        <RadzenAlert Shade="Shade.Lighter" Variant="Variant.Flat" Size="AlertSize.Small" AlertStyle="AlertStyle.Danger" Visible="@errorVisible">Cannot save CourseLevel</RadzenAlert>
+        <RadzenTemplateForm TItem="Ceilapp.Models.ceilapp.CourseLevel" Data="@(courseLevel)" Visible="@(courseLevel != null)" Submit="@FormSubmit">
+          <RadzenStack>
+            <RadzenFormField Text="Name" Variant="Variant.Filled">
+                  <ChildContent>
+                    <RadzenTextBox style="display: block; width: 100%" @bind-Value="@(courseLevel.Name)" Name="Name" />
+                  </ChildContent>    
+                  <Helper>
+                    <RadzenRequiredValidator Component="Name" Text="Name is required" />
+                  </Helper>
+            </RadzenFormField>
+            <RadzenFormField Text="Name Ar" Variant="Variant.Filled">
+                  <ChildContent>
+                    <RadzenTextBox style="display: block; width: 100%" @bind-Value="@(courseLevel.NameAr)" Name="NameAr" />
+                  </ChildContent>    
+                  <Helper>
+                    <RadzenRequiredValidator Component="NameAr" Text="NameAr is required" />
+                  </Helper>
+            </RadzenFormField>
+            <RadzenFormField Text="Duration" Variant="Variant.Filled">
+                  <ChildContent>
+                    <RadzenNumeric style="display: block; width: 100%" @bind-Value="@(courseLevel.Duration)" Name="Duration" />
+                  </ChildContent>    
+                  <Helper>
+                    <RadzenRequiredValidator Component="Duration" Text="Duration is required" />
+                  </Helper>
+            </RadzenFormField>
+            <RadzenRow style="margin-bottom: 1rem">
+                <RadzenColumn SizeMD="3">
+                    <RadzenLabel Text="Is Active" Component="IsActive" style="width: 100%" />
+                </RadzenColumn>
+                <RadzenColumn SizeMD="9">
+                    <RadzenCheckBox @bind-Value="@(courseLevel.IsActive)" Name="IsActive" />
+                </RadzenColumn>
+            </RadzenRow>
+            <RadzenFormField Text="Course" Variant="Variant.Filled">
+                  <ChildContent>
+                    <RadzenDropDown Data="@(coursesForCourseId)" TextProperty="Image" ValueProperty="Id" AllowClear=true
+                        Disabled=@(hasCourseIdValue)  style="display: block; width: 100%" @bind-Value="@(courseLevel.CourseId)" Name="CourseId"
+                           />
+              </ChildContent>
+            </RadzenFormField>
+            <RadzenFormField Text="Course Level1" Variant="Variant.Filled">
+                  <ChildContent>
+                    <RadzenDropDown Data="@(courseLevelsForNextLevelId)" TextProperty="NameAr" ValueProperty="Id" AllowClear=true
+                        Disabled=@(hasNextLevelIdValue)  style="display: block; width: 100%" @bind-Value="@(courseLevel.NextLevelId)" Name="NextLevelId"
+                           />
+              </ChildContent>
+            </RadzenFormField>
+          </RadzenStack>
+          <RadzenStack style="margin-top:1rem;" Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.End" Gap="0.5rem">
+                    <RadzenButton ButtonStyle="ButtonStyle.Primary" ButtonType="ButtonType.Submit" Icon="save" Text="Save" Variant="Variant.Flat" />
+                    <RadzenButton ButtonStyle="ButtonStyle.Light" Text="Cancel" Variant="Variant.Flat" Click="@CancelButtonClick"  />
+          </RadzenStack>
+        </RadzenTemplateForm>
+    </RadzenColumn>
+

@@ -98,6 +98,9 @@ namespace DataModel
         [Column(TypeName = "decimal(18, 2)")]
         [Display(Name = "Paid fee value")]
         public decimal PaidFeeValue { get; set; }
+		
+		[Display(Name = "is re-registration for courses")]
+        public bool IsReregistration { get; set; }
 
         [Display(Name = "Accept the registration terms")]
         public bool RegistrationTermsAccepted { get; set; }
