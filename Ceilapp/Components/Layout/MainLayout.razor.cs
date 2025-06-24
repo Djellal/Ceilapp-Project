@@ -32,7 +32,7 @@ namespace Ceilapp.Components.Layout
         [Inject]
         protected NotificationService NotificationService { get; set; }
 
-        private bool sidebarExpanded = true;
+        private bool sidebarExpanded = false;
 
         [Inject]
         protected SecurityService Security { get; set; }
@@ -56,6 +56,8 @@ namespace Ceilapp.Components.Layout
             var roles = await Security.GetRoles(); // Await the Task to get the actual IEnumerable<ApplicationRole>
 
             RolesNotExists = !roles.Any();
+
+            sidebarExpanded = false;
         }
     }
 }

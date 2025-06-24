@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -33,6 +33,9 @@ namespace Ceilapp.Components.Pages
         [Inject]
         protected SecurityService Security { get; set; }
 
+        [Inject]
+        protected ceilappService ceilappdb { get; set; }
+
         protected override async Task OnInitializedAsync()
         {
             var roles = await Security.GetRoles(); // Await the Task to get the actual IEnumerable<ApplicationRole>
@@ -61,6 +64,12 @@ namespace Ceilapp.Components.Pages
                     new Models.ApplicationRole { Name = Constants.ADMIN } // Assuming the first role is Admin
                 };
                 var result = await Security.CreateUser(admin);
+            }
+
+            if (!ceilappdb.dbContext.CourseTypes.Any())
+            {
+                await ceilappdb.CreateCourseType(new Models.ceilapp.CourseType { Name = "Language",NameAr="لغات" });
+                await ceilappdb.CreateCourseType(new Models.ceilapp.CourseType { Name = "Atelier", NameAr = "ورشة" });
             }
         }
     }
