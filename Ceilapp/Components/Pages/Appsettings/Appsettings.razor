@@ -131,10 +131,7 @@
             <RadzenRow Gap="1rem" class="rz-mb-4">
                 <RadzenColumn SizeMD="6">
                     <RadzenFormField Text="Current Session" Variant="Variant.Outlined" Style="width: 100%">
-                        <RadzenDropDown TextProperty="SessionNameAr" ValueProperty="Id" 
-                                      Placeholder="Select current session" 
-                                      @bind-Value="appSetting.CurrentSessionId" Name="CurrentSessionId" 
-                                      class="w-100" />
+                        <RadzenDropDown TValue="int?" ValueProperty="Id" TextProperty="SessionName" Data="@sessions" Placeholder="Select current session" @bind-Value="appSetting.CurrentSessionId" Name="CurrentSessionId" AllowClear="true" AllowSelectAll="false" AllowFiltering="true" />
                     </RadzenFormField>
                 </RadzenColumn>
                 <RadzenColumn SizeMD="6">

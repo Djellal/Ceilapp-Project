@@ -37,6 +37,11 @@ namespace Ceilapp.Components.Pages.Appsettings
         [Inject]
         public ceilappService ceilappdb { get; set; }
 
+        [Inject]
+        protected Ceilapp.ceilappService ceilappService { get; set; }
+
+        protected System.Linq.IQueryable<Ceilapp.Models.ceilapp.Session> sessions;
+
         protected override async Task OnInitializedAsync()
         {
             try
@@ -71,6 +76,7 @@ namespace Ceilapp.Components.Pages.Appsettings
             {
                 NotificationService.Notify(NotificationSeverity.Error, "Error", ex.Message);
             }
+            sessions = await ceilappService.GetSessions();
         }
 
         protected async System.Threading.Tasks.Task SaveButtonClick(Microsoft.AspNetCore.Components.Web.MouseEventArgs args)
@@ -78,6 +84,7 @@ namespace Ceilapp.Components.Pages.Appsettings
             try
             {
                 await ceilappdb.UpdateAppSetting(appSetting.Id, appSetting);
+                NotificationService.Notify(new NotificationMessage { Severity = NotificationSeverity.Success, Summary = "Success", Detail = "Application settings saved successfuly" });
             }
             catch (Exception ex)
             {
