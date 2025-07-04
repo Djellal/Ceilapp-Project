@@ -71,6 +71,14 @@ namespace Ceilapp.Components.Pages
                 await ceilappdb.CreateCourseType(new Models.ceilapp.CourseType { Name = "Language",NameAr="لغات" });
                 await ceilappdb.CreateCourseType(new Models.ceilapp.CourseType { Name = "Atelier", NameAr = "ورشة" });
             }
+
+            if (!ceilappdb.dbContext.Professions.Any())
+            {
+                await ceilappdb.CreateProfession(new Models.ceilapp.Profession { Name = "Etudiant", NameAr = "طالب", FeeValue = 4000 });
+                await ceilappdb.CreateProfession(new Models.ceilapp.Profession { Name = "Enseignant", NameAr = "استاذ", FeeValue = 8000 });
+                await ceilappdb.CreateProfession(new Models.ceilapp.Profession { Name = "Externe", NameAr = "خارجي", FeeValue = 6000 });
+            }
+           
         }
     }
 }
