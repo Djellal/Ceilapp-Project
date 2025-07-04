@@ -1,0 +1,76 @@
+@page "/course-registrations"
+
+@attribute [Authorize]
+
+<PageTitle>Course Registrations</PageTitle>
+<RadzenStack>
+    <RadzenRow AlignItems="AlignItems.Center">
+        <RadzenColumn Size="12" SizeMD="6">
+            <RadzenText Text="CourseRegistrations" TextStyle="Radzen.Blazor.TextStyle.H4" TagName="Radzen.Blazor.TagName.H4" style="margin: 0" />
+        </RadzenColumn>
+        <RadzenColumn Size="12" SizeMD="6">
+            <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.End" Gap="0.5rem">
+                <RadzenButton Icon="add_circle_outline" Text="Add" Click="@AddButtonClick" Variant="Variant.Flat" />
+            </RadzenStack>
+        </RadzenColumn>
+    </RadzenRow>
+    <RadzenRow>
+      <RadzenColumn SizeMD=12>
+        <RadzenDataGrid @ref="grid0" ColumnWidth="200px"   AllowFiltering="true" FilterMode="FilterMode.Advanced" AllowPaging="true" AllowSorting="true" ShowPagingSummary="true" PageSizeOptions=@(new int[]{5, 10, 20, 30})
+            Data="@(courseRegistrations)" TItem="Ceilapp.Models.ceilapp.CourseRegistration" RowSelect="@EditRow">
+            <Columns>
+                <RadzenDataGridColumn TItem="Ceilapp.Models.ceilapp.CourseRegistration" Property="InscriptionCode" Title="Inscription Code">
+                </RadzenDataGridColumn>
+                <RadzenDataGridColumn TItem="Ceilapp.Models.ceilapp.CourseRegistration" Property="FirstName" Title="First Name">
+                </RadzenDataGridColumn>
+                <RadzenDataGridColumn TItem="Ceilapp.Models.ceilapp.CourseRegistration" Property="LastName" Title="Last Name">
+                </RadzenDataGridColumn>
+                <RadzenDataGridColumn TItem="Ceilapp.Models.ceilapp.CourseRegistration" Property="FirstNameAr" Title="First Name Ar">
+                </RadzenDataGridColumn>
+                <RadzenDataGridColumn TItem="Ceilapp.Models.ceilapp.CourseRegistration" Property="LastNameAr" Title="Last Name Ar">
+                </RadzenDataGridColumn>
+                <RadzenDataGridColumn TItem="Ceilapp.Models.ceilapp.CourseRegistration" Property="BirthDate" Title="Birth Date">
+                </RadzenDataGridColumn>
+                <RadzenDataGridColumn TItem="Ceilapp.Models.ceilapp.CourseRegistration" Property="State.NameAr" Title="State">
+                </RadzenDataGridColumn>
+                <RadzenDataGridColumn TItem="Ceilapp.Models.ceilapp.CourseRegistration" Property="Municipality.StateId" Title="Municipality">
+                </RadzenDataGridColumn>
+                <RadzenDataGridColumn TItem="Ceilapp.Models.ceilapp.CourseRegistration" Property="Address" Title="Address">
+                </RadzenDataGridColumn>
+                <RadzenDataGridColumn TItem="Ceilapp.Models.ceilapp.CourseRegistration" Property="Tel" Title="Tel">
+                </RadzenDataGridColumn>
+                <RadzenDataGridColumn TItem="Ceilapp.Models.ceilapp.CourseRegistration" Property="Profession.NameAr" Title="Profession">
+                </RadzenDataGridColumn>
+                <RadzenDataGridColumn TItem="Ceilapp.Models.ceilapp.CourseRegistration" Property="Course.Image" Title="Course">
+                </RadzenDataGridColumn>
+                <RadzenDataGridColumn TItem="Ceilapp.Models.ceilapp.CourseRegistration" Property="CourseLevel.NameAr" Title="Course Level">
+                </RadzenDataGridColumn>
+                <RadzenDataGridColumn TItem="Ceilapp.Models.ceilapp.CourseRegistration" Property="Session.SessionNameAr" Title="Session">
+                </RadzenDataGridColumn>
+                <RadzenDataGridColumn TItem="Ceilapp.Models.ceilapp.CourseRegistration" Property="RegistrationDate" Title="Registration Date">
+                </RadzenDataGridColumn>
+                <RadzenDataGridColumn TItem="Ceilapp.Models.ceilapp.CourseRegistration" Property="Notes" Title="Notes">
+                </RadzenDataGridColumn>
+                <RadzenDataGridColumn TItem="Ceilapp.Models.ceilapp.CourseRegistration" Property="PaidFeeValue" Title="Paid Fee Value">
+                </RadzenDataGridColumn>
+                <RadzenDataGridColumn TItem="Ceilapp.Models.ceilapp.CourseRegistration" Property="RegistrationTermsAccepted" Title="Registration Terms Accepted">
+                </RadzenDataGridColumn>
+                <RadzenDataGridColumn TItem="Ceilapp.Models.ceilapp.CourseRegistration" Property="RegistrationValidated" Title="Registration Validated">
+                </RadzenDataGridColumn>
+                <RadzenDataGridColumn TItem="Ceilapp.Models.ceilapp.CourseRegistration" Property="IsReregistration" Title="Is Reregistration">
+                </RadzenDataGridColumn>
+                <RadzenDataGridColumn TItem="Ceilapp.Models.ceilapp.CourseRegistration" Filterable="false" Sortable="false" Width="70px" TextAlign="TextAlign.Center">
+                    <Template Context="courseRegistration">
+
+                        <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="delete" Size="ButtonSize.Medium"
+                            Shade="Shade.Lighter" Variant="Variant.Flat"
+                            Click=@(args => GridDeleteButtonClick(args, courseRegistration)) @onclick:stopPropagation="true" />
+                    </Template>
+                </RadzenDataGridColumn>
+            </Columns>
+
+        </RadzenDataGrid>
+
+    </RadzenColumn>
+  </RadzenRow>
+</RadzenStack>

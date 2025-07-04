@@ -1,0 +1,162 @@
+@page "/new-course-registration/{isnew:bool}"
+
+@attribute [Authorize]
+
+<PageTitle>Add CourseRegistration</PageTitle>
+    <RadzenColumn SizeMD=12>
+        <RadzenAlert Shade="Shade.Lighter" Variant="Variant.Flat" Size="AlertSize.Small" AlertStyle="AlertStyle.Danger" Visible="@errorVisible">Cannot save CourseRegistration</RadzenAlert>
+        <RadzenTemplateForm TItem="Ceilapp.Models.ceilapp.CourseRegistration" Data="@(courseRegistration)" Visible="@(courseRegistration != null)" Submit="@FormSubmit">
+          <RadzenStack>
+            <RadzenFormField Text="Inscription Code" Variant="Variant.Filled" Visible="@(!isnew)">
+                  <ChildContent>
+                    <RadzenTextBox style="display: block; width: 100%" @bind-Value="@(courseRegistration.InscriptionCode)" Name="InscriptionCode"  />
+                  </ChildContent>    
+                  <Helper>
+                  </Helper>
+            </RadzenFormField>
+            <RadzenFormField Text="First Name" Variant="Variant.Filled">
+                  <ChildContent>
+                    <RadzenTextBox style="display: block; width: 100%" @bind-Value="@(courseRegistration.FirstName)" Name="FirstName" />
+                  </ChildContent>    
+                  <Helper>
+                    <RadzenRequiredValidator Component="FirstName" Text="FirstName is required" />
+                  </Helper>
+            </RadzenFormField>
+            <RadzenFormField Text="Last Name" Variant="Variant.Filled">
+                  <ChildContent>
+                    <RadzenTextBox style="display: block; width: 100%" @bind-Value="@(courseRegistration.LastName)" Name="LastName" />
+                  </ChildContent>    
+                  <Helper>
+                    <RadzenRequiredValidator Component="LastName" Text="LastName is required" />
+                  </Helper>
+            </RadzenFormField>
+            <RadzenFormField Text="First Name Ar" Variant="Variant.Filled">
+                  <ChildContent>
+                    <RadzenTextBox style="display: block; width: 100%" @bind-Value="@(courseRegistration.FirstNameAr)" Name="FirstNameAr" />
+                  </ChildContent>    
+                  <Helper>
+                    <RadzenRequiredValidator Component="FirstNameAr" Text="FirstNameAr is required" />
+                  </Helper>
+            </RadzenFormField>
+            <RadzenFormField Text="Last Name Ar" Variant="Variant.Filled">
+                  <ChildContent>
+                    <RadzenTextBox style="display: block; width: 100%" @bind-Value="@(courseRegistration.LastNameAr)" Name="LastNameAr" />
+                  </ChildContent>    
+                  <Helper>
+                    <RadzenRequiredValidator Component="LastNameAr" Text="LastNameAr is required" />
+                  </Helper>
+            </RadzenFormField>
+            <RadzenFormField Text="Birth Date" Variant="Variant.Filled">
+                  <ChildContent>
+                    <RadzenDatePicker DateFormat="dd/MM/yyyy" style="display: block; width: 100%" @bind-Value="@(courseRegistration.BirthDate)" Name="BirthDate" />
+                  </ChildContent>    
+                  <Helper>
+                    <RadzenRequiredValidator Component="BirthDate" Text="BirthDate is required" />
+                  </Helper>
+            </RadzenFormField>
+            <RadzenFormField Text="State" Variant="Variant.Filled">
+                  <ChildContent>
+                    <RadzenDropDown Data="@(statesForBirthStateId)" TextProperty="NameAr" ValueProperty="Id" AllowClear=true
+                          style="display: block; width: 100%" @bind-Value="@(courseRegistration.BirthStateId)" Name="BirthStateId"
+                           />
+              </ChildContent>
+            </RadzenFormField>
+            <RadzenFormField Text="Municipality" Variant="Variant.Filled">
+                  <ChildContent>
+                    <RadzenDropDown Data="@(municipalitiesForBirthMunicipalityId)" TextProperty="StateId" ValueProperty="Id" AllowClear=true
+                          style="display: block; width: 100%" @bind-Value="@(courseRegistration.BirthMunicipalityId)" Name="BirthMunicipalityId"
+                           />
+              </ChildContent>
+            </RadzenFormField>
+            <RadzenFormField Text="Address" Variant="Variant.Filled">
+                  <ChildContent>
+                    <RadzenTextBox style="display: block; width: 100%" @bind-Value="@(courseRegistration.Address)" Name="Address" />
+                  </ChildContent>    
+                  <Helper>
+                    <RadzenRequiredValidator Component="Address" Text="Address is required" />
+                  </Helper>
+            </RadzenFormField>
+            <RadzenFormField Text="Tel" Variant="Variant.Filled">
+                  <ChildContent>
+                    <RadzenTextBox style="display: block; width: 100%" @bind-Value="@(courseRegistration.Tel)" Name="Tel" />
+                  </ChildContent>    
+                  <Helper>
+                    <RadzenRequiredValidator Component="Tel" Text="Tel is required" />
+                  </Helper>
+            </RadzenFormField>
+            <RadzenFormField Text="Profession" Variant="Variant.Filled">
+                  <ChildContent>
+                    <RadzenDropDown Data="@(professionsForProfessionId)" TextProperty="NameAr" ValueProperty="Id" AllowClear=true
+                          style="display: block; width: 100%" @bind-Value="@(courseRegistration.ProfessionId)" Name="ProfessionId"
+                           />
+              </ChildContent>
+            </RadzenFormField>
+            <RadzenFormField Text="Course" Variant="Variant.Filled">
+                  <ChildContent>
+                    <RadzenDropDown Data="@(coursesForCourseId)" TextProperty="Name" ValueProperty="Id" AllowClear=true
+                          style="display: block; width: 100%" @bind-Value="@(courseRegistration.CourseId)" Name="CourseId"
+                           />
+              </ChildContent>
+            </RadzenFormField>
+            <RadzenFormField Text="Course Level" Variant="Variant.Filled">
+                  <ChildContent>
+                    <RadzenDropDown Data="@(courseLevelsForCourseLevelId)" TextProperty="Name" ValueProperty="Id" AllowClear=true
+                          style="display: block; width: 100%" @bind-Value="@(courseRegistration.CourseLevelId)" Name="CourseLevelId"
+                           />
+              </ChildContent>
+            </RadzenFormField>
+            <RadzenFormField Text="Session" Variant="Variant.Filled">
+                  <ChildContent>
+                    <RadzenDropDown Data="@(sessionsForSessionId)" TextProperty="SessionNameAr" ValueProperty="Id" AllowClear=true
+                          style="display: block; width: 100%" @bind-Value="@(courseRegistration.SessionId)" Name="SessionId"
+                           />
+              </ChildContent>
+            </RadzenFormField>
+            <RadzenFormField Text="Registration Date" Variant="Variant.Filled">
+                  <ChildContent>
+                    <RadzenDatePicker DateFormat="dd/MM/yyyy" style="display: block; width: 100%" @bind-Value="@(courseRegistration.RegistrationDate)" Name="RegistrationDate" />
+                  </ChildContent>    
+                  <Helper>
+                    <RadzenRequiredValidator Component="RegistrationDate" Text="RegistrationDate is required" />
+                  </Helper>
+            </RadzenFormField>
+            <RadzenFormField Text="Paid Fee Value" Variant="Variant.Filled">
+                  <ChildContent>
+                    <RadzenNumeric style="display: block; width: 100%" @bind-Value="@(courseRegistration.PaidFeeValue)" Name="PaidFeeValue" />
+                  </ChildContent>    
+                  <Helper>
+                    <RadzenRequiredValidator Component="PaidFeeValue" Text="PaidFeeValue is required" />
+                  </Helper>
+            </RadzenFormField>
+            <RadzenRow style="margin-bottom: 1rem">
+                <RadzenColumn SizeMD="3">
+                    <RadzenLabel Text="Registration Terms Accepted" Component="RegistrationTermsAccepted" style="width: 100%" />
+                </RadzenColumn>
+                <RadzenColumn SizeMD="9">
+                    <RadzenCheckBox @bind-Value="@(courseRegistration.RegistrationTermsAccepted)" Name="RegistrationTermsAccepted" />
+                </RadzenColumn>
+            </RadzenRow>
+            <RadzenRow style="margin-bottom: 1rem">
+                <RadzenColumn SizeMD="3">
+                    <RadzenLabel Text="Registration Validated" Component="RegistrationValidated" style="width: 100%" />
+                </RadzenColumn>
+                <RadzenColumn SizeMD="9">
+                    <RadzenCheckBox @bind-Value="@(courseRegistration.RegistrationValidated)" Name="RegistrationValidated" />
+                </RadzenColumn>
+            </RadzenRow>
+            <RadzenRow style="margin-bottom: 1rem">
+                <RadzenColumn SizeMD="3">
+                    <RadzenLabel Text="Is Reregistration" Component="IsReregistration" style="width: 100%" />
+                </RadzenColumn>
+                <RadzenColumn SizeMD="9">
+                    <RadzenCheckBox @bind-Value="@(courseRegistration.IsReregistration)" Name="IsReregistration" />
+                </RadzenColumn>
+            </RadzenRow>
+          </RadzenStack>
+          <RadzenStack style="margin-top:1rem;" Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.End" Gap="0.5rem">
+                    <RadzenButton ButtonStyle="ButtonStyle.Primary" ButtonType="ButtonType.Submit" Icon="save" Text="Save" Variant="Variant.Flat" />
+                    <RadzenButton ButtonStyle="ButtonStyle.Light" Text="Cancel" Variant="Variant.Flat" Click="@CancelButtonClick"  />
+          </RadzenStack>
+        </RadzenTemplateForm>
+    </RadzenColumn>
+

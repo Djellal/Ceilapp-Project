@@ -34,5 +34,13 @@ namespace Ceilapp.Components.Pages
 
         [Inject]
         protected SecurityService Security { get; set; }
+
+        
+
+        protected async System.Threading.Tasks.Task Button2Click(Microsoft.AspNetCore.Components.Web.MouseEventArgs args)
+        {
+            NavigationManager.NavigateTo($"/edit-course-registration/true");
+
+        }
     }
 }

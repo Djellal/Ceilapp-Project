@@ -179,6 +179,7 @@ If you didn't request this registration, you can safely ignore this email. Someo
             var message = string.Join(", ", result.Errors.Select(error => error.Description));
 
             return BadRequest(message);
+            
         }
 
         public async Task<IActionResult> ConfirmEmail(string userId, string code)

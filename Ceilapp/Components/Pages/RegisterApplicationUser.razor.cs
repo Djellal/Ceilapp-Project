@@ -48,8 +48,8 @@ namespace Ceilapp.Components.Pages
             try
             {
                 isBusy = true;
-
-                await Security.Register(user.Email, user.Password);
+                await Security.RegisterWithRole(user.Email, user.Password, Constants.STUDENT);
+                // await Security.Register(user.Email, user.Password);
 
                 DialogService.Close(true);
             }

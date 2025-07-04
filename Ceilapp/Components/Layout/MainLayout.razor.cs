@@ -1,4 +1,4 @@
-using System.Net.Http;
+using Ceilapp.Components.Pages.CourseRegistrations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Components.Web.Virtualization;
 using Microsoft.JSInterop;
 using Radzen;
 using Radzen.Blazor;
+using System.Net.Http;
 
 namespace Ceilapp.Components.Layout
 {
@@ -32,7 +33,7 @@ namespace Ceilapp.Components.Layout
         [Inject]
         protected NotificationService NotificationService { get; set; }
 
-        private bool sidebarExpanded = false;
+        private bool sidebarExpanded ;
 
         [Inject]
         protected SecurityService Security { get; set; }
@@ -56,8 +57,13 @@ namespace Ceilapp.Components.Layout
             var roles = await Security.GetRoles(); // Await the Task to get the actual IEnumerable<ApplicationRole>
 
             RolesNotExists = !roles.Any();
+           
+        }
 
-            sidebarExpanded = false;
+        protected async Task NewCourseRegistration()
+        {
+            // await DialogService.OpenAsync<EditCourseRegistration>("Edit CourseRegistration", new Dictionary<string, object> { { "mode", "create" } });
+            NavigationManager.NavigateTo($"/new-course-registration/create", true);
         }
     }
 }
