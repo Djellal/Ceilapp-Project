@@ -146,6 +146,9 @@ namespace Ceilapp.Components.Pages.CourseRegistrations
             if (selectedprofession != null)
             {
                 FeeValue = selectedprofession.FeeValue.ToString("C");
+            }else
+            {
+                FeeValue = 0.ToString("C");
             }
         }
     }
