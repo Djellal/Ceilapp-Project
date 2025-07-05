@@ -105,39 +105,55 @@
             
            
             
-            <RadzenFormField Text="Profession" Variant="Variant.Filled">
+           
+            
+            <RadzenRow>
+                <RadzenColumn Size="12" SizeXS="6">
+                   <RadzenFormField Text="Profession" Variant="Variant.Filled" Style="width: 100%">
                   <ChildContent>
                     <RadzenDropDown Data="@(professionsForProfessionId)" TextProperty="NameAr" ValueProperty="Id" AllowClear=true
-                          style="display: block; width: 100%" @bind-Value="@(courseRegistration.ProfessionId)" Name="ProfessionId"
+                          style="display: block; width: 100%" @bind-Value="@(courseRegistration.ProfessionId)" Name="ProfessionId" Change="@ProfessionIdChange"
                            />
               </ChildContent>
             </RadzenFormField>
-            <RadzenFormField Text="Course" Variant="Variant.Filled">
-                  <ChildContent>
-                    <RadzenDropDown Data="@(coursesForCourseId)" TextProperty="Name" ValueProperty="Id" AllowClear=true
-                          style="display: block; width: 100%" @bind-Value="@(courseRegistration.CourseId)" Name="CourseId"
-                           />
-              </ChildContent>
-            </RadzenFormField>
-            <RadzenFormField Text="Course Level" Variant="Variant.Filled">
+                </RadzenColumn>
+                <RadzenColumn Size="12" SizeXS="6">
+                    <RadzenButton Style="width: 100%; height: 100%" ButtonStyle="Radzen.ButtonStyle.Info" Variant="Radzen.Variant.Outlined" Size="Radzen.ButtonSize.Large" Icon="payments" Text="@FeeValue"></RadzenButton>
+                </RadzenColumn>
+            </RadzenRow>
+            <RadzenRow>
+                <RadzenColumn Size="12" SizeXS="6">
+                  <RadzenFormField Text="Course" Variant="Variant.Filled" Style="width: 100%">
+                    <ChildContent>
+                      <RadzenDropDown Data="@(coursesForCourseId)" TextProperty="Name" ValueProperty="Id" AllowClear=true
+                            style="display: block; width: 100%" @bind-Value="@(courseRegistration.CourseId)" Name="CourseId"
+                            />
+                </ChildContent>
+              </RadzenFormField>
+                </RadzenColumn>
+                <RadzenColumn Size="12" SizeXS="6">
+                  <RadzenFormField Text="Course Level" Variant="Variant.Filled" Style="width: 100%">
                   <ChildContent>
                     <RadzenDropDown Data="@(courseLevelsForCourseLevelId)" TextProperty="Name" ValueProperty="Id" AllowClear=true
                           style="display: block; width: 100%" @bind-Value="@(courseRegistration.CourseLevelId)" Name="CourseLevelId" Placeholder="Course level"
                            />
               </ChildContent>
             </RadzenFormField>
+                </RadzenColumn>
+            </RadzenRow>
             
             
-            <RadzenFieldset Text="Terms & Conditions" Icon="gavel" Style="margin-top: 1rem; margin-bottom: 1rem">
-                <div class="form-group mb-3">
-    @if (!string.IsNullOrEmpty(AppSetting?.TermsAndConditions))
-    {
-        <div class="terms-content bg-light p-3 mb-2">
-            @((MarkupString)AppSetting.TermsAndConditions)
-        </div>
-    }
-    
-</div>
+            
+          <RadzenFieldset Text="Terms & Conditions" Icon="gavel" Style="margin-top: 1rem; margin-bottom: 1rem">
+              <div class="form-group mb-3">
+                @if (!string.IsNullOrEmpty(AppSetting?.TermsAndConditions))
+                {
+                    <div class="terms-content bg-light p-3 mb-2">
+                        @((MarkupString)AppSetting.TermsAndConditions)
+                    </div>
+                }
+                
+            </div>
                 <RadzenRow JustifyContent="Radzen.JustifyContent.Start" AlignItems="Radzen.AlignItems.Center" Style="padding: 1rem">
                     <RadzenColumn SizeMD="12">
                         <div class="d-flex align-items-center">

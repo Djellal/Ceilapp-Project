@@ -34,6 +34,8 @@ namespace Ceilapp.Components.Pages.CourseRegistrations
         [Inject]
         public ceilappService ceilappService { get; set; }
 
+        public string FeeValue { get; set; } = 0.ToString("C");
+
         [Parameter]
         public int Id { get; set; }
 
@@ -136,6 +138,15 @@ namespace Ceilapp.Components.Pages.CourseRegistrations
             courseRegistration.SessionId = CurrentSession?.Id ?? 0; // Ensure SessionId is set to the current session
             courseRegistration.InscriptionCode = CurrentSession?.SessionCode + "/..";
 
+        }
+
+        protected async System.Threading.Tasks.Task ProfessionIdChange(System.Object args)
+        {
+            var selectedprofession = professionsForProfessionId.FirstOrDefault(x => x.Id == (int)args);
+            if (selectedprofession != null)
+            {
+                FeeValue = selectedprofession.FeeValue.ToString("C");
+            }
         }
     }
 
