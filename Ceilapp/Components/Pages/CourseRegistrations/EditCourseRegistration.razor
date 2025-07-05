@@ -128,14 +128,33 @@
             </RadzenFormField>
             
             
-            <RadzenRow style="margin-bottom: 1rem" JustifyContent="Radzen.JustifyContent.Center" AlignItems="Radzen.AlignItems.Center">
-                <RadzenColumn SizeMD="3">
-                    <RadzenLabel Text="Registration Terms Accepted" Component="RegistrationTermsAccepted" style="width: 100%" />
-                </RadzenColumn>
-                <RadzenColumn SizeMD="1">
-                    <RadzenCheckBox @bind-Value="@(courseRegistration.RegistrationTermsAccepted)" Name="RegistrationTermsAccepted" />
-                </RadzenColumn>
-            </RadzenRow>
+            <RadzenFieldset Text="Terms & Conditions" Icon="gavel" Style="margin-top: 1rem; margin-bottom: 1rem">
+                <div class="form-group mb-3">
+    @if (!string.IsNullOrEmpty(AppSetting?.TermsAndConditions))
+    {
+        <div class="terms-content bg-light p-3 mb-2">
+            @((MarkupString)AppSetting.TermsAndConditions)
+        </div>
+    }
+    
+</div>
+                <RadzenRow JustifyContent="Radzen.JustifyContent.Start" AlignItems="Radzen.AlignItems.Center" Style="padding: 1rem">
+                    <RadzenColumn SizeMD="12">
+                        <div class="d-flex align-items-center">
+                            <RadzenCheckBox 
+                                @bind-Value="@(courseRegistration.RegistrationTermsAccepted)" 
+                                Name="RegistrationTermsAccepted"
+                                Style="margin-right: 0.5rem" 
+                            />
+                            <RadzenLabel 
+                                Text="I have read and accept the registration terms and conditions" 
+                                Component="RegistrationTermsAccepted" 
+                                Style="font-weight: 500; cursor: pointer"
+                            />
+                        </div>
+                    </RadzenColumn>
+                </RadzenRow>
+            </RadzenFieldset>
             <RadzenFieldset Text="Administration zone" Visible="Security.IsInRole(Constants.ADMIN)" AllowCollapse="true" Icon="shield_person" Style="border: 2px solid #000000">
                 <RadzenRow Style="margin-top: 2em; margin-bottom: 1em">
                     <RadzenColumn SizeMD="3" Style="text-align: right">
