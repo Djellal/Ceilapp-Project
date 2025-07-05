@@ -42,5 +42,10 @@ namespace Ceilapp.Components.Pages
             NavigationManager.NavigateTo($"/edit-course-registration/true");
 
         }
+
+        protected async System.Threading.Tasks.Task LoginButtonClick(Microsoft.AspNetCore.Components.Web.MouseEventArgs args)
+        {
+            NavigationManager.NavigateTo($"/login");
+        }
     }
 }

@@ -42,6 +42,8 @@ namespace Ceilapp.Components.Layout
         protected ceilappService ceilappdb { get; set; }
         public bool AppIsInitialized { get; private set; } = false;
 
+        public string Logout = "Logout";
+
         void SidebarToggleClick()
         {
             sidebarExpanded = !sidebarExpanded;
@@ -76,6 +78,14 @@ namespace Ceilapp.Components.Layout
         {
             // await DialogService.OpenAsync<EditCourseRegistration>("Edit CourseRegistration", new Dictionary<string, object> { { "mode", "create" } });
             NavigationManager.NavigateTo($"/new-course-registration/create", true);
+        }
+
+        protected async System.Threading.Tasks.Task PanelMenu0Click(Radzen.MenuItemEventArgs args)
+        {
+           if (args.Value == "Logout")
+            {
+                Security.Logout();
+            }
         }
     }
 }
