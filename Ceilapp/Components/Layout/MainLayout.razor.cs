@@ -37,7 +37,10 @@ namespace Ceilapp.Components.Layout
 
         [Inject]
         protected SecurityService Security { get; set; }
-        public bool RolesNotExists { get; private set; } = false;
+
+        [Inject]
+        protected ceilappService ceilappdb { get; set; }
+        public bool AppIsInitialized { get; private set; } = false;
 
         void SidebarToggleClick()
         {
@@ -54,9 +57,18 @@ namespace Ceilapp.Components.Layout
 
         protected override async Task OnInitializedAsync()
         {
-            var roles = await Security.GetRoles(); // Await the Task to get the actual IEnumerable<ApplicationRole>
+            try
+            {
+                AppIsInitialized =  !(ceilappdb.dbContext.Professions.Any() &&  ceilappdb.dbContext.CourseTypes.Any());
+            }
+            catch (Exception ex)
+            {
+                NotificationService.Notify(new NotificationMessage { Severity = NotificationSeverity.Error, Summary = "Error", Detail = ex.Message });
+            }
+            //var roles = await Security.GetRoles(); // Await the Task to get the actual IEnumerable<ApplicationRole>
 
-            RolesNotExists = !roles.Any();
+            
+               
            
         }
 
