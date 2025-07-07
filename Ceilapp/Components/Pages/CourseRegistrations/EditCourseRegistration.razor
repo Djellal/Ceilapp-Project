@@ -126,7 +126,7 @@
                   <RadzenFormField Text="Course" Variant="Variant.Filled" Style="width: 100%">
                     <ChildContent>
                       <RadzenDropDown Data="@(coursesForCourseId)" TextProperty="Name" ValueProperty="Id" AllowClear=true
-                            style="display: block; width: 100%" @bind-Value="@(courseRegistration.CourseId)" Name="CourseId"
+                            style="display: block; width: 100%" @bind-Value="@(courseRegistration.CourseId)" Name="CourseId" Change="@CourseIdChange"
                             />
                 </ChildContent>
               </RadzenFormField>
@@ -134,8 +134,8 @@
                 <RadzenColumn Size="12" SizeXS="6">
                   <RadzenFormField Text="Course Level" Variant="Variant.Filled" Style="width: 100%">
                   <ChildContent>
-                    <RadzenDropDown Data="@(courseLevelsForCourseLevelId)" TextProperty="Name" ValueProperty="Id" AllowClear=true
-                          style="display: block; width: 100%" @bind-Value="@(courseRegistration.CourseLevelId)" Name="CourseLevelId" Placeholder="Course level"
+                    <RadzenDropDown Data="@(courseLevelsForCourseLevelId)" TextProperty="Name" ValueProperty="Id" AllowClear=false
+                          style="display: block; width: 100%" @bind-Value="@(courseRegistration.CourseLevelId)" Name="CourseLevelId" Placeholder="Course level" ReadOnly="true"
                            />
               </ChildContent>
             </RadzenFormField>
@@ -144,28 +144,28 @@
             
             
             
-          <RadzenFieldset Text="Terms & Conditions" Icon="gavel" Style="margin-top: 1rem; margin-bottom: 1rem">
+          <RadzenFieldset Text="Terms & Conditions" Icon="gavel" Style="margin-top: 1rem; margin-bottom: 1rem; background-color: rgba(150, 150, 150, 0)">
               <div class="form-group mb-3">
                 @if (!string.IsNullOrEmpty(AppSetting?.TermsAndConditions))
                 {
-                    <div class="terms-content bg-light p-3 mb-2">
+                    <div class="terms-content bg-light p-3 mb-2" style="margin-bottom: 1em">
                         @((MarkupString)AppSetting.TermsAndConditions)
                     </div>
                 }
                 
             </div>
-                <RadzenRow JustifyContent="Radzen.JustifyContent.Start" AlignItems="Radzen.AlignItems.Center" Style="padding: 1rem">
+                <RadzenRow JustifyContent="Radzen.JustifyContent.Start" AlignItems="Radzen.AlignItems.Center" Style="padding: 1rem; text-align: center; border-radius: 5px; background-color: #eee8fb; border: 1px solid #424242">
                     <RadzenColumn SizeMD="12">
                         <div class="d-flex align-items-center">
                             <RadzenCheckBox 
                                 @bind-Value="@(courseRegistration.RegistrationTermsAccepted)" 
                                 Name="RegistrationTermsAccepted"
-                                Style="margin-right: 0.5rem" 
+                                Style="margin-right: 0.5rem; width: 30px; height: 30px" 
                             />
                             <RadzenLabel 
                                 Text="I have read and accept the registration terms and conditions" 
                                 Component="RegistrationTermsAccepted" 
-                                Style="font-weight: 500; cursor: pointer"
+                                Style="font-weight: 600; cursor: pointer; font-style: italic; font-family: 'Comic Sans MS'"
                             />
                         </div>
                     </RadzenColumn>

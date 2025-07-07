@@ -4,6 +4,7 @@
     <NuGetAuditMode>direct</NuGetAuditMode>
     <TargetFramework>net9.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
+	 <EnableStaticWebAssetCompression>false</EnableStaticWebAssetCompression>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Radzen.Blazor" Version="*" />

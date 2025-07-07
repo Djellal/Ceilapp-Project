@@ -36,8 +36,10 @@ namespace Ceilapp.Components.Pages
         [Inject]
         protected ceilappService ceilappdb { get; set; }
 
+        public bool initfinished { get; set; } = false;
         protected override async Task OnInitializedAsync()
         {
+            initfinished = false;
             var roles = await Security.GetRoles(); // Await the Task to get the actual IEnumerable<ApplicationRole>
 
             foreach (var item in Constants.Roles)
@@ -78,7 +80,158 @@ namespace Ceilapp.Components.Pages
                 await ceilappdb.CreateProfession(new Models.ceilapp.Profession { Name = "Enseignant", NameAr = "استاذ", FeeValue = 8000 });
                 await ceilappdb.CreateProfession(new Models.ceilapp.Profession { Name = "Externe", NameAr = "خارجي", FeeValue = 6000 });
             }
-           
+
+
+            var Langid = ceilappdb.dbContext.CourseTypes.FirstOrDefault(ct => ct.Name == "Language").Id;
+
+            var atlid = ceilappdb.dbContext.CourseTypes.FirstOrDefault(ct => ct.Name == "Atelier").Id;
+
+            if (!ceilappdb.dbContext.Courses.Any())
+            {
+                var c =  await ceilappdb.CreateCourse(new Models.ceilapp.Course
+                {
+                    Code= "ENG",
+                    Name = "Anglais",
+                    NameAr = "اللغة الانجليزية",   
+                    Image="",
+                    CourseTypeId = Langid,
+                    IsActive = true,
+                });
+
+                await ceilappdb.CreateCourseLevel(new Models.ceilapp.CourseLevel {CourseId =c.Id,  Name = "Pré-A1", NameAr = "Pré-A1" ,IsActive = true });
+                await ceilappdb.CreateCourseLevel(new Models.ceilapp.CourseLevel { CourseId = c.Id, Name = "A1.1", NameAr = "A1.1" , IsActive = true });
+                await ceilappdb.CreateCourseLevel(new Models.ceilapp.CourseLevel { CourseId = c.Id, Name = "A1.2", NameAr = "A1.2" , IsActive = true });
+                await ceilappdb.CreateCourseLevel(new Models.ceilapp.CourseLevel { CourseId = c.Id, Name = "A2.2", NameAr = "A2.2" , IsActive = true });
+                await ceilappdb.CreateCourseLevel(new Models.ceilapp.CourseLevel { CourseId = c.Id, Name = "B1.1", NameAr = "B1.1" , IsActive = true });
+                await ceilappdb.CreateCourseLevel(new Models.ceilapp.CourseLevel { CourseId = c.Id, Name = "B1.2", NameAr = "B1.2" , IsActive = true });
+                await ceilappdb.CreateCourseLevel(new Models.ceilapp.CourseLevel { CourseId = c.Id, Name = "B2.1", NameAr = "B2.1" , IsActive = true });
+                await ceilappdb.CreateCourseLevel(new Models.ceilapp.CourseLevel { CourseId = c.Id, Name = "B2.2", NameAr = "B2.2" , IsActive = true });
+                await ceilappdb.CreateCourseLevel(new Models.ceilapp.CourseLevel { CourseId = c.Id, Name = "C1.1", NameAr = "C1.1" , IsActive = true });
+                await ceilappdb.CreateCourseLevel(new Models.ceilapp.CourseLevel { CourseId = c.Id, Name = "C1.2", NameAr = "C1.2" , IsActive = true });
+
+                c = await ceilappdb.CreateCourse(new Models.ceilapp.Course
+                {
+                    Code = "FRA",
+                    Name = "Français",
+                    NameAr = "اللغة الفرنسية",
+                    Image = "",
+                    CourseTypeId = Langid,
+                    IsActive = true,
+                });
+
+                await ceilappdb.CreateCourseLevel(new Models.ceilapp.CourseLevel { CourseId = c.Id, Name = "Pré-A1", NameAr = "Pré-A1", IsActive = true });
+                await ceilappdb.CreateCourseLevel(new Models.ceilapp.CourseLevel { CourseId = c.Id, Name = "A1.1", NameAr = "A1.1", IsActive = true });
+                await ceilappdb.CreateCourseLevel(new Models.ceilapp.CourseLevel { CourseId = c.Id, Name = "A1.2", NameAr = "A1.2", IsActive = true });
+                await ceilappdb.CreateCourseLevel(new Models.ceilapp.CourseLevel { CourseId = c.Id, Name = "A2.2", NameAr = "A2.2", IsActive = true });
+                await ceilappdb.CreateCourseLevel(new Models.ceilapp.CourseLevel { CourseId = c.Id, Name = "B1.1", NameAr = "B1.1", IsActive = true });
+                await ceilappdb.CreateCourseLevel(new Models.ceilapp.CourseLevel { CourseId = c.Id, Name = "B1.2", NameAr = "B1.2", IsActive = true });
+                await ceilappdb.CreateCourseLevel(new Models.ceilapp.CourseLevel { CourseId = c.Id, Name = "B2.1", NameAr = "B2.1", IsActive = true });
+                await ceilappdb.CreateCourseLevel(new Models.ceilapp.CourseLevel { CourseId = c.Id, Name = "B2.2", NameAr = "B2.2", IsActive = true });
+                await ceilappdb.CreateCourseLevel(new Models.ceilapp.CourseLevel { CourseId = c.Id, Name = "C1.1", NameAr = "C1.1", IsActive = true });
+                await ceilappdb.CreateCourseLevel(new Models.ceilapp.CourseLevel { CourseId = c.Id, Name = "C1.2", NameAr = "C1.2", IsActive = true });
+
+              c =  await ceilappdb.CreateCourse(new Models.ceilapp.Course
+                {
+                    Code = "ESP",
+                    Name = "Espagnol",
+                    NameAr = "اللغة الاسبانية",
+                    Image = "",
+                    CourseTypeId = Langid,
+                    IsActive = true,
+                });
+                await ceilappdb.CreateCourseLevel(new Models.ceilapp.CourseLevel { CourseId = c.Id, Name = "Pré-A1", NameAr = "Pré-A1", IsActive = true });
+                await ceilappdb.CreateCourseLevel(new Models.ceilapp.CourseLevel { CourseId = c.Id, Name = "A1.1", NameAr = "A1.1", IsActive = true });
+                await ceilappdb.CreateCourseLevel(new Models.ceilapp.CourseLevel { CourseId = c.Id, Name = "A1.2", NameAr = "A1.2", IsActive = true });
+                await ceilappdb.CreateCourseLevel(new Models.ceilapp.CourseLevel { CourseId = c.Id, Name = "A2.2", NameAr = "A2.2", IsActive = true });
+                await ceilappdb.CreateCourseLevel(new Models.ceilapp.CourseLevel { CourseId = c.Id, Name = "B1.1", NameAr = "B1.1", IsActive = true });
+                await ceilappdb.CreateCourseLevel(new Models.ceilapp.CourseLevel { CourseId = c.Id, Name = "B1.2", NameAr = "B1.2", IsActive = true });
+                await ceilappdb.CreateCourseLevel(new Models.ceilapp.CourseLevel { CourseId = c.Id, Name = "B2.1", NameAr = "B2.1", IsActive = true });
+                await ceilappdb.CreateCourseLevel(new Models.ceilapp.CourseLevel { CourseId = c.Id, Name = "B2.2", NameAr = "B2.2", IsActive = true });
+                await ceilappdb.CreateCourseLevel(new Models.ceilapp.CourseLevel { CourseId = c.Id, Name = "C1.1", NameAr = "C1.1", IsActive = true });
+                await ceilappdb.CreateCourseLevel(new Models.ceilapp.CourseLevel { CourseId = c.Id, Name = "C1.2", NameAr = "C1.2", IsActive = true });
+               
+                c = await ceilappdb.CreateCourse(new Models.ceilapp.Course
+                {
+                    Code = "RUS",
+                    Name = "Russe",
+                    NameAr = "اللغة الروسية",
+                    Image = "",
+                    CourseTypeId = Langid,
+                    IsActive = true,
+                });
+
+                await ceilappdb.CreateCourse(new Models.ceilapp.Course
+                {
+                    Code = "TUR",
+                    Name = "Turc",
+                    NameAr = "اللغة التركية",
+                    Image = "",
+                    CourseTypeId = Langid,
+                    IsActive = true, 
+
+                });
+
+                c = await ceilappdb.CreateCourse(new Models.ceilapp.Course
+                {
+                    Code= "ALM",
+                    Name = "Allemand",
+                    NameAr= "اللغة الالمانية",
+                    Image = "",
+                    CourseTypeId = Langid,
+                    IsActive = true,
+                });
+                c = await ceilappdb.CreateCourse(new Models.ceilapp.Course
+                {
+                    Code = "ARAB",
+                    Name = "Arabe",
+                    NameAr = "اللغة العربية",
+                    Image = "",
+                    CourseTypeId = Langid,
+                    IsActive = true,
+                });
+                c = await ceilappdb.CreateCourse(new Models.ceilapp.Course
+                {
+                    Code = "ITL",
+                    Name = "Italien",
+                    NameAr= "اللغة الايطالية",
+                    Image = "",
+                    CourseTypeId = Langid,
+                    IsActive = true,
+                });
+
+                c = await ceilappdb.CreateCourse(new Models.ceilapp.Course
+                {
+                    Code = "SPKENS",
+                    Name = "Workshops Speaking For Teachers",
+                    NameAr= "ورشة محادثة للمدرسين",
+                    Image = "",
+                    CourseTypeId = atlid,
+                    IsActive = true,
+                });
+                await ceilappdb.CreateCourseLevel(new Models.ceilapp.CourseLevel { CourseId = c.Id, Name = "-", NameAr = "-", IsActive = true });
+                c = await ceilappdb.CreateCourse(new Models.ceilapp.Course
+                {
+                    Code = "SPK",
+                    Name = "WORKSHOP SPEAKING",
+                    NameAr= "ورشة محادثة",
+                    Image = "",
+                    CourseTypeId = atlid,
+                    IsActive = true,
+                });
+                await ceilappdb.CreateCourseLevel(new Models.ceilapp.CourseLevel { CourseId = c.Id, Name = "-", NameAr = "-", IsActive = true });
+                c = await ceilappdb.CreateCourse(new Models.ceilapp.Course
+                {
+                    Code = "ACOF",
+                    Name = "Atelier communication orale français",
+                    NameAr= "ورشة التواصل الشفوي بالفرنسية",
+                    Image = "",
+                    CourseTypeId = atlid,
+                    IsActive = true,
+                });
+                await ceilappdb.CreateCourseLevel(new Models.ceilapp.CourseLevel { CourseId = c.Id, Name = "-", NameAr = "-", IsActive = true });
+            }
+
+            initfinished = true;
         }
     }
 }

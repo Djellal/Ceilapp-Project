@@ -9,6 +9,7 @@ using Radzen;
 using Radzen.Blazor;
 using Microsoft.EntityFrameworkCore.Infrastructure.Internal;
 using Ceilapp.Models.ceilapp;
+using Microsoft.EntityFrameworkCore;
 
 namespace Ceilapp.Components.Pages.CourseRegistrations
 {
@@ -150,6 +151,23 @@ namespace Ceilapp.Components.Pages.CourseRegistrations
             {
                 FeeValue = 0.ToString("C");
             }
+        }
+
+        protected async System.Threading.Tasks.Task CourseIdChange(System.Object args)
+        {
+            var selectedCourse = coursesForCourseId.FirstOrDefault(x => x.Id == (int)args);
+            if (selectedCourse != null)
+            {
+                courseLevelsForCourseLevelId = await ceilappService.dbContext.CourseLevels
+                    .Where(x => x.CourseId == selectedCourse.Id)
+                    .ToListAsync();
+                if(isnew)
+                {
+                    courseRegistration.CourseLevelId = courseLevelsForCourseLevelId.FirstOrDefault()?.Id ?? 0;
+                }
+            }
+            
+            
         }
     }
 
