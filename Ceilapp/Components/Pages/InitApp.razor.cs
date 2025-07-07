@@ -40,6 +40,34 @@ namespace Ceilapp.Components.Pages
         protected override async Task OnInitializedAsync()
         {
             initfinished = false;
+
+            var appSetting = await ceilappdb.GetAppSettingById(1);
+            if (appSetting == null)
+            {
+                appSetting = new Ceilapp.Models.ceilapp.AppSetting
+                {
+                    Id = 1,
+                    OrganizationName = "CEIL UFAS1",
+                    Address = "Université Sétif -1- Campus El Bez, Ex-Faculté de Droit (Actuellement Département d'Agronomie)",
+                    Tel = " (+213) 036.62.09.96",
+                    Email = " ceil@univ-setif.dz",
+                    WebSite = " https://ceil.univ-setif.dz",
+                    Fb = "https://www.facebook.com/CEIL.SETIF1UNIVERSITY",
+                    LinkredIn = "https://www.linkedin.com/school/universite-ferhat-abbas-setif",
+                    Youtube = "https://www.youtube.com/channel/UCjU0ehPWCFlvCHrfgUt3DOQ",
+                    Instagram = "https://www.instagram.com/universite_ferhat_abbas_setif/?hl=fr",
+                    X = "https://x.com/UnivFerhatAbbas",
+                    Logo = "https://example.com/logo.png",
+                    TermsAndConditions = "Default Terms and Conditions",
+                    IsRegistrationOpened = false,
+                    MaxRegistrationPerSession = 2,
+                    CurrentSessionId = null
+
+                };
+                await ceilappdb.CreateAppSetting(appSetting);
+            }
+
+
             var roles = await Security.GetRoles(); // Await the Task to get the actual IEnumerable<ApplicationRole>
 
             foreach (var item in Constants.Roles)
