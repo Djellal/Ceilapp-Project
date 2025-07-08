@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -39,7 +39,37 @@ namespace Ceilapp.Components.Pages
         public bool initfinished { get; set; } = false;
         protected override async Task OnInitializedAsync()
         {
+
+
             initfinished = false;
+            
+            var roles = await Security.GetRoles(); // Await the Task to get the actual IEnumerable<ApplicationRole>
+
+            foreach (var item in Constants.Roles)
+            {
+                if (!roles.Any(role => role.Name == item)) // Now 'roles' is IEnumerable<ApplicationRole>, so 'Any' can be used
+                {
+                    await Security.CreateRole(new Models.ApplicationRole { Name = item });
+                }
+            }
+
+            var session = await ceilappdb.GetSessionById(1);
+            if(session == null){
+                session = new Ceilapp.Models.ceilapp.Session
+                {
+                    Id = 1,
+                    SessionCode = "SE001",
+                    SessionName = "Septembre 2025",
+                    SessionNameAr = "سبتمبر 2025",
+                    StartDate = DateTime.Now,
+                    EndDate = DateTime.Now.AddMonths(2),
+
+                };
+                await ceilappdb.CreateSession(session);
+            }
+
+
+
 
             var appSetting = await ceilappdb.GetAppSettingById(1);
             if (appSetting == null)
@@ -61,22 +91,14 @@ namespace Ceilapp.Components.Pages
                     TermsAndConditions = "Default Terms and Conditions",
                     IsRegistrationOpened = false,
                     MaxRegistrationPerSession = 2,
-                    CurrentSessionId = null
+                    CurrentSessionId = 1
 
                 };
                 await ceilappdb.CreateAppSetting(appSetting);
             }
 
 
-            var roles = await Security.GetRoles(); // Await the Task to get the actual IEnumerable<ApplicationRole>
-
-            foreach (var item in Constants.Roles)
-            {
-                if (!roles.Any(role => role.Name == item)) // Now 'roles' is IEnumerable<ApplicationRole>, so 'Any' can be used
-                {
-                    await Security.CreateRole(new Models.ApplicationRole { Name = item });
-                }
-            }
+            
             var adminmail = "djellal@univ-setif.dz";
             var admin = (await Security.GetUsers()).FirstOrDefault(u => u.Name == adminmail);
 

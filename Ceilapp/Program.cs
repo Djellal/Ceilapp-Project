@@ -64,7 +64,7 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 app.MapControllers();
 app.UseHeaderPropagation();
 app.UseRequestLocalization(options => options.AddSupportedCultures("en", "ar", "fr").AddSupportedUICultures("en", "ar", "fr").SetDefaultCulture("en"));
