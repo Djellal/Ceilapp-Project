@@ -1,4 +1,6 @@
+using Ceilapp.Components.Pages.Appsettings;
 using Ceilapp.Components.Pages.CourseRegistrations;
+using Ceilapp.Models.ceilapp;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
@@ -40,6 +42,8 @@ namespace Ceilapp.Components.Layout
 
         [Inject]
         protected ceilappService ceilappdb { get; set; }
+        public AppSetting AppSettings { get; private set; }
+
         public bool AppIsInitialized { get; private set; } = false;
 
         public string Logout = "Logout";
@@ -61,6 +65,7 @@ namespace Ceilapp.Components.Layout
         {
             try
             {
+                AppSettings = await ceilappdb.GetAppSettingById(1);
                 AppIsInitialized =  !(ceilappdb.dbContext.Professions.Any() &&  ceilappdb.dbContext.CourseTypes.Any());
             }
             catch (Exception ex)
