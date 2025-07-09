@@ -54,57 +54,78 @@
             <RadzenPanelMenuItem Path="login" Text="Login" Icon="passkey" Visible="!Security.IsAuthenticated()"></RadzenPanelMenuItem>
             <RadzenPanelMenuItem Text="Logout" Icon="logout" Value=@Logout Visible="Security.IsAuthenticated()"></RadzenPanelMenuItem>
         </RadzenPanelMenu>
-        <RadzenStack AlignItems="Radzen.AlignItems.Center" Gap="0.5rem" class="rz-py-4 rz-py-lg-6" Style="padding: var(--rz-panel-menu-item-padding);" Visible="AppSettings is not null">
-            <RadzenText Text="@AppSettings.OrganizationName" TextStyle="Radzen.Blazor.TextStyle.H6" TagName="Radzen.Blazor.TagName.H6" TextAlign="Radzen.TextAlign.Center" class="rz-mb-3" />
+        <RadzenStack AlignItems="Radzen.AlignItems.Center" Gap="0.5rem" class="rz-py-4 rz-py-lg-6 contact-info-section" Style="padding: var(--rz-panel-menu-item-padding); background: var(--rz-base-100);" Visible="AppSettings is not null">
+            <RadzenText Text="@AppSettings.OrganizationName" TextStyle="Radzen.Blazor.TextStyle.H6" TagName="Radzen.Blazor.TagName.H6" TextAlign="Radzen.TextAlign.Center" class="rz-mb-3" Style="color: var(--rz-primary); font-weight: bold;" />
             
-            <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="0.5rem">
-                <i class="bi bi-geo-alt"></i>
-                <RadzenText Text="@AppSettings.Address" TextStyle="Radzen.Blazor.TextStyle.Body2" />
+            <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="0.5rem" class="contact-item hover-effect">
+                <i class="bi bi-geo-alt" style="color: var(--rz-secondary)"></i>
+                <RadzenText Text="@AppSettings.Address" TextStyle="Radzen.Blazor.TextStyle.Body2" Style="transition: all 0.3s ease;" />
             </RadzenStack>
             
-            <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="0.5rem">
-                <i class="bi bi-telephone"></i>
-                <RadzenText Text="@AppSettings.Tel" TextStyle="Radzen.Blazor.TextStyle.Body2" />
+            <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="0.5rem" class="contact-item hover-effect">
+                <i class="bi bi-telephone" style="color: var(--rz-secondary)"></i>
+                <RadzenText Text="@AppSettings.Tel" TextStyle="Radzen.Blazor.TextStyle.Body2" Style="transition: all 0.3s ease;" />
             </RadzenStack>
             
-            <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="0.5rem">
-                <i class="bi bi-envelope"></i>
-                <RadzenText Text="@AppSettings.Email" TextStyle="Radzen.Blazor.TextStyle.Body2" />
+            <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="0.5rem" class="contact-item hover-effect">
+                <i class="bi bi-envelope" style="color: var(--rz-secondary)"></i>
+                <RadzenText Text="@AppSettings.Email" TextStyle="Radzen.Blazor.TextStyle.Body2" Style="transition: all 0.3s ease;" />
             </RadzenStack>
             
-            <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="0.5rem">
-                <i class="bi bi-globe"></i>
-                <RadzenText Text="@AppSettings.WebSite" TextStyle="Radzen.Blazor.TextStyle.Body2" />
+            <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="0.5rem" class="contact-item hover-effect">
+                <i class="bi bi-globe" style="color: var(--rz-secondary)"></i>
+                <RadzenText Text="@AppSettings.WebSite" TextStyle="Radzen.Blazor.TextStyle.Body2" Style="transition: all 0.3s ease;" />
             </RadzenStack>
 
-            <RadzenDivider class="rz-my-3" />
+            <RadzenDivider class="rz-my-4" Style="opacity: 0.5;" />
             
-            <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.Center" Gap="1rem" class="rz-mt-2">
+            <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.Center" Gap="1.5rem" class="rz-mt-3 social-icons">
                 @if (!string.IsNullOrEmpty(AppSettings.Fb))
                 {
-                    <i class="bi bi-facebook" style="font-size: 1.5rem; cursor: pointer;"></i>
+                    <i class="bi bi-facebook social-icon" style="font-size: 1.5rem; cursor: pointer; transition: all 0.3s ease; color: var(--rz-primary);" @onclick="() => OpenSocialLink(AppSettings.Fb)"></i>
                 }
                 @if (!string.IsNullOrEmpty(AppSettings.X))
                 {
-                    <i class="bi bi-twitter-x" style="font-size: 1.5rem; cursor: pointer;"></i>
+                    <i class="bi bi-twitter-x social-icon" style="font-size: 1.5rem; cursor: pointer; transition: all 0.3s ease; color: var(--rz-primary);" @onclick="() => OpenSocialLink(AppSettings.X)"></i>
                 }
                 @if (!string.IsNullOrEmpty(AppSettings.Instagram))
                 {
-                    <i class="bi bi-instagram" style="font-size: 1.5rem; cursor: pointer;"></i>
+                    <i class="bi bi-instagram social-icon" style="font-size: 1.5rem; cursor: pointer; transition: all 0.3s ease; color: var(--rz-primary);" @onclick="() => OpenSocialLink(AppSettings.Instagram)"></i>
                 }
                 @if (!string.IsNullOrEmpty(AppSettings.LinkredIn))
                 {
-                    <i class="bi bi-linkedin" style="font-size: 1.5rem; cursor: pointer;"></i>
+                    <i class="bi bi-linkedin social-icon" style="font-size: 1.5rem; cursor: pointer; transition: all 0.3s ease; color: var(--rz-primary);" @onclick="() => OpenSocialLink(AppSettings.LinkredIn)"></i>
                 }
                 @if (!string.IsNullOrEmpty(AppSettings.Youtube))
                 {
-                    <i class="bi bi-youtube" style="font-size: 1.5rem; cursor: pointer;"></i>
+                    <i class="bi bi-youtube social-icon" style="font-size: 1.5rem; cursor: pointer; transition: all 0.3s ease; color: var(--rz-primary);" @onclick="() => OpenSocialLink(AppSettings.Youtube)"></i>
                 }
             </RadzenStack>
         </RadzenStack>
-        <RadzenStack AlignItems="Radzen.AlignItems.Center" Gap="0" class="rz-py-4 rz-py-lg-6" Style="padding: var(--rz-panel-menu-item-padding);">
-            <RadzenText Text="Ceilapp v1.0.0" TextStyle="Radzen.Blazor.TextStyle.Caption" TagName="Radzen.Blazor.TagName.P" TextAlign="Radzen.TextAlign.Center" />
-            <RadzenText Text="Copyright Ⓒ 2025" TextStyle="Radzen.Blazor.TextStyle.Caption" class="rz-mb-0" TagName="Radzen.Blazor.TagName.P" TextAlign="Radzen.TextAlign.Center" />
+        <RadzenStack AlignItems="Radzen.AlignItems.Center" Gap="0" class="rz-py-4 rz-py-lg-6 footer-section" Style="padding: var(--rz-panel-menu-item-padding); background: var(--rz-base-200);">
+            <RadzenText Text="Ceilapp v1.0.0" TextStyle="Radzen.Blazor.TextStyle.Caption" TagName="Radzen.Blazor.TagName.P" TextAlign="Radzen.TextAlign.Center" Style="color: var(--rz-text-secondary);" />
+            <RadzenText Text="Copyright Ⓒ 2025" TextStyle="Radzen.Blazor.TextStyle.Caption" class="rz-mb-0" TagName="Radzen.Blazor.TagName.P" TextAlign="Radzen.TextAlign.Center" Style="color: var(--rz-text-secondary);" />
         </RadzenStack>
+
+<style>
+    .contact-item:hover {
+        transform: translateX(5px);
+    }
+
+    .social-icon:hover {
+        transform: scale(1.2);
+        opacity: 0.8;
+    }
+
+    .contact-info-section {
+        border-radius: 8px;
+        margin: 1rem;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .footer-section {
+        border-top: 1px solid var(--rz-border-color);
+    }
+</style>
     </RadzenSidebar>
 </RadzenLayout>

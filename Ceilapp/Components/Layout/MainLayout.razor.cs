@@ -92,5 +92,10 @@ namespace Ceilapp.Components.Layout
                 Security.Logout();
             }
         }
+
+        protected async System.Threading.Tasks.Task OpenSocialLink(string link)
+        {
+            await JSRuntime.InvokeVoidAsync("open", link);
+        }
     }
 }
