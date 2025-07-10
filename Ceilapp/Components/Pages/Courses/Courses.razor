@@ -3,120 +3,172 @@
 @attribute [Authorize]
 
 <PageTitle>Courses</PageTitle>
-<RadzenStack>
-    <RadzenRow AlignItems="AlignItems.Center">
+<RadzenStack Gap="1rem">
+    <RadzenRow AlignItems="AlignItems.Center" Class="mb-3">
         <RadzenColumn Size="12" SizeMD="6">
-            <RadzenText Text="Courses" TextStyle="Radzen.Blazor.TextStyle.H5" TagName="Radzen.Blazor.TagName.H5" style="margin: 0" />
+            <RadzenText Text="Courses" TextStyle="Radzen.Blazor.TextStyle.H4" TagName="Radzen.Blazor.TagName.H4" Class="rz-mb-0" />
         </RadzenColumn>
         <RadzenColumn Size="12" SizeMD="6">
-            <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.End" Gap="0.5rem">
-                <RadzenButton Icon="add_circle_outline" Text="Add" Click="@AddButtonClick" Variant="Variant.Flat" />
+            <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.End" Gap="1rem">
+                <RadzenButton Icon="add_circle_outline" Text="Add New Course" Click="@AddButtonClick" ButtonStyle="ButtonStyle.Primary" />
             </RadzenStack>
         </RadzenColumn>
     </RadzenRow>
     <RadzenRow>
       <RadzenColumn SizeMD=12>
-        <RadzenDataGrid @ref="grid0" ColumnWidth="200px"  Render=Grid0Render AllowFiltering="true" FilterMode="FilterMode.Advanced" AllowPaging="false" AllowSorting="true" ShowPagingSummary="true" PageSizeOptions=@(new int[]{5, 10, 20, 30})
-            Data="@(courses)" TItem="Ceilapp.Models.ceilapp.Course" RowDoubleClick="@EditRow" RowSelect="@GetChildData">
-            <Columns>
-                <RadzenDataGridColumn TItem="Ceilapp.Models.ceilapp.Course" Property="Name" Title="Name">
-                </RadzenDataGridColumn>
-                <RadzenDataGridColumn TItem="Ceilapp.Models.ceilapp.Course" Property="NameAr" Title="Name Ar">
-                </RadzenDataGridColumn>
-                <RadzenDataGridColumn TItem="Ceilapp.Models.ceilapp.Course" Property="IsActive" Title="Is Active">
-                </RadzenDataGridColumn>
-                <RadzenDataGridColumn TItem="Ceilapp.Models.ceilapp.Course" Property="Image" Title="Image">
-                    <Template>
-                        <RadzenImage Path="@context.Image" Style="text-align: center; height: 32px"></RadzenImage>
-                    </Template>
-                </RadzenDataGridColumn>
-                <RadzenDataGridColumn TItem="Ceilapp.Models.ceilapp.Course" Property="CourseType.Name" Title="Course Type">
-                </RadzenDataGridColumn>
-                <RadzenDataGridColumn TItem="Ceilapp.Models.ceilapp.Course" Filterable="false" Sortable="false" Width="70px" TextAlign="TextAlign.Center">
-                    <Template Context="course">
+        <RadzenCard>
+            <RadzenDataGrid @ref="grid0" 
+                ColumnWidth="200px"  
+                Render=Grid0Render 
+                AllowFiltering="true" 
+                FilterMode="FilterMode.Advanced" 
+                AllowPaging="true" 
+                AllowSorting="true" 
+                ShowPagingSummary="true" 
+                PageSize="10"
+                PageSizeOptions=@(new int[]{5, 10, 20, 30})
+                Data="@(courses)" 
+                TItem="Ceilapp.Models.ceilapp.Course" 
+                RowDoubleClick="@EditRow" 
+                RowSelect="@GetChildData"
+                Class="rz-shadow-3">
+                <Columns>
+                    <RadzenDataGridColumn TItem="Ceilapp.Models.ceilapp.Course" Property="Name" Title="Name" />
+                    <RadzenDataGridColumn TItem="Ceilapp.Models.ceilapp.Course" Property="NameAr" Title="Name (Arabic)" />
+                    <RadzenDataGridColumn TItem="Ceilapp.Models.ceilapp.Course" Property="IsActive" Title="Status">
+                        <Template Context="course">
+                            <RadzenBadge BadgeStyle="@(course.IsActive ? BadgeStyle.Success : BadgeStyle.Danger)" 
+                                Text="@(course.IsActive ? "Active" : "Inactive")" />
+                        </Template>
+                    </RadzenDataGridColumn>
+                    <RadzenDataGridColumn TItem="Ceilapp.Models.ceilapp.Course" Property="Image" Title="Image">
+                        <Template>
+                            <RadzenImage Path="@context.Image" Style="height: 40px; width: 40px; object-fit: cover; border-radius: 4px;" />
+                        </Template>
+                    </RadzenDataGridColumn>
+                    <RadzenDataGridColumn TItem="Ceilapp.Models.ceilapp.Course" Property="CourseType.Name" Title="Course Type" />
+                    <RadzenDataGridColumn TItem="Ceilapp.Models.ceilapp.Course" Filterable="false" Sortable="false" Width="70px" TextAlign="TextAlign.Center">
+                        <Template Context="course">
+                            <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="delete" Size="ButtonSize.Small"
+                                Variant="Variant.Outlined"
+                                Click=@(args => GridDeleteButtonClick(args, course)) @onclick:stopPropagation="true" />
+                        </Template>
+                    </RadzenDataGridColumn>
+                </Columns>
+            </RadzenDataGrid>
+        </RadzenCard>
+      </RadzenColumn>
+    </RadzenRow>
 
-                        <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="delete" Size="ButtonSize.Medium"
-                            Shade="Shade.Lighter" Variant="Variant.Flat"
-                            Click=@(args => GridDeleteButtonClick(args, course)) @onclick:stopPropagation="true" />
-                    </Template>
-                </RadzenDataGridColumn>
-            </Columns>
-
-        </RadzenDataGrid>
-
-                
-                
-    </RadzenColumn>
-      
-  </RadzenRow>
-  <RadzenRow>
-          <RadzenColumn Size="12" SizeXS="4" Style="border-radius: 5px; border: 2px solid #000000; padding: 3px">
-          <RadzenStack Class="rz-my-8">
-                    <RadzenRow Gap="0" AlignItems="AlignItems.Center">
+    <RadzenRow Gap="1rem" Class="mt-4">
+        <RadzenColumn Size="12" SizeXS="4">
+            <RadzenCard Class="rz-shadow-3">
+                <RadzenStack Class="rz-p-2">
+                    <RadzenRow Gap="0" AlignItems="AlignItems.Center" Class="mb-3">
                         <RadzenColumn Size="12" SizeMD="6">
-                            <RadzenText Visible="@(courseChild != null)" Text="Components" TextStyle="Radzen.Blazor.TextStyle.H6" TagName="TagName.H2" style="margin: 0" />
+                            <RadzenText Visible="@(courseChild != null)" Text="Components" TextStyle="Radzen.Blazor.TextStyle.H6" Class="rz-mb-0" />
                         </RadzenColumn>
                         <RadzenColumn Size="12" SizeMD="6">
-                            <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.End" Gap="0.5rem">
-                                <RadzenButton Visible="@(courseChild != null)" Icon="add_circle_outline" Text="Add" Click=@(args => CourseComponentsAddButtonClick(args,courseChild)) />
+                            <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.End" Gap="1rem">
+                                <RadzenButton Visible="@(courseChild != null)" Icon="add_circle_outline" Text="Add Component" 
+                                    Click=@(args => CourseComponentsAddButtonClick(args,courseChild)) 
+                                    ButtonStyle="ButtonStyle.Secondary" 
+                                    Size="ButtonSize.Small" />
                             </RadzenStack>
                         </RadzenColumn>
                     </RadzenRow>
-                    <RadzenDataGrid ColumnWidth="200px" Visible="@(courseChild != null)" @ref=CourseComponentsDataGrid AllowFiltering="false" FilterMode="Radzen.FilterMode.Advanced" AllowPaging="false" AllowSorting="true" ShowPagingSummary="true" PageSizeOptions=@(new int[]{5, 10, 20, 30})
-                      Data="@courseChild?.CourseComponents" TItem="Ceilapp.Models.ceilapp.CourseComponent"  RowSelect="@(args => CourseComponentsRowSelect(args, courseChild))">
-                      <Columns>
-                        <RadzenDataGridColumn TItem="Ceilapp.Models.ceilapp.CourseComponent" Property="Name" Title="Name">
-                        </RadzenDataGridColumn>
-                        <RadzenDataGridColumn TItem="Ceilapp.Models.ceilapp.CourseComponent" Property="Coeff" Title="Coeff">
-                        </RadzenDataGridColumn>
-                        <RadzenDataGridColumn TItem="Ceilapp.Models.ceilapp.CourseComponent" Property="Course.Image" Title="Course">
-                        </RadzenDataGridColumn>
-                        <RadzenDataGridColumn TItem="Ceilapp.Models.ceilapp.CourseComponent" Filterable="false" Sortable="false" Width="70px" TextAlign="TextAlign.Center">
-                            <Template Context="courseComponentChild">
-
-                                <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="delete" Size="ButtonSize.Medium" Shade="Shade.Lighter" Variant="Variant.Flat"
-                                    Click=@(args => CourseComponentsDeleteButtonClick(args, courseComponentChild)) @onclick:stopPropagation="true" />
-                            </Template>
-                        </RadzenDataGridColumn>
-                      </Columns>
+                    <RadzenDataGrid ColumnWidth="200px" 
+                        Visible="@(courseChild != null)" 
+                        @ref=CourseComponentsDataGrid 
+                        AllowFiltering="false" 
+                        FilterMode="Radzen.FilterMode.Advanced" 
+                        AllowPaging="true" 
+                        PageSize="5"
+                        AllowSorting="true" 
+                        ShowPagingSummary="true" 
+                        PageSizeOptions=@(new int[]{5, 10, 20})
+                        Data="@courseChild?.CourseComponents" 
+                        TItem="Ceilapp.Models.ceilapp.CourseComponent"  
+                        RowSelect="@(args => CourseComponentsRowSelect(args, courseChild))"
+                        Class="rz-border-radius-4">
+                        <Columns>
+                            <RadzenDataGridColumn TItem="Ceilapp.Models.ceilapp.CourseComponent" Property="Name" Title="Name" />
+                            <RadzenDataGridColumn TItem="Ceilapp.Models.ceilapp.CourseComponent" Property="Coeff" Title="Coefficient" />
+                            <RadzenDataGridColumn TItem="Ceilapp.Models.ceilapp.CourseComponent" Property="Course.Image" Title="Course">
+                                <Template Context="component">
+                                    <RadzenImage Path="@component.Course?.Image" Style="height: 32px; width: 32px; object-fit: cover; border-radius: 4px;" />
+                                </Template>
+                            </RadzenDataGridColumn>
+                            <RadzenDataGridColumn TItem="Ceilapp.Models.ceilapp.CourseComponent" Filterable="false" Sortable="false" Width="70px" TextAlign="TextAlign.Center">
+                                <Template Context="courseComponentChild">
+                                    <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="delete" Size="ButtonSize.Small"
+                                        Variant="Variant.Outlined"
+                                        Click=@(args => CourseComponentsDeleteButtonClick(args, courseComponentChild)) @onclick:stopPropagation="true" />
+                                </Template>
+                            </RadzenDataGridColumn>
+                        </Columns>
                     </RadzenDataGrid>
                 </RadzenStack>
-                </RadzenColumn>
-          <RadzenColumn Size="12" SizeXS="8" Style="padding: 3px; border-radius: 5px; border: 2px solid #000000"><RadzenStack Class="rz-my-8">
-                    <RadzenRow Gap="0" AlignItems="AlignItems.Center">
+            </RadzenCard>
+        </RadzenColumn>
+
+        <RadzenColumn Size="12" SizeXS="8">
+            <RadzenCard Class="rz-shadow-3">
+                <RadzenStack Class="rz-p-2">
+                    <RadzenRow Gap="0" AlignItems="AlignItems.Center" Class="mb-3">
                         <RadzenColumn Size="12" SizeMD="6">
-                            <RadzenText Visible="@(courseChild != null)" Text="Levels" TextStyle="Radzen.Blazor.TextStyle.H6" TagName="Radzen.Blazor.TagName.H6" style="margin: 0" />
+                            <RadzenText Visible="@(courseChild != null)" Text="Levels" TextStyle="Radzen.Blazor.TextStyle.H6" Class="rz-mb-0" />
                         </RadzenColumn>
                         <RadzenColumn Size="12" SizeMD="6">
-                            <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.End" Gap="0.5rem">
-                                <RadzenButton Visible="@(courseChild != null)" Icon="add_circle_outline" Text="Add" Click=@(args => CourseLevelsAddButtonClick(args,courseChild)) />
+                            <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.End" Gap="1rem">
+                                <RadzenButton Visible="@(courseChild != null)" Icon="add_circle_outline" Text="Add Level" 
+                                    Click=@(args => CourseLevelsAddButtonClick(args,courseChild)) 
+                                    ButtonStyle="ButtonStyle.Secondary"
+                                    Size="ButtonSize.Small" />
                             </RadzenStack>
                         </RadzenColumn>
                     </RadzenRow>
-                    <RadzenDataGrid ColumnWidth="200px" Visible="@(courseChild != null)" @ref=CourseLevelsDataGrid AllowFiltering="false" FilterMode="Radzen.FilterMode.Advanced" AllowPaging="false" AllowSorting="true" ShowPagingSummary="true" PageSizeOptions=@(new int[]{5, 10, 20, 30})
-                      Data="@courseChild?.CourseLevels" TItem="Ceilapp.Models.ceilapp.CourseLevel"  RowSelect="@(args => CourseLevelsRowSelect(args, courseChild))">
-                      <Columns>
-                        <RadzenDataGridColumn TItem="Ceilapp.Models.ceilapp.CourseLevel" Property="Name" Title="Name">
-                        </RadzenDataGridColumn>
-                        <RadzenDataGridColumn TItem="Ceilapp.Models.ceilapp.CourseLevel" Property="NameAr" Title="Name Ar">
-                        </RadzenDataGridColumn>
-                        <RadzenDataGridColumn TItem="Ceilapp.Models.ceilapp.CourseLevel" Property="Duration" Title="Duration">
-                        </RadzenDataGridColumn>
-                        <RadzenDataGridColumn TItem="Ceilapp.Models.ceilapp.CourseLevel" Property="IsActive" Title="Is Active">
-                        </RadzenDataGridColumn>
-                        <RadzenDataGridColumn TItem="Ceilapp.Models.ceilapp.CourseLevel" Property="Course.Image" Title="Course">
-                        </RadzenDataGridColumn>
-                        <RadzenDataGridColumn TItem="Ceilapp.Models.ceilapp.CourseLevel" Property="CourseLevel1.NameAr" Title="Course Level1">
-                        </RadzenDataGridColumn>
-                        <RadzenDataGridColumn TItem="Ceilapp.Models.ceilapp.CourseLevel" Filterable="false" Sortable="false" Width="70px" TextAlign="TextAlign.Center">
-                            <Template Context="courseLevelChild">
-
-                                <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="delete" Size="ButtonSize.Medium" Shade="Shade.Lighter" Variant="Variant.Flat"
-                                    Click=@(args => CourseLevelsDeleteButtonClick(args, courseLevelChild)) @onclick:stopPropagation="true" />
-                            </Template>
-                        </RadzenDataGridColumn>
-                      </Columns>
+                    <RadzenDataGrid ColumnWidth="200px" 
+                        Visible="@(courseChild != null)" 
+                        @ref=CourseLevelsDataGrid 
+                        AllowFiltering="false" 
+                        FilterMode="Radzen.FilterMode.Advanced" 
+                        AllowPaging="true" 
+                        PageSize="5"
+                        AllowSorting="true" 
+                        ShowPagingSummary="true" 
+                        PageSizeOptions=@(new int[]{5, 10, 20})
+                        Data="@courseChild?.CourseLevels" 
+                        TItem="Ceilapp.Models.ceilapp.CourseLevel"  
+                        RowSelect="@(args => CourseLevelsRowSelect(args, courseChild))"
+                        Class="rz-border-radius-4">
+                        <Columns>
+                            <RadzenDataGridColumn TItem="Ceilapp.Models.ceilapp.CourseLevel" Property="Name" Title="Name" />
+                            <RadzenDataGridColumn TItem="Ceilapp.Models.ceilapp.CourseLevel" Property="NameAr" Title="Name (Arabic)" />
+                            <RadzenDataGridColumn TItem="Ceilapp.Models.ceilapp.CourseLevel" Property="Duration" Title="Duration" />
+                            <RadzenDataGridColumn TItem="Ceilapp.Models.ceilapp.CourseLevel" Property="IsActive" Title="Status">
+                                <Template Context="level">
+                                    <RadzenBadge BadgeStyle="@(level.IsActive ? BadgeStyle.Success : BadgeStyle.Danger)" 
+                                        Text="@(level.IsActive ? "Active" : "Inactive")" />
+                                </Template>
+                            </RadzenDataGridColumn>
+                            <RadzenDataGridColumn TItem="Ceilapp.Models.ceilapp.CourseLevel" Property="Course.Image" Title="Course">
+                                <Template Context="level">
+                                    <RadzenImage Path="@level.Course?.Image" Style="height: 32px; width: 32px; object-fit: cover; border-radius: 4px;" />
+                                </Template>
+                            </RadzenDataGridColumn>
+                            <RadzenDataGridColumn TItem="Ceilapp.Models.ceilapp.CourseLevel" Property="CourseLevel1.NameAr" Title="Previous Level" />
+                            <RadzenDataGridColumn TItem="Ceilapp.Models.ceilapp.CourseLevel" Filterable="false" Sortable="false" Width="70px" TextAlign="TextAlign.Center">
+                                <Template Context="courseLevelChild">
+                                    <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="delete" Size="ButtonSize.Small"
+                                        Variant="Variant.Outlined"
+                                        Click=@(args => CourseLevelsDeleteButtonClick(args, courseLevelChild)) @onclick:stopPropagation="true" />
+                                </Template>
+                            </RadzenDataGridColumn>
+                        </Columns>
                     </RadzenDataGrid>
-                </RadzenStack></RadzenColumn>
-      </RadzenRow>
+                </RadzenStack>
+            </RadzenCard>
+        </RadzenColumn>
+    </RadzenRow>
 </RadzenStack>
