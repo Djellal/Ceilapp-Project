@@ -1,4 +1,5 @@
-@page "/add-course"
+@page "/add-course"
+
 @attribute [Authorize]
 
 <PageTitle>Add Course</PageTitle>
@@ -40,7 +41,7 @@
             </RadzenRow>
             <RadzenFormField Text="Image" Variant="Variant.Filled">
                   <ChildContent>
-                    <RadzenTextBox style="display: block; width: 100%" @bind-Value="@(course.Image)" Name="Image" />
+                      <RadzenFileInput TValue="string" @bind-Value="@course.Image"></RadzenFileInput>
                   </ChildContent>    
                   <Helper>
                     <RadzenRequiredValidator Component="Image" Text="Image is required" />

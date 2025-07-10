@@ -39,7 +39,7 @@
             <RadzenImage Path="images/ceillogo.png"  AlternateText="Application logo" Style="height: 96px"></RadzenImage>
         </RadzenStack>
         <RadzenPanelMenu Click="@PanelMenu0Click">
-            <RadzenPanelMenuItem Text="Home" Path="" Icon="home_app_logo" />
+            <RadzenPanelMenuItem Text="@L["PanelMenuItem0.Text"]" Path="" Icon="home_app_logo" />
             <RadzenPanelMenuItem Text="InitApp" Path="init-app" Icon="not_started" Visible="@AppIsInitialized" />
             <RadzenPanelMenuItem Text="Administration" Icon="admin_panel_settings" Visible="Security.IsInRole(Constants.ADMIN)">
                 <RadzenPanelMenuItem Path="appsettings" Text="App Settings" Icon="instant_mix"></RadzenPanelMenuItem>

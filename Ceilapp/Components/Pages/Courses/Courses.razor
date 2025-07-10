@@ -26,8 +26,11 @@
                 <RadzenDataGridColumn TItem="Ceilapp.Models.ceilapp.Course" Property="IsActive" Title="Is Active">
                 </RadzenDataGridColumn>
                 <RadzenDataGridColumn TItem="Ceilapp.Models.ceilapp.Course" Property="Image" Title="Image">
+                    <Template>
+                        <RadzenImage Path="@context.Image" Style="text-align: center; height: 32px"></RadzenImage>
+                    </Template>
                 </RadzenDataGridColumn>
-                <RadzenDataGridColumn TItem="Ceilapp.Models.ceilapp.Course" Property="CourseType.Description" Title="Course Type">
+                <RadzenDataGridColumn TItem="Ceilapp.Models.ceilapp.Course" Property="CourseType.Name" Title="Course Type">
                 </RadzenDataGridColumn>
                 <RadzenDataGridColumn TItem="Ceilapp.Models.ceilapp.Course" Filterable="false" Sortable="false" Width="70px" TextAlign="TextAlign.Center">
                     <Template Context="course">
