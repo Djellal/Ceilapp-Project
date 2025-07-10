@@ -13,8 +13,31 @@
             <RadzenStack AlignItems="Radzen.AlignItems.Center" JustifyContent="Radzen.JustifyContent.SpaceAround" Orientation="Radzen.Orientation.Horizontal">
                 <RadzenButton Text="Login" Icon="login" Size="Radzen.ButtonSize.Large" Click="@LoginButtonClick"></RadzenButton>
             <RadzenButton Text="Register" ButtonStyle="Radzen.ButtonStyle.Info" Icon="how_to_reg" Size="Radzen.ButtonSize.Large"></RadzenButton>
-<RadzenButton Text="Register" ButtonStyle="Radzen.ButtonStyle.Warning" Icon="how_to_reg" Size="Radzen.ButtonSize.Large" Click="@Button2Click"></RadzenButton>
             </RadzenStack>
         </RadzenCard>
     </RadzenColumn>
 </RadzenRow>
+<RadzenCard Style="margin-top: 20px;">
+    <RadzenText TextStyle="TextStyle.H4" Class="rz-mb-4" Text="Available Courses" TextAlign="TextAlign.Center"/>
+    <RadzenDataList TItem="Models.ceilapp.Course" Data="@courses" WrapItems="true" AllowPaging="false" PageSize="10">
+        <Template>
+            <RadzenCard Style="width: 200px; margin: 10px; padding: 15px" Class="course-card">
+                <RadzenStack Orientation="Orientation.Vertical" AlignItems="AlignItems.Center" Gap="1rem">
+                    <RadzenImage Style="height: 100px; width: 100px; object-fit: contain;" Path="@context.Image" Class="rz-mb-2"/>
+                    <RadzenHeading Text="@context.Name" Size="H4" Style="margin: 0;"/>
+                    <RadzenButton Text="Learn More" ButtonStyle="ButtonStyle.Secondary" Size="ButtonSize.Medium" Class="rz-mt-2"/>
+                </RadzenStack>
+            </RadzenCard>
+        </Template>
+    </RadzenDataList>
+</RadzenCard>
+
+<style>
+    .course-card {
+        transition: transform 0.2s ease-in-out;
+    }
+    .course-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+</style>

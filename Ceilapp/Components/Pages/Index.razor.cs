@@ -35,6 +35,11 @@ namespace Ceilapp.Components.Pages
         [Inject]
         protected SecurityService Security { get; set; }
 
+        [Inject]
+        protected Ceilapp.ceilappService ceilappService { get; set; }
+
+        protected System.Linq.IQueryable<Ceilapp.Models.ceilapp.Course> courses;
+
         
 
         protected async System.Threading.Tasks.Task Button2Click(Microsoft.AspNetCore.Components.Web.MouseEventArgs args)
@@ -46,6 +51,11 @@ namespace Ceilapp.Components.Pages
         protected async System.Threading.Tasks.Task LoginButtonClick(Microsoft.AspNetCore.Components.Web.MouseEventArgs args)
         {
             NavigationManager.NavigateTo($"/login");
+        }
+
+        protected override async Task OnInitializedAsync()
+        {
+            courses = await ceilappService.GetCourses();
         }
     }
 }
