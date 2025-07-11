@@ -6,9 +6,9 @@
     <RadzenColumn Size="12">
         <RadzenCard Style="margin-top: 40px; padding: 20px 40px 40px;">
             <RadzenStack AlignItems="Radzen.AlignItems.Center" Gap="0" class="rz-my-6 rz-my-sm-12">
-              <RadzenText Text="Welcome to CEIL-UFAS" TextStyle="Radzen.Blazor.TextStyle.DisplayH3" TextAlign="Radzen.TextAlign.Center" Style="max-width: 800px" class="" />
+              <RadzenText Text="@L["Text0.Text"]" TextStyle="Radzen.Blazor.TextStyle.DisplayH3" TextAlign="Radzen.TextAlign.Center" Style="max-width: 800px" class="" />
               <RadzenHeading Text="Who are we? "></RadzenHeading>
-              <p>Who are we? The Center for Intensive Language Teaching (CEIL-UFAS-1) is part of the university's shared services. We offer comprehensive language teaching services primarily for university community members (students, faculty, and civil servants), while also welcoming external students through partnerships. Join us to enhance your language skills in a professional and supportive environment.</p>
+              <RadzenText Text="@L[""]" Style="text-align: justify; text-transform: none; font-style: italic" />
             </RadzenStack>
             <RadzenStack AlignItems="Radzen.AlignItems.Center" JustifyContent="Radzen.JustifyContent.SpaceAround" Orientation="Radzen.Orientation.Horizontal">
                 <RadzenButton Text="Login" Icon="login" Size="Radzen.ButtonSize.Large" Click="@LoginButtonClick"></RadzenButton>
