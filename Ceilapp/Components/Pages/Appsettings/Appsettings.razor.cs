@@ -58,7 +58,7 @@ namespace Ceilapp.Components.Pages.Appsettings
                         Email = "",
                         WebSite = "https://example.com",
                         Fb = "https://facebook.com/example",
-                        LinkredIn = "https://linkedin.com/in/example",
+                        LinkedIn = "https://linkedin.com/in/example",
                         Youtube = "https://youtube.com/example",
                         Instagram = "https://instagram.com/example",
                         X = "https://x.com/example",

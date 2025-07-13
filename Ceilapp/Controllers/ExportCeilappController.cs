@@ -158,5 +158,33 @@ namespace Ceilapp.Controllers
         {
             return ToExcel(ApplyQuery(await service.GetStates(), Request.Query, false), fileName);
         }
+
+        [HttpGet("/export/ceilapp/evaluations/csv")]
+        [HttpGet("/export/ceilapp/evaluations/csv(fileName='{fileName}')")]
+        public async Task<FileStreamResult> ExportEvaluationsToCSV(string fileName = null)
+        {
+            return ToCSV(ApplyQuery(await service.GetEvaluations(), Request.Query, false), fileName);
+        }
+
+        [HttpGet("/export/ceilapp/evaluations/excel")]
+        [HttpGet("/export/ceilapp/evaluations/excel(fileName='{fileName}')")]
+        public async Task<FileStreamResult> ExportEvaluationsToExcel(string fileName = null)
+        {
+            return ToExcel(ApplyQuery(await service.GetEvaluations(), Request.Query, false), fileName);
+        }
+
+        [HttpGet("/export/ceilapp/groupes/csv")]
+        [HttpGet("/export/ceilapp/groupes/csv(fileName='{fileName}')")]
+        public async Task<FileStreamResult> ExportGroupesToCSV(string fileName = null)
+        {
+            return ToCSV(ApplyQuery(await service.GetGroupes(), Request.Query, false), fileName);
+        }
+
+        [HttpGet("/export/ceilapp/groupes/excel")]
+        [HttpGet("/export/ceilapp/groupes/excel(fileName='{fileName}')")]
+        public async Task<FileStreamResult> ExportGroupesToExcel(string fileName = null)
+        {
+            return ToExcel(ApplyQuery(await service.GetGroupes(), Request.Query, false), fileName);
+        }
     }
 }

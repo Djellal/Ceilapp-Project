@@ -83,7 +83,7 @@ namespace Ceilapp.Components.Pages
                     Email = " ceil@univ-setif.dz",
                     WebSite = " https://ceil.univ-setif.dz",
                     Fb = "https://www.facebook.com/CEIL.SETIF1UNIVERSITY",
-                    LinkredIn = "https://www.linkedin.com/school/universite-ferhat-abbas-setif",
+                    LinkedIn = "https://www.linkedin.com/school/universite-ferhat-abbas-setif",
                     Youtube = "https://www.youtube.com/channel/UCjU0ehPWCFlvCHrfgUt3DOQ",
                     Instagram = "https://www.instagram.com/universite_ferhat_abbas_setif/?hl=fr",
                     X = "https://x.com/UnivFerhatAbbas",

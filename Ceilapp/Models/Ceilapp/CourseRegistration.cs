@@ -77,10 +77,12 @@ namespace Ceilapp.Models.ceilapp
         [Required]
         public decimal PaidFeeValue { get; set; }
 
+        public bool IsReregistration { get; set; }
+
         public bool RegistrationTermsAccepted { get; set; }
 
         public bool RegistrationValidated { get; set; }
 
-        public bool IsReregistration { get; set; }
+        public ICollection<Evaluation> Evaluations { get; set; }
     }
 }

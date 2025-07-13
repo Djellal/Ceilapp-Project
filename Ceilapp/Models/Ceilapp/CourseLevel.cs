@@ -35,5 +35,7 @@ namespace Ceilapp.Models.ceilapp
         public ICollection<CourseLevel> CourseLevels1 { get; set; }
 
         public ICollection<CourseRegistration> CourseRegistrations { get; set; }
+
+        public ICollection<Groupe> Groupes { get; set; }
     }
 }

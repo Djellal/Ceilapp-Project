@@ -30,5 +30,7 @@ namespace Ceilapp.Models.ceilapp
         public ICollection<CourseRegistration> CourseRegistrations { get; set; }
 
         public ICollection<AppSetting> AppSettings { get; set; }
+
+        public ICollection<Groupe> Groupes { get; set; }
     }
 }

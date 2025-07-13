@@ -32,7 +32,7 @@ namespace Ceilapp.Models.ceilapp
         public string Fb { get; set; }
 
         [Required]
-        public string LinkredIn { get; set; }
+        public string LinkedIn { get; set; }
 
         [Required]
         public string Youtube { get; set; }

@@ -15,5 +15,36 @@
                     Register="@Register" AllowRememberMe="true" RememberMe="true"
             />
         </RadzenTemplateForm>
+        <RadzenStack Gap="1.5rem">
+                        <RadzenFormField Text="Email" Variant="Variant.Outlined">
+                            <ChildContent>
+                                <RadzenTextBox class="w-100" 
+                                    @bind-Value="@(user.Email)" 
+                                    Name="UserName"
+                                    Placeholder="Enter your email" />
+                            </ChildContent>
+                            <Helper>
+                                <RadzenRequiredValidator Component="UserName" 
+                                    Text="Email is required" 
+                                    Style="color: var(--rz-danger);" />
+                            </Helper>
+                        </RadzenFormField>
+
+                        <RadzenFormField Text="Password" Variant="Variant.Outlined">
+                            <ChildContent>
+                                <RadzenPassword class="w-100"
+                                    @bind-Value="@(user.Password)" 
+                                    Name="Password"
+                                    Placeholder="Enter your password" />
+                            </ChildContent>
+                            <Helper>
+                                <RadzenRequiredValidator Component="Password" 
+                                    Text="Password is required"
+                                    Style="color: var(--rz-danger);" />
+                            </Helper>
+                        </RadzenFormField>
+
+                       
+                    </RadzenStack>
     </RadzenColumn>
 </RadzenRow>

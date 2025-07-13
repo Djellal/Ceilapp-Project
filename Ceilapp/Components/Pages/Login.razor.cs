@@ -30,6 +30,8 @@ namespace Ceilapp.Components.Pages
         [Inject]
         protected NotificationService NotificationService { get; set; }
 
+        protected Ceilapp.Models.ApplicationUser user;
+
         protected string redirectUrl;
         protected string error;
         protected string info;

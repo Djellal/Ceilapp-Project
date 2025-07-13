@@ -1,0 +1,62 @@
+@page "/edit-groupe"
+@attribute [Authorize]
+
+<PageTitle>Edit Groupe</PageTitle>
+
+    <RadzenColumn SizeMD=12>
+        <RadzenAlert Shade="Shade.Lighter" Variant="Variant.Flat" Size="AlertSize.Small" AlertStyle="AlertStyle.Danger" Visible="@errorVisible">Cannot save Groupe</RadzenAlert>
+        <RadzenTemplateForm TItem="Ceilapp.Models.ceilapp.Groupe" Data="@(groupe)" Visible="@(groupe != null)" Submit="@FormSubmit">
+          <RadzenStack>
+            <RadzenFormField Text="Groupe Name" Variant="Variant.Filled">
+                  <ChildContent>
+                    <RadzenTextBox style="display: block; width: 100%" @bind-Value="@(groupe.GroupeName)" Name="GroupeName" />
+                  </ChildContent>    
+                  <Helper>
+                    <RadzenRequiredValidator Component="GroupeName" Text="GroupeName is required" />
+                  </Helper>
+            </RadzenFormField>
+            <RadzenFormField Text="Teacher Id" Variant="Variant.Filled">
+                  <ChildContent>
+                    <RadzenTextBox style="display: block; width: 100%" @bind-Value="@(groupe.TeacherId)" Name="TeacherId" />
+                  </ChildContent>    
+                  <Helper>
+                    <RadzenRequiredValidator Component="TeacherId" Text="TeacherId is required" />
+                  </Helper>
+            </RadzenFormField>
+            <RadzenFormField Text="Course" Variant="Variant.Filled">
+                  <ChildContent>
+                    <RadzenDropDown Data="@(coursesForCourseId)" TextProperty="Image" ValueProperty="Id" AllowClear=true
+                          style="display: block; width: 100%" @bind-Value="@(groupe.CourseId)" Name="CourseId"
+                           />
+              </ChildContent>
+            </RadzenFormField>
+            <RadzenFormField Text="Course Level" Variant="Variant.Filled">
+                  <ChildContent>
+                    <RadzenDropDown Data="@(courseLevelsForCourseLevelId)" TextProperty="NameAr" ValueProperty="Id" AllowClear=true
+                          style="display: block; width: 100%" @bind-Value="@(groupe.CourseLevelId)" Name="CourseLevelId"
+                           />
+              </ChildContent>
+            </RadzenFormField>
+            <RadzenFormField Text="Session" Variant="Variant.Filled">
+                  <ChildContent>
+                    <RadzenDropDown Data="@(sessionsForCurrentSessionId)" TextProperty="SessionNameAr" ValueProperty="Id" AllowClear=true
+                          style="display: block; width: 100%" @bind-Value="@(groupe.CurrentSessionId)" Name="CurrentSessionId"
+                           />
+              </ChildContent>
+            </RadzenFormField>
+            <RadzenFormField Text="Nbr Places" Variant="Variant.Filled">
+                  <ChildContent>
+                    <RadzenNumeric style="display: block; width: 100%" @bind-Value="@(groupe.NbrPlaces)" Name="NbrPlaces" />
+                  </ChildContent>    
+                  <Helper>
+                    <RadzenRequiredValidator Component="NbrPlaces" Text="NbrPlaces is required" />
+                  </Helper>
+            </RadzenFormField>
+          </RadzenStack>
+          <RadzenStack style="margin-top:1rem;" Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.End" Gap="0.5rem">
+                    <RadzenButton ButtonStyle="ButtonStyle.Primary" ButtonType="ButtonType.Submit" Icon="save" Text="Save" Variant="Variant.Flat" />
+                    <RadzenButton ButtonStyle="ButtonStyle.Light" Text="Cancel" Variant="Variant.Flat" Click="@CancelButtonClick"  />
+          </RadzenStack>
+        </RadzenTemplateForm>
+    </RadzenColumn>
+
