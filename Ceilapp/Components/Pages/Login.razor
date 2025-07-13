@@ -3,7 +3,6 @@
 @page "/login"
 
 <PageTitle>Login</PageTitle>
-<RadzenText Text="Login" TextStyle="Radzen.Blazor.TextStyle.H5" class="mb-4" TagName="Radzen.Blazor.TagName.H2" />
 <RadzenRow>
     <RadzenColumn SizeMD="12">
         <RadzenTemplateForm Action="@($"account/login?redirectUrl={redirectUrl}")" Data="@("login")"
@@ -12,39 +11,8 @@
             <RadzenAlert Shade="Radzen.Shade.Lighter" Variant="Radzen.Variant.Flat" Size="Radzen.AlertSize.Small" AlertStyle="Radzen.AlertStyle.Info" Visible="@infoVisible">@info</RadzenAlert>
             <RadzenLogin AllowResetPassword="true" AllowRegister="true" FormFieldVariant="Variant.Filled"
                     ResetPassword="@ResetPassword"
-                    Register="@Register" AllowRememberMe="true" RememberMe="true"
+                    Register="@Register" AllowRememberMe="true" RememberMe="true" UserText="@L["Login0.UserText"]" UserRequired="@L["Login0.UserRequired"]" PasswordText="@L["Login0.PasswordText"]" PasswordRequired="@L["Login0.PasswordRequired"]" LoginText="@L["Login0.LoginText"]" RegisterMessageText="@L["Login0.RegisterMessageText"]" RememberMeText="@L["Login0.RememberMeText"]" RegisterText="@L["Login0.RegisterText"]"
             />
         </RadzenTemplateForm>
-        <RadzenStack Gap="1.5rem">
-                        <RadzenFormField Text="Email" Variant="Variant.Outlined">
-                            <ChildContent>
-                                <RadzenTextBox class="w-100" 
-                                    @bind-Value="@(user.Email)" 
-                                    Name="UserName"
-                                    Placeholder="Enter your email" />
-                            </ChildContent>
-                            <Helper>
-                                <RadzenRequiredValidator Component="UserName" 
-                                    Text="Email is required" 
-                                    Style="color: var(--rz-danger);" />
-                            </Helper>
-                        </RadzenFormField>
-
-                        <RadzenFormField Text="Password" Variant="Variant.Outlined">
-                            <ChildContent>
-                                <RadzenPassword class="w-100"
-                                    @bind-Value="@(user.Password)" 
-                                    Name="Password"
-                                    Placeholder="Enter your password" />
-                            </ChildContent>
-                            <Helper>
-                                <RadzenRequiredValidator Component="Password" 
-                                    Text="Password is required"
-                                    Style="color: var(--rz-danger);" />
-                            </Helper>
-                        </RadzenFormField>
-
-                       
-                    </RadzenStack>
     </RadzenColumn>
 </RadzenRow>
