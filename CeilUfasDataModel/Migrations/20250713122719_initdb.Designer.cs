@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DataModel.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250619110856_initdb")]
+    [Migration("20250713122719_initdb")]
     partial class initdb
     {
         /// <inheritdoc />
@@ -59,7 +59,7 @@ namespace DataModel.Migrations
                     b.Property<bool>("IsRegistrationOpened")
                         .HasColumnType("boolean");
 
-                    b.Property<string>("LinkredIn")
+                    b.Property<string>("LinkedIn")
                         .IsRequired()
                         .HasMaxLength(250)
                         .HasColumnType("character varying(250)");
@@ -256,6 +256,9 @@ namespace DataModel.Migrations
                         .HasMaxLength(20)
                         .HasColumnType("character varying(20)");
 
+                    b.Property<bool>("IsReregistration")
+                        .HasColumnType("boolean");
+
                     b.Property<string>("LastName")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -338,6 +341,72 @@ namespace DataModel.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("CourseTypes");
+                });
+
+            modelBuilder.Entity("DataModel.Evaluation", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CourseComponentId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("CourseRegistrationId")
+                        .HasColumnType("integer");
+
+                    b.Property<double>("Eval")
+                        .HasColumnType("double precision");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CourseComponentId");
+
+                    b.HasIndex("CourseRegistrationId");
+
+                    b.ToTable("Evaluations");
+                });
+
+            modelBuilder.Entity("DataModel.Groupe", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CourseId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("CourseLevelId")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("CurrentSessionId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("GroupeName")
+                        .IsRequired()
+                        .HasMaxLength(250)
+                        .HasColumnType("character varying(250)");
+
+                    b.Property<int>("NbrPlaces")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("TeacherId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CourseId");
+
+                    b.HasIndex("CourseLevelId");
+
+                    b.HasIndex("CurrentSessionId");
+
+                    b.ToTable("Groupes");
                 });
 
             modelBuilder.Entity("DataModel.Municipality", b =>
@@ -548,6 +617,50 @@ namespace DataModel.Migrations
                     b.Navigation("Profession");
 
                     b.Navigation("Session");
+                });
+
+            modelBuilder.Entity("DataModel.Evaluation", b =>
+                {
+                    b.HasOne("DataModel.Course", "CourseComponent")
+                        .WithMany()
+                        .HasForeignKey("CourseComponentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("DataModel.CourseRegistration", "CourseRegistration")
+                        .WithMany()
+                        .HasForeignKey("CourseRegistrationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("CourseComponent");
+
+                    b.Navigation("CourseRegistration");
+                });
+
+            modelBuilder.Entity("DataModel.Groupe", b =>
+                {
+                    b.HasOne("DataModel.Course", "Course")
+                        .WithMany()
+                        .HasForeignKey("CourseId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("DataModel.CourseLevel", "CourseLevel")
+                        .WithMany()
+                        .HasForeignKey("CourseLevelId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("DataModel.Session", "CurrentSession")
+                        .WithMany()
+                        .HasForeignKey("CurrentSessionId");
+
+                    b.Navigation("Course");
+
+                    b.Navigation("CourseLevel");
+
+                    b.Navigation("CurrentSession");
                 });
 
             modelBuilder.Entity("DataModel.Municipality", b =>

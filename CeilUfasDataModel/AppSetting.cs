@@ -26,7 +26,7 @@ namespace DataModel
         [MaxLength(250)]
         public string FB { get; set; } = string.Empty;
         [MaxLength(250)]
-        public string LinkredIn { get; set; } = string.Empty;
+        public string LinkedIn { get; set; } = string.Empty;
 
         [MaxLength(250)]
         public string Youtube { get; set; } = string.Empty;

@@ -24,4 +24,7 @@ public class ApplicationDbContext : DbContext
     public DbSet<CourseRegistration> CourseRegistrations { get; set; }
     public DbSet<Profession> Professions { get; set; }
 
+    public DbSet<Evaluation> Evaluations { get; set; }
+    public DbSet<Groupe> Groupes { get; set; }
+
 }
