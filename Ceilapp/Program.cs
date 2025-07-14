@@ -35,7 +35,13 @@ builder.Services.AddDbContext<ApplicationIdentityDbContext>(options =>
 {
     options.UseNpgsql(builder.Configuration.GetConnectionString("ceilappConnection"));
 });
-builder.Services.AddIdentity<ApplicationUser, ApplicationRole>().AddEntityFrameworkStores<ApplicationIdentityDbContext>().AddDefaultTokenProviders();
+builder.Services.AddIdentity<ApplicationUser, ApplicationRole>(options => {
+    options.Password.RequiredLength = 6;
+    options.Password.RequireUppercase = false;
+    options.Password.RequireNonAlphanumeric = false;
+    options.Password.RequireLowercase = false;
+    options.Password.RequireDigit = false;
+}).AddEntityFrameworkStores<ApplicationIdentityDbContext>().AddDefaultTokenProviders();
 builder.Services.AddControllers().AddOData(o =>
 {
     var oDataBuilder = new ODataConventionModelBuilder();
