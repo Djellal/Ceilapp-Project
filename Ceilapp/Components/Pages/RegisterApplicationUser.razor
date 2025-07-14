@@ -1,85 +1,95 @@
+@layout LoginLayout
 @page "/register-application-user"
 
-@attribute [Authorize]
 
 @inject Microsoft.Extensions.Localization.IStringLocalizer<RegisterApplicationUser> L
 <PageTitle>Register Application User</PageTitle>
 
-<div class="container">
-    <RadzenRow Class="justify-content-center">
-        <RadzenColumn SizeMD="8" SizeLG="6" SizeXL="4">
-            <div class="card shadow-sm p-4 mt-4">
-                <h2 class="text-center mb-4">Create New Account</h2>
+<div class="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 py-12 px-4 sm:px-6 lg:px-8">
+    <RadzenRow Class="justify-content-center" AlignItems="Radzen.AlignItems.Center" JustifyContent="Radzen.JustifyContent.Center">
+        <RadzenColumn SizeSM="11" SizeMD="8" SizeLG="6" SizeXL="4" Size="12">
+            <div class="bg-white rounded-xl shadow-lg p-6 sm:p-8">
+                <div class="text-center">
+                    <h1 class="text-3xl font-bold text-gray-900 mb-2">Create Account</h1>
+                    <p class="text-gray-600 mb-6">Join our community today</p>
+                </div>
+
                 <RadzenTemplateForm Data="@user" TItem="Ceilapp.Models.ApplicationUser"
                     Visible="@(user != null)" Submit="@FormSubmit">
                     
-                    <RadzenAlert class="mb-4" Shade="Shade.Dark" Variant="Variant.Filled" 
-                        Size="AlertSize.Small" AlertStyle="AlertStyle.Danger" 
-                        Visible="@errorVisible">@error</RadzenAlert>
+                    <RadzenAlert class="mb-6" Shade="Shade.Lighter" Variant="Variant.Flat" 
+                        Size="AlertSize.Medium" AlertStyle="AlertStyle.Danger" 
+                        Visible="@errorVisible">
+                        <div class="flex items-center">
+                            <i class="material-icons mr-2">error_outline</i>
+                            <span>@error</span>
+                        </div>
+                    </RadzenAlert>
 
-                    <RadzenStack Gap="1.5rem">
-                        <RadzenFormField Text="Email" Variant="Variant.Outlined">
+                    <RadzenStack Gap="2rem">
+                        <RadzenFormField Text="Email Address" Variant="Variant.Filled">
                             <ChildContent>
                                 <RadzenTextBox class="w-100" 
-                                    @bind-Value="@(user.Email)" 
-                                    Name="UserName"
-                                    Placeholder="Enter your email" />
+                                                                    @bind-Value="@(user.Email)" 
+                                                                    Name="UserName"
+                                                                    Placeholder="you@example.com"
+                                                                    aria-label="Email address input" />
                             </ChildContent>
                             <Helper>
                                 <RadzenRequiredValidator Component="UserName" 
-                                    Text="Email is required" 
-                                    Style="color: var(--rz-danger);" />
+                                    Text="Please enter your email address" 
+                                    Style="color: var(--rz-danger-lighter);" />
                             </Helper>
                         </RadzenFormField>
 
-                        <RadzenFormField Text="Password" Variant="Variant.Outlined">
+                        <RadzenFormField Text="Password" Variant="Variant.Filled">
                             <ChildContent>
                                 <RadzenPassword class="w-100"
                                     @bind-Value="@(user.Password)" 
                                     Name="Password"
-                                    Placeholder="Enter your password" />
+                                    Placeholder="••••••••"
+                                    aria-label="Password input" />
                             </ChildContent>
                             <Helper>
                                 <RadzenRequiredValidator Component="Password" 
-                                    Text="Password is required"
-                                    Style="color: var(--rz-danger);" />
+                                    Text="Please enter a password"
+                                    Style="color: var(--rz-danger-lighter);" />
                             </Helper>
                         </RadzenFormField>
 
-                        <RadzenFormField Text="Confirm Password" Variant="Variant.Outlined">
+                        <RadzenFormField Text="Confirm Password" Variant="Variant.Filled">
                             <ChildContent>
                                 <RadzenPassword class="w-100"
                                     @bind-Value="@(user.ConfirmPassword)" 
                                     Name="ConfirmPassword"
-                                    Placeholder="Confirm your password" />
+                                    Placeholder="••••••••"
+                                    aria-label="Confirm password input" />
                             </ChildContent>
                             <Helper>
                                 <RadzenRequiredValidator Component="ConfirmPassword" 
-                                    Text="Password confirmation is required"
-                                    Style="color: var(--rz-danger);" />
+                                    Text="Please confirm your password"
+                                    Style="color: var(--rz-danger-lighter);" />
                             </Helper>
                         </RadzenFormField>
                     </RadzenStack>
 
-                    <RadzenStack class="mt-4" 
-                        Orientation="Orientation.Horizontal" 
-                        AlignItems="AlignItems.Center" 
-                        JustifyContent="JustifyContent.Center" 
-                        Gap="1rem">
+                    <div class="mt-8 space-y-4 sm:space-y-0 sm:flex sm:justify-between sm:items-center">
                         <RadzenButton ButtonType="ButtonType.Submit" 
-                            Icon="person_add" 
+                            Icon="how_to_reg"
                             Text="Create Account" 
                             IsBusy="@isBusy" 
-                            BusyText="Creating account..." 
+                            BusyText="Setting up your account..." 
                             ButtonStyle="ButtonStyle.Primary"
                             Size="ButtonSize.Large"
-                            class="px-5" />
+                            class="w-full sm:w-auto px-8 py-3 rounded-lg shadow-sm hover:shadow-md transition-all" />
+                        
                         <RadzenButton ButtonStyle="ButtonStyle.Light" 
                             Text="Cancel" 
                             Click="@CancelClick" 
-                            Variant="Variant.Outlined"
-                            Size="ButtonSize.Large" />
-                    </RadzenStack>
+                            Variant="Variant.Text"
+                            Size="ButtonSize.Large"
+                            class="w-full sm:w-auto hover:bg-gray-50 transition-colors" />
+                    </div>
                 </RadzenTemplateForm>
             </div>
         </RadzenColumn>

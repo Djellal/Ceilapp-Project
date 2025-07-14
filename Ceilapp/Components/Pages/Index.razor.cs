@@ -57,5 +57,10 @@ namespace Ceilapp.Components.Pages
         {
             courses = await ceilappService.GetCourses();
         }
+
+        protected async System.Threading.Tasks.Task RegisterButtonClick(Microsoft.AspNetCore.Components.Web.MouseEventArgs args)
+        {
+            NavigationManager.NavigateTo($"/register-application-user");
+        }
     }
 }
