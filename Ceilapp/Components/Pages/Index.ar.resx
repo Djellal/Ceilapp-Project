@@ -57,6 +57,18 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="Heading0.Text" xml:space="preserve">
+    <value>@context.NameAr</value>
+  </data>
+  <data name="Text2.Text" xml:space="preserve">
+    <value>الدورات المتاحة</value>
+  </data>
+  <data name="Button1.Text" xml:space="preserve">
+    <value>تسجيل</value>
+  </data>
+  <data name="Button0.Text" xml:space="preserve">
+    <value>تسجيل الدخول</value>
+  </data>
   <data name="Text1.Text" xml:space="preserve">
     <value>مركز تعليم اللغات المكثف (CEIL-UFAS-1) هو جزء من الخدمات المشتركة للجامعة. نقدم خدمات شاملة لتدريس اللغات، موجهة بالأساس لأعضاء مجتمع الجامعة (الطلاب وأعضاء هيئة التدريس والموظفين الحكوميين)، كما نرحب بالطلاب الخارجيين من خلال شراكاتنا. انضم إلينا لتطوير مهاراتك اللغوية في بيئة مهنية وداعمة.</value>
   </data>
@@ -64,6 +76,6 @@
     <value>من نحن؟ يُعد مركز تعليم اللغات المكثف (CEIL-UFAS-1) جزءًا من الخدمات المشتركة للجامعة. نقدم خدمات شاملة لتدريس اللغات، موجهة بالأساس لأعضاء مجتمع الجامعة (الطلاب وأعضاء هيئة التدريس والموظفين الحكوميين)، كما نرحب بالطلاب الخارجيين من خلال شراكاتنا. انضم إلينا لتطوير مهاراتك اللغوية في بيئة مهنية وداعمة.</value>
   </data>
   <data name="Text0.Text" xml:space="preserve">
-    <value>مرحباً بكم في CEIL-UFAS</value>
+    <value>CEIL-UFAS مرحباً بكم في </value>
   </data>
 </root>

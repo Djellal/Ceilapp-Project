@@ -1,7 +1,6 @@
 @layout LoginLayout
 @page "/register-application-user"
 
-
 @inject Microsoft.Extensions.Localization.IStringLocalizer<RegisterApplicationUser> L
 <PageTitle>Register Application User</PageTitle>
 
@@ -11,7 +10,6 @@
             <div class="bg-white rounded-xl shadow-lg p-6 sm:p-8">
                 <div class="text-center">
                     <h1 class="text-3xl font-bold text-gray-900 mb-2">Create Account</h1>
-                    <p class="text-gray-600 mb-6">Join our community today</p>
                 </div>
 
                 <RadzenTemplateForm Data="@user" TItem="Ceilapp.Models.ApplicationUser"
@@ -21,7 +19,7 @@
                         Size="AlertSize.Medium" AlertStyle="AlertStyle.Danger" 
                         Visible="@errorVisible">
                         <div class="flex items-center">
-                            <i class="material-icons mr-2">error_outline</i>
+                            <i class="bi bi-exclamation-triangle-fill me-2"></i>
                             <span>@error</span>
                         </div>
                     </RadzenAlert>
@@ -29,11 +27,14 @@
                     <RadzenStack Gap="2rem">
                         <RadzenFormField Text="Email Address" Variant="Variant.Filled">
                             <ChildContent>
-                                <RadzenTextBox class="w-100" 
-                                                                    @bind-Value="@(user.Email)" 
-                                                                    Name="UserName"
-                                                                    Placeholder="you@example.com"
-                                                                    aria-label="Email address input" />
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-envelope-fill"></i></span>
+                                    <RadzenTextBox class="w-100" 
+                                        @bind-Value="@(user.Email)" 
+                                        Name="UserName"
+                                        Placeholder="you@example.com"
+                                        aria-label="Email address input" />
+                                </div>
                             </ChildContent>
                             <Helper>
                                 <RadzenRequiredValidator Component="UserName" 
@@ -44,11 +45,14 @@
 
                         <RadzenFormField Text="Password" Variant="Variant.Filled">
                             <ChildContent>
-                                <RadzenPassword class="w-100"
-                                    @bind-Value="@(user.Password)" 
-                                    Name="Password"
-                                    Placeholder="••••••••"
-                                    aria-label="Password input" />
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-lock-fill"></i></span>
+                                    <RadzenPassword class="w-100"
+                                        @bind-Value="@(user.Password)" 
+                                        Name="Password"
+                                        Placeholder="••••••••"
+                                        aria-label="Password input" />
+                                </div>
                             </ChildContent>
                             <Helper>
                                 <RadzenRequiredValidator Component="Password" 
@@ -59,11 +63,14 @@
 
                         <RadzenFormField Text="Confirm Password" Variant="Variant.Filled">
                             <ChildContent>
-                                <RadzenPassword class="w-100"
-                                    @bind-Value="@(user.ConfirmPassword)" 
-                                    Name="ConfirmPassword"
-                                    Placeholder="••••••••"
-                                    aria-label="Confirm password input" />
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-shield-lock-fill"></i></span>
+                                    <RadzenPassword class="w-100"
+                                        @bind-Value="@(user.ConfirmPassword)" 
+                                        Name="ConfirmPassword"
+                                        Placeholder="••••••••"
+                                        aria-label="Confirm password input" />
+                                </div>
                             </ChildContent>
                             <Helper>
                                 <RadzenRequiredValidator Component="ConfirmPassword" 
@@ -75,20 +82,21 @@
 
                     <div class="mt-8 space-y-4 sm:space-y-0 sm:flex sm:justify-between sm:items-center">
                         <RadzenButton ButtonType="ButtonType.Submit" 
-                            Icon="how_to_reg"
+                           
                             Text="Create Account" 
                             IsBusy="@isBusy" 
                             BusyText="Setting up your account..." 
                             ButtonStyle="ButtonStyle.Primary"
                             Size="ButtonSize.Large"
-                            class="w-full sm:w-auto px-8 py-3 rounded-lg shadow-sm hover:shadow-md transition-all" />
+                            Icon="how_to_reg" Style="width: 100%" />
                         
-                        <RadzenButton ButtonStyle="ButtonStyle.Light" 
+                        <RadzenButton ButtonStyle="Radzen.ButtonStyle.Light" 
+                           
                             Text="Cancel" 
                             Click="@CancelClick" 
-                            Variant="Variant.Text"
+                            Variant="Radzen.Variant.Filled"
                             Size="ButtonSize.Large"
-                            class="w-full sm:w-auto hover:bg-gray-50 transition-colors" />
+                            Icon="cancel" Style="width: 100%" />
                     </div>
                 </RadzenTemplateForm>
             </div>

@@ -57,6 +57,15 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="Text2.Text" xml:space="preserve">
+    <value>Available Courses</value>
+  </data>
+  <data name="Button1.Text" xml:space="preserve">
+    <value>Register</value>
+  </data>
+  <data name="Button0.Text" xml:space="preserve">
+    <value>Login</value>
+  </data>
   <data name="Text1.Text" xml:space="preserve">
     <value>The Center for Intensive Language Teaching (CEIL-UFAS-1) is part of the university's shared services. We offer comprehensive language teaching services primarily for university community members (students, faculty, and civil servants), while also welcoming external students through partnerships. Join us to enhance your language skills in a professional and supportive environment.</value>
   </data>
