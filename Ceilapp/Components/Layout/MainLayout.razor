@@ -54,10 +54,9 @@
             <RadzenPanelMenuItem Path="login" Text="Login" Icon="passkey" Visible="!Security.IsAuthenticated()"></RadzenPanelMenuItem>
             <RadzenPanelMenuItem Text="Logout" Icon="logout" Value=@Logout Visible="Security.IsAuthenticated()"></RadzenPanelMenuItem>
         </RadzenPanelMenu>
-        <RadzenStack AlignItems="Radzen.AlignItems.Center" Gap="0.5rem" class="rz-py-4 rz-py-lg-6 contact-info-section" Style="padding: var(--rz-panel-menu-item-padding); background: var(--rz-base-100); background-color: #eeeeee" Visible="AppSettings is not null">
+        <RadzenCard>
             <RadzenText Text="@AppSettings.OrganizationName" TextStyle="Radzen.Blazor.TextStyle.H6" TagName="Radzen.Blazor.TagName.H6" TextAlign="Radzen.TextAlign.Center" class="rz-mb-3" Style="color: var(--rz-primary); font-weight: bold;" />
-            
-            <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="0.5rem" class="contact-item hover-effect">
+               <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="0.5rem" class="contact-item hover-effect">
                 <i class="bi bi-geo-alt" style="color: var(--rz-secondary)"></i>
                 <RadzenText Text="@AppSettings.Address" TextStyle="Radzen.Blazor.TextStyle.Body2" Style="transition: all 0.3s ease;" />
             </RadzenStack>
@@ -100,13 +99,16 @@
                 {
                     <i class="bi bi-youtube social-icon" style="font-size: 1.5rem; cursor: pointer; transition: all 0.3s ease; color: var(--rz-primary);" @onclick="() => OpenSocialLink(AppSettings.Youtube)"></i>
                 }
+               
+                
             </RadzenStack>
-             <RadzenStack AlignItems="Radzen.AlignItems.Center" Gap="0" class="rz-py-4 rz-py-lg-6 footer-section" Style="padding: var(--rz-panel-menu-item-padding); background: var(--rz-base-200); width: 100%">
-            <RadzenText Text="Ceilapp v1.0.0" TextStyle="Radzen.Blazor.TextStyle.Caption" TagName="Radzen.Blazor.TagName.P" TextAlign="Radzen.TextAlign.Center" Style="color: var(--rz-text-secondary)" />
-            <RadzenText Text="Copyright Ⓒ 2025" TextStyle="Radzen.Blazor.TextStyle.Caption" class="rz-mb-0" TagName="Radzen.Blazor.TagName.P" TextAlign="Radzen.TextAlign.Center" Style="color: var(--rz-text-secondary);" />
-        </RadzenStack>
-        </RadzenStack>
-       
+
+            <RadzenStack AlignItems="Radzen.AlignItems.Center" Gap="0.5rem" class="rz-py-4 rz-py-lg-6 contact-info-section" Style="padding: var(--rz-panel-menu-item-padding); background: var(--rz-base-100);" Visible="AppSettings is not null">
+                <RadzenText Text="Ceilapp v1.0.0" TextStyle="Radzen.Blazor.TextStyle.Caption" TagName="Radzen.Blazor.TagName.P" TextAlign="Radzen.TextAlign.Center" Style="color: var(--rz-text-secondary)" />
+                <RadzenText Text="Copyright Ⓒ 2025" TextStyle="Radzen.Blazor.TextStyle.Caption" class="rz-mb-0" TagName="Radzen.Blazor.TagName.P" TextAlign="Radzen.TextAlign.Center" Style="color: var(--rz-text-secondary);" />
+            </RadzenStack>
+        
+       </RadzenCard>
 
 <style>
     .contact-item:hover {

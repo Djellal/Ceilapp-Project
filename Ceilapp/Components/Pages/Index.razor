@@ -4,14 +4,11 @@
 @inject Microsoft.Extensions.Localization.IStringLocalizer<Index> L
 
 
-<RadzenCard Style="background: linear-gradient(135deg, #ffffff, #f8f9fa); border: none; box-shadow: 0 10px 20px rgba(0,0,0,0.05); padding-bottom: 20px; padding-top: 0px; background-color: var(--rz-base-100)">
-
-    <RadzenStack AlignItems="Radzen.AlignItems.Center" Gap="1.5rem" class="rz-my-6 rz-my-sm-12">
-        <RadzenImage Path="images/ceillogo.png" Style="width: 150px"></RadzenImage>
-        <RadzenText Text="@L["Text0.Text"]" TextStyle="Radzen.Blazor.TextStyle.DisplayH3" TextAlign="Radzen.TextAlign.Center" Style="max-width: 800px; color: #2a2a2a; font-family: 'Times New Roman'" />
-        <RadzenText Text="@L["Text1.Text"]" Style="text-align: justify; text-transform: none; font-style: italic; color: #666; line-height: 1.6; max-width: 700px;" />
-    </RadzenStack>
-    <RadzenStack AlignItems="Radzen.AlignItems.Center" JustifyContent="Radzen.JustifyContent.SpaceAround" Orientation="Radzen.Orientation.Horizontal" Gap="2rem">
+<RadzenCard Style="text-align: center; padding-top: 0px">
+    <RadzenImage Path="images/ceillogo.png" Style="width: 150px"></RadzenImage>
+    <RadzenText Text="@L["Text0.Text"]" TextStyle="Radzen.Blazor.TextStyle.DisplayH3" TextAlign="Radzen.TextAlign.Center" Style="max-width: 800px; font-family: 'Times New Roman'" />
+    <RadzenText Text="@L["Text1.Text"]" Style="text-align: center; text-transform: none; font-style: italic; line-height: 1.6" />
+    <RadzenStack AlignItems="Radzen.AlignItems.Center" JustifyContent="Radzen.JustifyContent.SpaceAround" Orientation="Radzen.Orientation.Horizontal" Gap="2rem" Style="margin-top: 16px">
         <RadzenButton Text="@L["Button0.Text"]" Icon="login" Size="Radzen.ButtonSize.Large" 
                     Click="@LoginButtonClick"
                     Style="background: #007bff; padding: 0.8rem 2rem; font-weight: 600;"
@@ -21,15 +18,14 @@
                     Style="padding: 0.8rem 2rem; font-weight: 600;"
                     class="auth-button" Click="@RegisterButtonClick"></RadzenButton>
     </RadzenStack>
-    
 </RadzenCard>
-<RadzenCard Style="margin-top: 40px; padding: 30px; background: #ffffff; border: none; box-shadow: 0 5px 15px rgba(0,0,0,0.05);">
-    <RadzenText TextStyle="TextStyle.H4" Class="rz-mb-6" Text="@L["Text2.Text"]" TextAlign="TextAlign.Center" Style="color: #2a2a2a; font-weight: 700;"/>
+<RadzenCard>
+    <RadzenText TextStyle="TextStyle.H4" Class="rz-mb-6" Text="@L["Text2.Text"]" TextAlign="TextAlign.Center" Style="font-weight: 700"/>
     <RadzenDataList TItem="Models.ceilapp.Course" Data="@courses" WrapItems="true" AllowPaging="false" PageSize="10" Style="gap: 20px;">
         <Template>
             <RadzenCard Style="width: 250px; margin: 10px; padding: 20px; border-radius: 12px;" Class="course-card">
                 <RadzenStack Orientation="Orientation.Vertical" AlignItems="AlignItems.Center" Gap="1.5rem">
-                    <div class="image-container">
+                    <div class="image-container" style="background-color: rgba(255, 255, 255, 0)">
                         <RadzenImage Style="height: 140px; width: 140px; object-fit: cover; border-radius: 8px;" Path="@context.Image" Class="rz-mb-2"/>
                     </div>
                     <RadzenHeading Text="@context.Name" Size="H4" Style="margin: 0; color: #2a2a2a; font-weight: 600; text-align: center;"/>
