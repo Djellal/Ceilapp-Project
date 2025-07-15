@@ -66,4 +66,7 @@
   <data name="Fieldset0.Text" xml:space="preserve">
     <value>المعلومات الشخصية</value>
   </data>
+  <data name="Alert0.Text" xml:space="preserve">
+    <value>Cannot save registration</value>
+  </data>
 </root>

@@ -53,10 +53,8 @@
             <RadzenPanelMenuItem Text="Course Registration" Path="edit-course-registration/true" Icon="app_registration" Visible="Security.IsInRole(Constants.STUDENT)" />
             <RadzenPanelMenuItem Path="login" Text="Login" Icon="passkey" Visible="!Security.IsAuthenticated()"></RadzenPanelMenuItem>
             <RadzenPanelMenuItem Text="Logout" Icon="logout" Value=@Logout Visible="Security.IsAuthenticated()"></RadzenPanelMenuItem>
-            <RadzenPanelMenuItem Text="Groupes" Path="groupes" />
-            <RadzenPanelMenuItem Text="Evaluations" Path="evaluations" />
         </RadzenPanelMenu>
-        <RadzenStack AlignItems="Radzen.AlignItems.Center" Gap="0.5rem" class="rz-py-4 rz-py-lg-6 contact-info-section" Style="padding: var(--rz-panel-menu-item-padding); background: var(--rz-base-100);" Visible="AppSettings is not null">
+        <RadzenStack AlignItems="Radzen.AlignItems.Center" Gap="0.5rem" class="rz-py-4 rz-py-lg-6 contact-info-section" Style="padding: var(--rz-panel-menu-item-padding); background: var(--rz-base-100); background-color: #eeeeee" Visible="AppSettings is not null">
             <RadzenText Text="@AppSettings.OrganizationName" TextStyle="Radzen.Blazor.TextStyle.H6" TagName="Radzen.Blazor.TagName.H6" TextAlign="Radzen.TextAlign.Center" class="rz-mb-3" Style="color: var(--rz-primary); font-weight: bold;" />
             
             <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="0.5rem" class="contact-item hover-effect">

@@ -9,12 +9,14 @@
         <RadzenTemplateForm TItem="Ceilapp.Models.ceilapp.CourseRegistration" Data="@(courseRegistration)" Visible="@(courseRegistration != null)" Submit="@FormSubmit">
           <RadzenStack>
             <RadzenAlert Title="@courseRegistration.InscriptionCode" AllowClose="false" AlertStyle="Radzen.AlertStyle.Primary" Icon="barcode"></RadzenAlert>
-            <RadzenFieldset Text="@L["Fieldset0.Text"]" Icon="personal_injury" AllowCollapse="false">
+           
+            <RadzenAlert Size="Radzen.AlertSize.Small" AllowClose="false" AlertStyle="Radzen.AlertStyle.Info" Icon="personal_injury" Text="@L["Fieldset0.Text"]"></RadzenAlert>
+            <RadzenFieldset Text="" Icon="" AllowCollapse="false">
                 <RadzenRow Style="margin-top: 1em">
                     <RadzenColumn Size="12" SizeXS="6">
                         <RadzenFormField Text="First Name" Variant="Variant.Filled" Style="width: 100%">
                               <ChildContent>
-                                <RadzenTextBox style="display: block; width: 100%" @bind-Value="@(courseRegistration.FirstName)" Name="FirstName" Placeholder="@L["FirstName.Placeholder"]" />
+                                <RadzenTextBox style="display: block; width: 100%" @bind-Value="@(courseRegistration.FirstName)" Name="FirstName" Placeholder="@L["FirstName.Placeholder"]" Trim="true" />
                               </ChildContent>    
                               <Helper>
                                 <RadzenRequiredValidator Component="FirstName" Text="FirstName is required" />
@@ -24,7 +26,7 @@
                     <RadzenColumn Size="12" SizeXS="6">
                         <RadzenFormField Text="Last Name" Variant="Variant.Filled" Style="width: 100%">
                               <ChildContent>
-                                <RadzenTextBox style="display: block; width: 100%" @bind-Value="@(courseRegistration.LastName)" Name="LastName" Placeholder="@L["LastName.Placeholder"]" />
+                                <RadzenTextBox style="display: block; width: 100%" @bind-Value="@(courseRegistration.LastName)" Name="LastName" Placeholder="@L["LastName.Placeholder"]" Trim="true" />
                               </ChildContent>    
                               <Helper>
                                 <RadzenRequiredValidator Component="LastName" Text="LastName is required" />
