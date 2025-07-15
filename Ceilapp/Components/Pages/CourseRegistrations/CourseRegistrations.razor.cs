@@ -46,8 +46,7 @@ namespace Ceilapp.Components.Pages.CourseRegistrations
 
         protected async Task AddButtonClick(MouseEventArgs args)
         {
-            await DialogService.OpenAsync<NewCourseRegistration>("Add CourseRegistration", null);
-            await grid0.Reload();
+           
         }
 
         protected async Task EditRow(Ceilapp.Models.ceilapp.CourseRegistration args)
