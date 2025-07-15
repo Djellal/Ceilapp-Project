@@ -1,11 +1,11 @@
-@page "/registration"
+@page "/registration/{isnew:bool}"
 
 @attribute [Authorize]
 
 <PageTitle>Registration</PageTitle>
 <RadzenStack>
-    <RadzenAlert AlertStyle="Radzen.AlertStyle.Danger" Shade="Radzen.Shade.Light" AllowClose="false" @bind-Visible="@errorVisible" Size="Radzen.AlertSize.Small" Title="@L["Alert0.Title"]"></RadzenAlert>
-    <RadzenFieldset Text="@L["Fieldset0.Text"]" Icon="account_circle">
+    <RadzenAlert AlertStyle="Radzen.AlertStyle.Danger" Shade="Radzen.Shade.Light" AllowClose="false" @bind-Visible="@errorVisible" Size="Radzen.AlertSize.Small" Title="@L["ErrorSaving"]"></RadzenAlert>
+    <RadzenFieldset Text="@L["PersonelInfos"]" Icon="account_circle">
          <RadzenRow style="margin-bottom: 1rem">
             <RadzenColumn SizeMD="3">
                 <RadzenLabel Text="Inscription Code" Component="InscriptionCode" style="width: 100%" />
@@ -16,7 +16,7 @@
         </RadzenRow>
         <RadzenRow style="margin-bottom: 1rem">
             <RadzenColumn SizeMD="3">
-                <RadzenLabel Text="@L["Label1.Text"]" Component="FirstName" style="width: 100%" />
+                <RadzenLabel Component="FirstName" style="width: 100%" Text="@L["FirstName"]" />
             </RadzenColumn>
             <RadzenColumn SizeMD="9">
               <RadzenTextBox style="display: block; width: 100%" @bind-Value="courseRegistration.FirstName" Name="FirstName" />

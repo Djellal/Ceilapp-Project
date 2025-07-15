@@ -41,8 +41,11 @@ namespace Ceilapp.Components.Pages.CourseRegistrations
 
         [Parameter]
         public bool isnew { get; set; } = true;
+
         [Inject]
         protected SecurityService Security { get; set; }
+
+        
 
         protected Ceilapp.Models.ceilapp.CourseRegistration courseRegistration = new Ceilapp.Models.ceilapp.CourseRegistration();
         private bool errorVisible;
