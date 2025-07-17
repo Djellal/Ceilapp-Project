@@ -2,7 +2,6 @@
 @inject CookieThemeService CookieThemeService
 @inject Microsoft.Extensions.Localization.IStringLocalizer<MainLayout> L
 <RadzenComponents />
-
 <RadzenLayout style="grid-template-areas: 'rz-sidebar rz-header' 'rz-sidebar rz-body';">
     <RadzenHeader>
         <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceBetween" class="rz-py-2 rz-px-4" Style="border-bottom: var(--rz-panel-border);">
@@ -10,14 +9,13 @@
                 <RadzenSidebarToggle Click="@SidebarToggleClick" />
             </RadzenStack>
             <RadzenStack AlignItems="AlignItems.Center" Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.End" Gap="0.5rem">
-                <CulturePicker />
                 <RadzenAppearanceToggle />
                 <RadzenProfileMenu Visible="@Security.IsAuthenticated()" Click="@ProfileMenuClick">
                     <ChildContent>
-                        <RadzenProfileMenuItem Path="profile" Icon="settings" Text="Profile" />
-                        <RadzenProfileMenuItem Path="application-users" Icon="person" Text="Users" />
-                        <RadzenProfileMenuItem Path="application-roles" Icon="security" Text="Roles" />
-                        <RadzenProfileMenuItem Text="Logout" Value="@Logout" Icon="power_settings_new" />
+                        <RadzenProfileMenuItem Path="profile" Icon="settings" Text="Profil" />
+                        <RadzenProfileMenuItem Path="application-users" Icon="person" Text="Utilisateurs" />
+                        <RadzenProfileMenuItem Path="application-roles" Icon="security" Text="Rôles" />
+                        <RadzenProfileMenuItem Text="Déconnexion" Value="@Logout" Icon="power_settings_new" />
                     </ChildContent>
                     <Template>
                         @Security.User?.Name
@@ -36,24 +34,23 @@
     </RadzenBody>
     <RadzenSidebar @bind-Expanded="@sidebarExpanded" style="z-index: 2; border-right: var(--rz-panel-border);">
         <RadzenStack AlignItems="Radzen.AlignItems.Center" class="rz-py-4 rz-py-lg-6" Style="padding: var(--rz-panel-menu-item-padding); border-bottom: var(--rz-panel-menu-item-border);">
-            <RadzenImage Path="images/ceillogo.png"  AlternateText="Application logo" Style="height: 96px"></RadzenImage>
+            <RadzenImage Path="images/ceillogo.png"  AlternateText="Logo de l'application" Style="height: 96px"></RadzenImage>
         </RadzenStack>
         <RadzenPanelMenu Click="@PanelMenu0Click">
-            <RadzenPanelMenuItem Text="@L["PanelMenuItem0.Text"]" Path="" Icon="home_app_logo" />
+            <RadzenPanelMenuItem Text="Accueil" Path="" Icon="home_app_logo" />
             <RadzenPanelMenuItem Text="InitApp" Path="init-app" Icon="not_started" Visible="@AppIsInitialized" />
             <RadzenPanelMenuItem Text="Administration" Icon="admin_panel_settings" Visible="Security.IsInRole(Constants.ADMIN)">
-                <RadzenPanelMenuItem Path="appsettings" Text="App Settings" Icon="instant_mix"></RadzenPanelMenuItem>
+                <RadzenPanelMenuItem Path="appsettings" Text="Paramètres" Icon="instant_mix"></RadzenPanelMenuItem>
                 <RadzenPanelMenuItem Path="sessions" Text="Sessions" Icon="date_range"></RadzenPanelMenuItem>
-                <RadzenPanelMenuItem Path="courses" Text="Courses" Icon="book_3"></RadzenPanelMenuItem>
-                <RadzenPanelMenuItem Path="course-types" Text="CourseTypes" Icon="category"></RadzenPanelMenuItem>
-                <RadzenPanelMenuItem Path="states" Text="States" Icon="distance"></RadzenPanelMenuItem>
+                <RadzenPanelMenuItem Path="courses" Text="Cours" Icon="book_3"></RadzenPanelMenuItem>
+                <RadzenPanelMenuItem Path="course-types" Text="Types de cours" Icon="category"></RadzenPanelMenuItem>
+                <RadzenPanelMenuItem Path="states" Text="États" Icon="distance"></RadzenPanelMenuItem>
                 <RadzenPanelMenuItem Path="professions" Text="Professions" Icon="work"></RadzenPanelMenuItem>
             </RadzenPanelMenuItem>
-            <RadzenPanelMenuItem Path="course-registrations" Text="Course Registrations" Icon="user_attributes" Visible="Security.IsInRole(Constants.ADMIN)"></RadzenPanelMenuItem>
-            <RadzenPanelMenuItem Text="Course Registration" Path="edit-course-registration/true" Icon="app_registration" Visible="Security.IsInRole(Constants.STUDENT)" />
-            <RadzenPanelMenuItem Path="login" Text="Login" Icon="passkey" Visible="!Security.IsAuthenticated()"></RadzenPanelMenuItem>
-            <RadzenPanelMenuItem Text="Logout" Icon="logout" Value=@Logout Visible="Security.IsAuthenticated()"></RadzenPanelMenuItem>
-            <RadzenPanelMenuItem Text="Registration" Path="registration/true" Icon="app_registration" />
+            <RadzenPanelMenuItem Path="course-registrations" Text="Liste d'Inscriptions" Icon="user_attributes" Visible="Security.IsInRole(Constants.ADMIN)"></RadzenPanelMenuItem>
+            <RadzenPanelMenuItem Text="S'inscrire" Path="edit-course-registration/true" Icon="app_registration" Visible="Security.IsInRole(Constants.STUDENT)" />
+            <RadzenPanelMenuItem Path="login" Text="Connexion" Icon="passkey" Visible="!Security.IsAuthenticated()"></RadzenPanelMenuItem>
+            <RadzenPanelMenuItem Text="Se déconnecter" Icon="logout" Value=@Logout Visible="Security.IsAuthenticated()"></RadzenPanelMenuItem>
         </RadzenPanelMenu>
         <RadzenCard>
             <RadzenText Text="@AppSettings.OrganizationName" TextStyle="Radzen.Blazor.TextStyle.H6" TagName="Radzen.Blazor.TagName.H6" TextAlign="Radzen.TextAlign.Center" class="rz-mb-3" Style="color: var(--rz-primary); font-weight: bold;" />
@@ -100,13 +97,11 @@
                 {
                     <i class="bi bi-youtube social-icon" style="font-size: 1.5rem; cursor: pointer; transition: all 0.3s ease; color: var(--rz-primary);" @onclick="() => OpenSocialLink(AppSettings.Youtube)"></i>
                 }
-               
-                
             </RadzenStack>
 
             <RadzenStack AlignItems="Radzen.AlignItems.Center" Gap="0.5rem" class="rz-py-4 rz-py-lg-6 contact-info-section" Style="padding: var(--rz-panel-menu-item-padding); background: var(--rz-base-100);" Visible="AppSettings is not null">
                 <RadzenText Text="Ceilapp v1.0.0" TextStyle="Radzen.Blazor.TextStyle.Caption" TagName="Radzen.Blazor.TagName.P" TextAlign="Radzen.TextAlign.Center" Style="color: var(--rz-text-secondary)" />
-                <RadzenText Text="Copyright Ⓒ 2025" TextStyle="Radzen.Blazor.TextStyle.Caption" class="rz-mb-0" TagName="Radzen.Blazor.TagName.P" TextAlign="Radzen.TextAlign.Center" Style="color: var(--rz-text-secondary);" />
+                <RadzenText Text="Tous droits réservés Ⓒ 2025" TextStyle="Radzen.Blazor.TextStyle.Caption" class="rz-mb-0" TagName="Radzen.Blazor.TagName.P" TextAlign="Radzen.TextAlign.Center" Style="color: var(--rz-text-secondary);" />
             </RadzenStack>
         
        </RadzenCard>
