@@ -58,12 +58,12 @@ namespace Ceilapp.Components.Pages
         {
             var result = await DialogService.OpenAsync<RegisterApplicationUser>("Register Application User");
 
-            if (result == true)
-            {
-                infoVisible = true;
+            // if (result == true)
+            // {
+            //     infoVisible = true;
 
-                info = "Registration accepted. Please check your email for further instructions.";
-            }
+            //     info = "Registration accepted. Please check your email for further instructions.";
+            // }
         }
 
         protected async Task ResetPassword()

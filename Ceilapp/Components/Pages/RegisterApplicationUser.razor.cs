@@ -49,9 +49,12 @@ namespace Ceilapp.Components.Pages
             {
                 isBusy = true;
                 await Security.RegisterWithRole(user.Email, user.Password, Constants.STUDENT);
+                NavigationManager.NavigateTo($"/login");
                 // await Security.Register(user.Email, user.Password);
 
-                DialogService.Close(true);
+                //DialogService.Close(true);
+
+
             }
             catch (Exception ex)
             {
