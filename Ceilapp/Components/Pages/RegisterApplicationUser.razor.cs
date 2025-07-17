@@ -64,7 +64,8 @@ namespace Ceilapp.Components.Pages
 
         protected async Task CancelClick()
         {
-            DialogService.Close(false);
+            await JSRuntime.InvokeVoidAsync("window.history.back");
+
         }
     }
 }
