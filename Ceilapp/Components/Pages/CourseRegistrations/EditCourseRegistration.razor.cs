@@ -135,6 +135,7 @@ namespace Ceilapp.Components.Pages.CourseRegistrations
         {
             courseRegistration = new Models.ceilapp.CourseRegistration();
             courseRegistration.RegistrationDate = DateTime.Now;
+            courseRegistration.BirthDate = DateTime.Now.AddYears(-20);
             courseRegistration.UserId = Security.User.Id;
             courseRegistration.SessionId = CurrentSession?.Id ?? 0; // Ensure SessionId is set to the current session
             courseRegistration.InscriptionCode = CurrentSession?.SessionCode + "/..";
@@ -168,6 +169,20 @@ namespace Ceilapp.Components.Pages.CourseRegistrations
             }
             
             
+        }
+
+        protected async System.Threading.Tasks.Task BirthStateIdChange(System.Object args)
+        {
+           try
+           { 
+            municipalitiesForBirthMunicipalityId = await ceilappService.GetMunicipalities(new Radzen.Query { Filter = "i => i.StateId == @0", FilterParameters = new object[] { @args } });
+            
+           }
+           catch (Exception ex)
+           {
+                NotificationService.Notify(new NotificationMessage { Severity = NotificationSeverity.Error, Summary = "Erreur", Detail = ex.Message });
+           }
+          
         }
     }
 

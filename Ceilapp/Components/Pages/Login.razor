@@ -9,7 +9,7 @@
             Method="post">
             <RadzenAlert Shade="Radzen.Shade.Lighter" Variant="Radzen.Variant.Flat" Size="Radzen.AlertSize.Small" AlertStyle="Radzen.AlertStyle.Danger" Visible="@errorVisible">@error</RadzenAlert>
             <RadzenAlert Shade="Radzen.Shade.Lighter" Variant="Radzen.Variant.Flat" Size="Radzen.AlertSize.Small" AlertStyle="Radzen.AlertStyle.Info" Visible="@infoVisible">@info</RadzenAlert>
-            <RadzenLogin AllowResetPassword="true" AllowRegister="true" FormFieldVariant="Variant.Filled"
+            <RadzenLogin AllowResetPassword="false" AllowRegister="false" FormFieldVariant="Variant.Filled"
                     ResetPassword="@ResetPassword"
                     Register="@Register" AllowRememberMe="true" RememberMe="true" UserText="Nom d'utilisateur" UserRequired="Le nom d'utilisateur est requis" PasswordText="Mot de passe " PasswordRequired="Mot de passe  est requit" ResetPasswordText="Mot de passe oublié ?" RememberMeText="souviens-toi de moi" LoginText="Connexion" RegisterText="Inscription" RegisterMessageText="Vous n'avez pas encore de compte ?"
             />

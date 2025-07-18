@@ -11,11 +11,11 @@
         <RadzenButton Icon="login" Size="Radzen.ButtonSize.Large" 
                     Click="@LoginButtonClick"
                     Style="background: #007bff; padding: 0.8rem 2rem; font-weight: 600;"
-                    class="auth-button" Text="Se connecter"></RadzenButton>
+                    class="auth-button" Text="Se connecter" Visible="!Security.IsAuthenticated()"></RadzenButton>
         <RadzenButton ButtonStyle="Radzen.ButtonStyle.Success" 
                     Icon="how_to_reg" Size="Radzen.ButtonSize.Large"
                     Style="padding: 0.8rem 2rem; font-weight: 600;"
-                    class="auth-button" Click="@RegisterButtonClick" Text="S'enregistrer"></RadzenButton>
+                    class="auth-button" Click="@RegisterButtonClick" Text="S'enregistrer" Visible="!Security.IsAuthenticated()"></RadzenButton>
     </RadzenStack>
 </RadzenCard>
 <RadzenCard Style="margin-top: 2em">
