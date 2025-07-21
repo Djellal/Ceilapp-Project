@@ -156,19 +156,36 @@ namespace Ceilapp.Components.Pages.CourseRegistrations
 
         protected async System.Threading.Tasks.Task CourseIdChange(System.Object args)
         {
-            var selectedCourse = coursesForCourseId.FirstOrDefault(x => x.Id == (int)args);
-            if (selectedCourse != null)
+            try
             {
-                courseLevelsForCourseLevelId = await ceilappService.dbContext.CourseLevels
-                    .Where(x => x.CourseId == selectedCourse.Id)
-                    .ToListAsync();
-                if(isnew)
+                courseLevelsForCourseLevelId = await ceilappService.GetCourseLevels(new Radzen.Query { Filter = "i => i.CourseId == @0", FilterParameters = new object[] { args } });
+                if (isnew)
                 {
-                    courseRegistration.CourseLevelId = courseLevelsForCourseLevelId.FirstOrDefault()?.Id ?? 0;
+                    courseRegistration.CourseLevelId = courseLevelsForCourseLevelId?.FirstOrDefault()?.Id ?? 0;
                 }
+                else
+                    await GetNextLevel();
             }
-            
-            
+            catch (Exception ex)
+            {
+
+                NotificationService.Notify(new NotificationMessage
+                {
+                    Severity = NotificationSeverity.Error,
+                    Summary = "Error",
+                    Detail = ex.Message + "\r\n" + ex.InnerException?.Message,
+                    Duration = 4000
+                });
+            }
+        }
+        protected async System.Threading.Tasks.Task GetNextLevel()
+        {
+            NotificationService.Notify(new NotificationMessage { 
+                Severity = NotificationSeverity.Info, 
+                Summary = "Info", 
+                Detail = "This feature is not implemented yet.",
+                Duration = 4000
+            });
         }
 
         protected async System.Threading.Tasks.Task BirthStateIdChange(System.Object args)

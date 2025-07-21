@@ -35,7 +35,7 @@ namespace Ceilapp.Components.Layout
         [Inject]
         protected NotificationService NotificationService { get; set; }
 
-        private bool sidebarExpanded = false;
+        private bool sidebarExpanded = true;
 
         [Inject]
         protected SecurityService Security { get; set; }

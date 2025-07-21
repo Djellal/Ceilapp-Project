@@ -7,6 +7,8 @@ using Ceilapp.Models;
 using Microsoft.AspNetCore.OData;
 using Microsoft.OData.ModelBuilder;
 using Microsoft.AspNetCore.Components.Authorization;
+using Ceilapp.Models.ceilapp;
+using Ceilapp.Data.Seeders;
 
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 var builder = WebApplication.CreateBuilder(args);
@@ -78,5 +80,11 @@ app.UseAuthentication();
 app.UseAuthorization();
 app.UseAntiforgery();
 app.MapRazorComponents<App>().AddInteractiveServerRenderMode();
+
+// Run migrations
 app.Services.CreateScope().ServiceProvider.GetRequiredService<ApplicationIdentityDbContext>().Database.Migrate();
+
+// Seed Algerian locations (states and municipalities)
+AlgerianLocationSeeder.SeedAlgerianLocations(app);
+
 app.Run("http://localhost:5111");
