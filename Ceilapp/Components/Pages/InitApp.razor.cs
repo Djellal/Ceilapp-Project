@@ -88,10 +88,36 @@ namespace Ceilapp.Components.Pages
                     Instagram = "https://www.instagram.com/universite_ferhat_abbas_setif/?hl=fr",
                     X = "https://x.com/UnivFerhatAbbas",
                     Logo = "https://example.com/logo.png",
-                    TermsAndConditions = "Default Terms and Conditions",
+                   
                     IsRegistrationOpened = false,
                     MaxRegistrationPerSession = 2,
-                    CurrentSessionId = 1
+                    CurrentSessionId = 1,
+                    TermsAndConditions = @"
+                        <p><strong>مقتطفات من القانون الداخلي للمركز:</strong></p>
+                        <ul>
+                          <li>يجب الالتزام بالقانون الداخلي لجامعة فرحات عباس وأي إخلال به يؤدي إلى الإقصاء المباشر من المركز.</li>
+                          <li>لا يمكن بأي حال من الأحوال التحويل بين الأفواج بعد انتهاء الآجال المخصصة لذلك.</li>
+                          <li>لا يمكن استرداد مبلغ التسجيل لأي سبب من الأسباب كما لا يمكن الرجاء التسجيل في دورة أخرى.</li>
+                          <li>تؤدي الغيابات المتكررة إلى الإقصاء المباشر دون أي تعويض.</li>
+                          <li>يتم الاعتماد عن المعدل لتحديد المستوى إلى تصنيف المعني في المستوى الأدنى ولا يعاد الامتحان إلا إذا تم تبرير معقول.</li>
+                          <li>يكون اختيار الأفواج حسب الحصص المتوفرة والتي تكون موزعة.</li>
+                          <li>لا يمكن تغيير الفوج عند نفس الأستاذ ونفس المستوى فقط.</li>
+                          <li>يتم التكوين بشهادة مستوى للطالب الناجح وشهادة مشاركة للطالب الراسب.</li>
+                        </ul>
+
+                         <br/>
+                        <p><strong>Extraits du règlement intérieur du centre :</strong></p>
+                        <ul>
+                          <li>Le respect du règlement intérieur de l’université Ferhat Abbas est obligatoire ; toute infraction entraîne l’exclusion immédiate du centre.</li>
+                          <li>Aucun transfert entre groupes n’est autorisé après l’expiration des délais prévus à cet effet.</li>
+                          <li>Aucun remboursement des frais d’inscription n’est possible pour quelque raison que ce soit ; aucune nouvelle inscription à une autre session n’est acceptée.</li>
+                          <li>Les absences répétées entraînent l’exclusion immédiate sans compensation.</li>
+                          <li>Le classement de l’étudiant dans un niveau inférieur est basé sur la moyenne, et aucun examen de rattrapage ne sera organisé sauf en cas de justification valable.</li>
+                          <li>Le choix des groupes se fait selon les places disponibles et leur répartition.</li>
+                          <li>Il est interdit de changer de groupe avec le même enseignant et au même niveau.</li>
+                          <li>Une attestation de niveau est délivrée à l’étudiant ayant réussi, et une attestation de participation à l’étudiant ajourné.</li>
+                        </ul>
+                        ",
 
                 };
                 await ceilappdb.CreateAppSetting(appSetting);
