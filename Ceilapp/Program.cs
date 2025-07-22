@@ -85,6 +85,8 @@ app.MapRazorComponents<App>().AddInteractiveServerRenderMode();
 app.Services.CreateScope().ServiceProvider.GetRequiredService<ApplicationIdentityDbContext>().Database.Migrate();
 
 // Seed Algerian locations (states and municipalities)
-AlgerianLocationSeeder.SeedAlgerianLocations(app);
+DBSeeder.SeedAlgerianLocations(app);
+DBSeeder.SeedAppRoles(app);
+await DBSeeder.SeedAppData(app);
 
 app.Run("http://localhost:5111");

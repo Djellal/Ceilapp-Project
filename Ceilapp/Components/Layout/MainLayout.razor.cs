@@ -61,25 +61,7 @@ namespace Ceilapp.Components.Layout
             }
         }
 
-        protected override async Task OnInitializedAsync()
-        {
-            try
-            {
-                AppSettings = await ceilappdb.GetAppSettingById(1);
-                AppIsInitialized =  !(ceilappdb.dbContext.Professions.Any() &&  ceilappdb.dbContext.CourseTypes.Any());
-            }
-            catch (Exception ex)
-            {
-                NotificationService.Notify(new NotificationMessage { Severity = NotificationSeverity.Error, Summary = "Error", Detail = ex.Message });
-            }
-            //var roles = await Security.GetRoles(); // Await the Task to get the actual IEnumerable<ApplicationRole>
-
-            
-               
-           
-        }
-
-        protected async Task NewCourseRegistration()
+       protected async Task NewCourseRegistration()
         {
             // await DialogService.OpenAsync<EditCourseRegistration>("Edit CourseRegistration", new Dictionary<string, object> { { "mode", "create" } });
             NavigationManager.NavigateTo($"/new-course-registration/create", true);

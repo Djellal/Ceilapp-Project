@@ -38,7 +38,6 @@
         </RadzenStack>
         <RadzenPanelMenu Click="@PanelMenu0Click">
             <RadzenPanelMenuItem Text="Accueil" Path="" Icon="home_app_logo" />
-            <RadzenPanelMenuItem Text="InitApp" Path="init-app" Icon="not_started" Visible="@AppIsInitialized" />
             <RadzenPanelMenuItem Text="Administration" Icon="admin_panel_settings" Visible="Security.IsInRole(Constants.ADMIN)">
                 <RadzenPanelMenuItem Path="appsettings" Text="Paramètres" Icon="instant_mix"></RadzenPanelMenuItem>
                 <RadzenPanelMenuItem Path="sessions" Text="Sessions" Icon="date_range"></RadzenPanelMenuItem>
