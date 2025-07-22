@@ -43,9 +43,19 @@ namespace Ceilapp.Components.Layout
         [Inject]
         protected ceilappService ceilappdb { get; set; }
         public AppSetting AppSettings { get; private set; }
-
-        public bool AppIsInitialized { get; private set; } = false;
-
+       
+protected override async Task OnInitializedAsync()
+        {
+            try
+            {
+                AppSettings = await ceilappdb.GetAppSettingById(1);               
+            }
+            catch (Exception ex)
+            {
+                NotificationService.Notify(new NotificationMessage { Severity = NotificationSeverity.Error, Summary = "Error", Detail = ex.Message });
+            }         
+           
+        }
         public string Logout = "Logout";
 
         void SidebarToggleClick()
