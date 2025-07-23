@@ -77,5 +77,10 @@ namespace Ceilapp.Components.Pages
                 info = "Password reset successfully. Please check your email for further instructions.";
             }
         }
+
+        protected async System.Threading.Tasks.Task Button0Click(Microsoft.AspNetCore.Components.Web.MouseEventArgs args)
+        {
+            NavigationManager.NavigateTo($"/register-application-user");
+        }
     }
 }
