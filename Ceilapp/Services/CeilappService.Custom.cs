@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using Radzen;
 
 using Ceilapp.Data;
+using Ceilapp.Models.ceilapp;
 
 namespace Ceilapp
 {
@@ -30,5 +31,8 @@ namespace Ceilapp
                 .Where(x => x.CourseId == courseId)
                 .ToListAsync();
         }
-     }
+
+
+        
+    }
 }

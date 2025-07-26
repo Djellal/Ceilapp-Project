@@ -69,7 +69,7 @@
                     <RadzenFormField Text="State" Variant="Variant.Filled" Style="width: 100%">
                           <ChildContent>
                             <RadzenDropDown Data="@(statesForBirthStateId)" TextProperty="Name" ValueProperty="Id" AllowClear=true
-                                  style="display: block; width: 100%" @bind-Value="@(courseRegistration.BirthStateId)" Name="BirthStateId" Change="@BirthStateIdChange"
+                                  style="display: block; width: 100%" @bind-Value="@(courseRegistration.BirthStateId)" Name="BirthStateId" Change="@BirthStateIdChange" AllowFiltering="true"
                                    />
                       </ChildContent>
                     </RadzenFormField>
@@ -78,7 +78,7 @@
                     <RadzenFormField Text="Municipality" Variant="Variant.Filled" Style="width: 100%">
                           <ChildContent>
                             <RadzenDropDown Data="@(municipalitiesForBirthMunicipalityId)" TextProperty="Name" ValueProperty="Id" AllowClear=true
-                                  style="display: block; width: 100%" @bind-Value="@(courseRegistration.BirthMunicipalityId)" Name="BirthMunicipalityId"
+                                  style="display: block; width: 100%" @bind-Value="@(courseRegistration.BirthMunicipalityId)" Name="BirthMunicipalityId" AllowFiltering="true"
                                    />
                       </ChildContent>
                     </RadzenFormField>
@@ -112,7 +112,7 @@
                 <RadzenColumn Size="12" SizeXS="6">
                    <RadzenFormField Text="Profession" Variant="Variant.Filled" Style="width: 100%">
                   <ChildContent>
-                    <RadzenDropDown Data="@(professionsForProfessionId)" TextProperty="NameAr" ValueProperty="Id" AllowClear=true
+                    <RadzenDropDown Data="@(professionsForProfessionId)" TextProperty="Name" ValueProperty="Id" AllowClear=true
                           style="display: block; width: 100%" @bind-Value="@(courseRegistration.ProfessionId)" Name="ProfessionId" Change="@ProfessionIdChange"
                            />
               </ChildContent>
@@ -145,7 +145,7 @@
             
             
             
-          <RadzenFieldset Text="Terms & Conditions" Icon="gavel" Style="margin-top: 1rem; margin-bottom: 1rem; background-color: rgba(150, 150, 150, 0)">
+          <RadzenFieldset Text="Terms & Conditions" Icon="gavel" Style="margin-top: 1rem; margin-bottom: 1rem; background-color: rgba(150, 150, 150, 0)" Visible="Security.IsInRole(Constants.STUDENT)">
               <div class="form-group mb-3">
                 @if (!string.IsNullOrEmpty(AppSetting?.TermsAndConditions))
                 {
@@ -234,9 +234,9 @@
             
            
           </RadzenStack>
-          <RadzenStack style="margin-top:1rem;" Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.End" Gap="0.5rem">
-                    <RadzenButton ButtonStyle="ButtonStyle.Primary" ButtonType="ButtonType.Submit" Icon="save" Text="Save" Variant="Variant.Flat" />
-                    <RadzenButton ButtonStyle="ButtonStyle.Light" Text="Cancel" Variant="Variant.Flat" Click="@CancelButtonClick"  />
+          <RadzenStack style="margin-top:1rem;" Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="Radzen.JustifyContent.SpaceAround" Gap="0.5rem">
+                    <RadzenButton ButtonStyle="ButtonStyle.Primary" ButtonType="Radzen.ButtonType.Button" Icon="save" Text="Save" Variant="Variant.Flat" Size="Radzen.ButtonSize.Large" Disabled="@(!courseRegistration.RegistrationTermsAccepted)" Click="@Button1Click" />
+                    <RadzenButton ButtonStyle="ButtonStyle.Light" Text="Cancel" Variant="Variant.Flat" Click="@CancelButtonClick" Size="Radzen.ButtonSize.Large" Icon="close"  />
           </RadzenStack>
         </RadzenTemplateForm>
         

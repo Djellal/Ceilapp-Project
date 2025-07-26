@@ -50,6 +50,7 @@
             <RadzenPanelMenuItem Text="S'inscrire" Path="edit-course-registration/true" Icon="app_registration" Visible="Security.IsInRole(Constants.STUDENT)" />
             <RadzenPanelMenuItem Path="login" Text="Connexion" Icon="passkey" Visible="!Security.IsAuthenticated()"></RadzenPanelMenuItem>
             <RadzenPanelMenuItem Text="Se déconnecter" Icon="logout" Value=@Logout Visible="Security.IsAuthenticated()"></RadzenPanelMenuItem>
+            <RadzenPanelMenuItem Text="Dashboard" Path="student-dashboard" Icon="dashboard" />
         </RadzenPanelMenu>
         <RadzenCard>
             @if (AppSettings != null)

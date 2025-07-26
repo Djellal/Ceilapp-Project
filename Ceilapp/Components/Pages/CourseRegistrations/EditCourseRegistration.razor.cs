@@ -1,15 +1,17 @@
+using Ceilapp.Components.Pages.Sessions;
+using Ceilapp.Models.ceilapp;
+using DocumentFormat.OpenXml.InkML;
+using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Web;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure.Internal;
+using Microsoft.JSInterop;
+using Radzen;
+using Radzen.Blazor;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.JSInterop;
-using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Web;
-using Radzen;
-using Radzen.Blazor;
-using Microsoft.EntityFrameworkCore.Infrastructure.Internal;
-using Ceilapp.Models.ceilapp;
-using Microsoft.EntityFrameworkCore;
 
 namespace Ceilapp.Components.Pages.CourseRegistrations
 {
@@ -45,9 +47,6 @@ namespace Ceilapp.Components.Pages.CourseRegistrations
 
         protected override async Task OnInitializedAsync()
         {
-
-
-
             statesForBirthStateId = await ceilappService.GetStates();
 
             municipalitiesForBirthMunicipalityId = await ceilappService.GetMunicipalities();
@@ -109,22 +108,7 @@ namespace Ceilapp.Components.Pages.CourseRegistrations
 
         protected async Task FormSubmit()
         {
-            try
-            {
-                if (isnew)
-                {
-                    await ceilappService.CreateCourseRegistration(courseRegistration);
-                }
-                else
-                {
-                    await ceilappService.UpdateCourseRegistration(Id, courseRegistration);
-                }
-                DialogService.Close(courseRegistration);
-            }
-            catch (Exception ex)
-            {
-                errorVisible = true;
-            }
+            
         }
 
         protected async Task CancelButtonClick(MouseEventArgs args)
@@ -200,6 +184,52 @@ namespace Ceilapp.Components.Pages.CourseRegistrations
                 NotificationService.Notify(new NotificationMessage { Severity = NotificationSeverity.Error, Summary = "Erreur", Detail = ex.Message });
            }
           
+        }
+
+
+
+        protected async System.Threading.Tasks.Task Button1Click(Microsoft.AspNetCore.Components.Web.MouseEventArgs args)
+        {
+            try
+            {
+                if (isnew)
+                {
+                    courseRegistration.InscriptionCode = GenerateInscriptionCode();
+                    await ceilappService.CreateCourseRegistration(courseRegistration);
+                    NavigationManager.NavigateTo($"/student-dashboard");
+                }
+                else
+                {
+                    await ceilappService.UpdateCourseRegistration(Id, courseRegistration);
+                }
+                
+            }
+            catch (Exception ex)
+            {
+                NotificationService.Notify(NotificationSeverity.Error, "Error", ex.Message + "\r\n" + ex.InnerException?.Message, 5000);
+            }
+        }
+
+        private string GenerateInscriptionCode()
+        {
+           
+            if (CurrentSession == null)
+            {
+                return string.Empty; // or throw an exception if preferred
+            }
+
+            int count = ceilappService.dbContext.CourseRegistrations.Count(x => x.SessionId == CurrentSession.Id) + 1;
+
+
+
+            string code = $"{CurrentSession.SessionCode}-{count:0000}";
+
+            while (ceilappService.dbContext.CourseRegistrations.Any(reg => reg.InscriptionCode == code))
+            {
+                code = $"{CurrentSession.SessionCode}-{++count:0000}";
+            }
+
+            return code;
         }
     }
 
