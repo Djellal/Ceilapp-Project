@@ -34,7 +34,7 @@
     </RadzenBody>
     <RadzenSidebar @bind-Expanded="@sidebarExpanded" style="z-index: 2; border-right: var(--rz-panel-border);">
         <RadzenStack AlignItems="Radzen.AlignItems.Center" class="rz-py-4 rz-py-lg-6" Style="padding: var(--rz-panel-menu-item-padding); border-bottom: var(--rz-panel-menu-item-border);">
-            <RadzenImage Path="images/ceillogo.png"  AlternateText="Logo de l'application" Style="height: 96px"></RadzenImage>
+            <RadzenImage Path="images/ceillogo.png"  AlternateText="Logo de l'application" Style="height: 96px" Click="@Image0Click"></RadzenImage>
         </RadzenStack>
         <RadzenPanelMenu Click="@PanelMenu0Click">
             <RadzenPanelMenuItem Text="Accueil" Path="" Icon="home_app_logo" />

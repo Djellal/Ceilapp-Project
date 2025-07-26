@@ -89,5 +89,10 @@ protected override async Task OnInitializedAsync()
         {
             await JSRuntime.InvokeVoidAsync("open", link);
         }
+
+        protected async System.Threading.Tasks.Task Image0Click(Microsoft.AspNetCore.Components.Web.MouseEventArgs args)
+        {
+            NavigationManager.NavigateTo($"/");
+        }
     }
 }

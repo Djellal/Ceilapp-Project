@@ -71,16 +71,21 @@ namespace Ceilapp.Components.Pages
             {
                 // Fix CS8072: Remove null-propagating operator in expression tree
                 // Fix CS1061: Use Microsoft.EntityFrameworkCore for ToListAsync
-                currentRegistrations = await ceilappService.dbContext.CourseRegistrations
+                currentRegistrations = await ceilappService.dbContext.CourseRegistrations.Include(r=>r.Course).Include(r=>r.CourseLevel)
                     .Where(r => r.UserId == studentId && r.SessionId == CurrentSession.Id)
                     .ToListAsync();
 
-                previousRegistrations = await ceilappService.dbContext.CourseRegistrations
+                previousRegistrations = await ceilappService.dbContext.CourseRegistrations.Include(r=>r.Course).Include(r=>r.CourseLevel)
                     .Where(r => r.UserId == studentId && r.SessionId != CurrentSession.Id)
                     .ToListAsync();
             }
         }
 
 
+
+        protected async System.Threading.Tasks.Task Button1Click(Microsoft.AspNetCore.Components.Web.MouseEventArgs args)
+        {
+            NavigationManager.NavigateTo($"/edit-course-registration/false");
+        }
     }
 }

@@ -28,10 +28,12 @@
                     <RadzenDataList TItem="CourseRegistration" Data="@currentRegistrations" WrapItems="true">
                         <Template>
                             <RadzenCard class="mb-4 shadow-sm hover-shadow transition-all">
-                                <RadzenStack Gap="1.5rem">
+                            
+                                <RadzenStack Gap="1.5rem" Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.Start" AlignItems="Radzen.AlignItems.Center">
+                                <RadzenImage Path="@context.Course?.Image" Style="width: 64px; height: 64px"></RadzenImage>
                                     <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.Start" Gap="1rem" Class="align-items-center">
                                         <div class="bg-primary bg-opacity-10 p-3 rounded-circle">
-                                            <i class="bi bi-book fs-4 text-primary"></i>
+                                            
                                         </div>
                                         <RadzenText TextStyle="TextStyle.H5" class="mb-0 fw-bold">@context.Course?.Name</RadzenText>
                                     </RadzenStack>
@@ -55,6 +57,7 @@
                                                 <span class="badge rounded-pill bg-success-subtle text-success px-3 py-2">
                                                     <i class="bi bi-check-circle me-1"></i>Validated
                                                 </span>
+                                                                                           
                                             }
                                             else
                                             {
@@ -63,6 +66,7 @@
                                                 </span>
                                             }
                                         </div>
+                                        <div><RadzenButton Icon="visibility" Size="Radzen.ButtonSize.Small" Click="@Button1Click"></RadzenButton></div>
                                     </RadzenStack>
                                 </RadzenStack>
                             </RadzenCard>
