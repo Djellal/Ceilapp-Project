@@ -47,7 +47,7 @@
                 <RadzenPanelMenuItem Path="professions" Text="Professions" Icon="work"></RadzenPanelMenuItem>
             </RadzenPanelMenuItem>
             <RadzenPanelMenuItem Path="course-registrations" Text="Liste d'Inscriptions" Icon="user_attributes" Visible="Security.IsInRole(Constants.ADMIN)"></RadzenPanelMenuItem>
-            <RadzenPanelMenuItem Text="S'inscrire" Path="edit-course-registration/true" Icon="app_registration" Visible="Security.IsInRole(Constants.STUDENT)" />
+            <RadzenPanelMenuItem Text="S'inscrire" Path="edit-course-registration/true/0" Icon="app_registration" Visible="Security.IsInRole(Constants.STUDENT)" />
             <RadzenPanelMenuItem Path="login" Text="Connexion" Icon="passkey" Visible="!Security.IsAuthenticated()"></RadzenPanelMenuItem>
             <RadzenPanelMenuItem Text="Se déconnecter" Icon="logout" Value=@Logout Visible="Security.IsAuthenticated()"></RadzenPanelMenuItem>
             <RadzenPanelMenuItem Text="Dashboard" Path="student-dashboard" Icon="dashboard" />

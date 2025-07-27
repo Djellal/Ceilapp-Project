@@ -1,14 +1,15 @@
+using Ceilapp.Models.ceilapp;
+using DocumentFormat.OpenXml.InkML;
+using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Web;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.JSInterop;
+using Radzen;
+using Radzen.Blazor;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.JSInterop;
-using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Web;
-using Radzen;
-using Radzen.Blazor;
-using Ceilapp.Models.ceilapp;
-using Microsoft.EntityFrameworkCore;
 
 
 namespace Ceilapp.Components.Pages
@@ -81,11 +82,6 @@ namespace Ceilapp.Components.Pages
             }
         }
 
-
-
-        protected async System.Threading.Tasks.Task Button1Click(Microsoft.AspNetCore.Components.Web.MouseEventArgs args)
-        {
-            NavigationManager.NavigateTo($"/edit-course-registration/false");
-        }
+        
     }
 }
