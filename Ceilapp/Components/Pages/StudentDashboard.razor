@@ -3,15 +3,16 @@
 @using Ceilapp.Models.ceilapp
 @attribute [Authorize]
 
-<PageTitle>Student Dashboard</PageTitle>
+<PageTitle>Tableau de bord étudiant</PageTitle>
 
 <div class="container-fluid py-4">
     <RadzenStack Gap="2rem">
         <RadzenCard class="shadow-lg rounded-4 border-0">
             <RadzenCardHeader class="bg-primary bg-opacity-10 border-bottom">
-                <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="1rem">
+                <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="1rem" JustifyContent="Radzen.JustifyContent.SpaceBetween">
                     <i class="bi bi-calendar-check fs-3 text-primary"></i>
-                    <RadzenText TextStyle="TextStyle.H5" class="mb-0 fw-bold">Current Session Registrations</RadzenText>
+                    <RadzenText TextStyle="TextStyle.H5" class="mb-0 fw-bold">Inscriptions de la session actuelle</RadzenText>
+                    <RadzenButton Text="S'inscrire à un cours" Icon="add_circle" ButtonStyle="Radzen.ButtonStyle.Success" Class="mt-3" />
                 </RadzenStack>
             </RadzenCardHeader>
             <div class="p-4">
@@ -19,8 +20,7 @@
                 {
                     <div class="text-center p-5">
                         <i class="bi bi-inbox fs-1 text-muted opacity-50"></i>
-                        <p class="mt-3 text-muted">No registrations found for the current session</p>
-                        <RadzenButton Text="Register for a Course" Icon="add_circle" ButtonStyle="ButtonStyle.Light" Class="mt-3" />
+                        <p class="mt-3 text-muted">Aucune inscription trouvée pour la session actuelle</p>                        
                     </div>
                 }
                 else
@@ -55,18 +55,18 @@
                                             @if (context.RegistrationValidated)
                                             {
                                                 <span class="badge rounded-pill bg-success-subtle text-success px-3 py-2">
-                                                    <i class="bi bi-check-circle me-1"></i>Validated
+                                                    <i class="bi bi-check-circle me-1"></i>Validée
                                                 </span>
                                                                                            
                                             }
                                             else
                                             {
                                                 <span class="badge rounded-pill bg-warning-subtle text-warning px-3 py-2">
-                                                    <i class="bi bi-clock me-1"></i>Pending
+                                                    <i class="bi bi-clock me-1"></i>En attente
                                                 </span>
                                             }
                                         </div>                                        
-                                        <div><RadzenLink Text="Show inscription detail" Path="@($"/edit-course-registration/false/{context.Id}")" Icon="visibility"></RadzenLink></div>
+                                        <div><RadzenLink Text="Voir les détails de l'inscription" Path="@($"/edit-course-registration/false/{context.Id}")" Icon="visibility"></RadzenLink></div>
                                     </RadzenStack>
                                 </RadzenStack>
                                 
@@ -77,11 +77,11 @@
             </div>
         </RadzenCard>
 
-        <RadzenCard class="shadow-lg rounded-4 border-0">
+         <RadzenCard class="shadow-lg rounded-4 border-0">
             <RadzenCardHeader class="bg-primary bg-opacity-10 border-bottom">
                 <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="1rem">
-                    <i class="bi bi-clock-history fs-3 text-primary"></i>
-                    <RadzenText TextStyle="TextStyle.H5" class="mb-0 fw-bold">Previous Sessions Registrations</RadzenText>
+                    <i class="bi bi-calendar-check fs-3 text-primary"></i>
+                    <RadzenText TextStyle="TextStyle.H5" class="mb-0 fw-bold">Inscriptions des sessions précédentes</RadzenText>
                 </RadzenStack>
             </RadzenCardHeader>
             <div class="p-4">
@@ -89,79 +89,63 @@
                 {
                     <div class="text-center p-5">
                         <i class="bi bi-inbox fs-1 text-muted opacity-50"></i>
-                        <p class="mt-3 text-muted">No registrations found for previous sessions</p>
+                        <p class="mt-3 text-muted">Aucune inscription trouvée pour les sessions précédentes</p>
+                        <RadzenButton Text="S'inscrire à un cours" Icon="add_circle" ButtonStyle="ButtonStyle.Light" Class="mt-3" />
                     </div>
                 }
                 else
                 {
-                    <RadzenDataGrid Data="@previousRegistrations" 
-                                  TItem="Ceilapp.Models.ceilapp.CourseRegistration"
-                                  Class="border-0"
-                                  AllowFiltering="true"
-                                  AllowSorting="true"
-                                  AllowPaging="true"
-                                  PageSize="10">
-                        <Columns>
-                            <RadzenDataGridColumn TItem="Ceilapp.Models.ceilapp.CourseRegistration" Property="InscriptionCode" Title="Code" Width="140px">
-                                <Template Context="data">
-                                    <div class="d-flex align-items-center">
-                                        <i class="bi bi-hash me-2 text-primary"></i>
-                                        <span class="fw-semibold">@data.InscriptionCode</span>
-                                    </div>
-                                </Template>
-                            </RadzenDataGridColumn>
-                            <RadzenDataGridColumn TItem="Ceilapp.Models.ceilapp.CourseRegistration" Property="Course.Name" Title="Course">
-                                <Template Context="data">
-                                    <div class="d-flex align-items-center">
-                                        <i class="bi bi-book me-2 text-primary"></i>
-                                        <span>@data.Course.Name</span>
-                                    </div>
-                                </Template>
-                            </RadzenDataGridColumn>
-                            <RadzenDataGridColumn TItem="Ceilapp.Models.ceilapp.CourseRegistration" Property="CourseLevel.Name" Title="Level" Width="120px">
-                                <Template Context="data">
-                                    <div class="d-flex align-items-center">
-                                        <i class="bi bi-bar-chart me-2 text-primary"></i>
-                                        <span>@data.CourseLevel.Name</span>
-                                    </div>
-                                </Template>
-                            </RadzenDataGridColumn>
-                            <RadzenDataGridColumn TItem="Ceilapp.Models.ceilapp.CourseRegistration" Property="RegistrationDate" Title="Date" FormatString="{0:dd/MM/yyyy}" Width="140px">
-                                <Template Context="data">
-                                    <div class="d-flex align-items-center">
-                                        <i class="bi bi-calendar3 me-2 text-primary"></i>
-                                        <span>@data.RegistrationDate.ToString("dd/MM/yyyy")</span>
-                                    </div>
-                                </Template>
-                            </RadzenDataGridColumn>
-                            <RadzenDataGridColumn TItem="Ceilapp.Models.ceilapp.CourseRegistration" Property="Session.SessionCode" Title="Session" Width="140px">
-                                <Template Context="data">
-                                    <div class="d-flex align-items-center">
-                                        <i class="bi bi-collection me-2 text-primary"></i>
-                                        <span>@data.Session.SessionCode</span>
-                                    </div>
-                                </Template>
-                            </RadzenDataGridColumn>
-                            <RadzenDataGridColumn TItem="Ceilapp.Models.ceilapp.CourseRegistration" Property="RegistrationValidated" Title="Status" Width="120px">
-                                <Template Context="data">
-                                    @if (data.RegistrationValidated)
-                                    {
-                                        <span class="badge rounded-pill bg-success-subtle text-success px-3 py-2">
-                                            <i class="bi bi-check-circle me-1"></i>Validated
-                                        </span>
-                                    }
-                                    else
-                                    {
-                                        <span class="badge rounded-pill bg-warning-subtle text-warning px-3 py-2">
-                                            <i class="bi bi-clock me-1"></i>Pending
-                                        </span>
-                                    }
-                                </Template>
-                            </RadzenDataGridColumn>
-                        </Columns>
-                    </RadzenDataGrid>
+                    <RadzenDataList TItem="CourseRegistration" Data="@previousRegistrations" WrapItems="true">
+                        <Template>
+                            <RadzenCard class="mb-4 shadow-sm hover-shadow transition-all">
+                            
+                                <RadzenStack Gap="1.5rem" Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.Start" AlignItems="Radzen.AlignItems.Center">
+                                <RadzenImage Path="@context.Course?.Image" Style="width: 64px; height: 64px"></RadzenImage>
+                                    <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.Start" Gap="1rem" Class="align-items-center">
+                                        <div class="bg-primary bg-opacity-10 p-3 rounded-circle">
+                                            
+                                        </div>
+                                        <RadzenText TextStyle="TextStyle.H5" class="mb-0 fw-bold">@context.Course?.Name</RadzenText>
+                                    </RadzenStack>
+                                    
+                                    <RadzenStack Orientation="Orientation.Horizontal" Gap="2rem" Class="text-muted flex-wrap">
+                                        <div class="d-flex align-items-center">
+                                            <i class="bi bi-hash me-2 text-primary"></i>
+                                            <span class="fw-semibold">@context.InscriptionCode</span>
+                                        </div>
+                                        <div class="d-flex align-items-center">
+                                            <i class="bi bi-bar-chart me-2 text-primary"></i>
+                                            <span>@context.CourseLevel?.Name</span>
+                                        </div>
+                                        <div class="d-flex align-items-center">
+                                            <i class="bi bi-calendar3 me-2 text-primary"></i>
+                                            <span>@context.RegistrationDate.ToString("dd/MM/yyyy")</span>
+                                        </div>
+                                        <div>
+                                            @if (context.RegistrationValidated)
+                                            {
+                                                <span class="badge rounded-pill bg-success-subtle text-success px-3 py-2">
+                                                    <i class="bi bi-check-circle me-1"></i>Validée
+                                                </span>
+                                                                                           
+                                            }
+                                            else
+                                            {
+                                                <span class="badge rounded-pill bg-warning-subtle text-warning px-3 py-2">
+                                                    <i class="bi bi-clock me-1"></i>En attente
+                                                </span>
+                                            }
+                                        </div>                                        
+                                        <div><RadzenLink Text="Voir les détails de l'inscription" Path="@($"/edit-course-registration/false/{context.Id}")" Icon="visibility"></RadzenLink></div>
+                                    </RadzenStack>
+                                </RadzenStack>
+                                
+                            </RadzenCard>
+                        </Template>
+                    </RadzenDataList>
                 }
             </div>
         </RadzenCard>
+       
     </RadzenStack>
 </div>
