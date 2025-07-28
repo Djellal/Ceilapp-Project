@@ -39,53 +39,6 @@ namespace Ceilapp.Components.Pages.CourseRegistrations
 
         public string FeeValue { get; set; } = 0.ToString("C");
 
-        [Parameter]
-        public int Id { get; set; }
-
-        [Parameter]
-        public bool isnew { get; set; } = true;
-
-        protected override async Task OnInitializedAsync()
-        {
-            statesForBirthStateId = await ceilappService.GetStates();
-
-            municipalitiesForBirthMunicipalityId = await ceilappService.GetMunicipalities();
-
-            professionsForProfessionId = await ceilappService.GetProfessions();
-
-            coursesForCourseId = await ceilappService.GetCourses();
-
-            courseLevelsForCourseLevelId = await ceilappService.GetCourseLevels();
-
-            sessionsForSessionId = await ceilappService.GetSessions();
-
-            AppSetting = await ceilappService.GetAppSettingById(1);
-            if (AppSetting == null)
-            {
-                NotificationService.Notify(new NotificationMessage { Severity = NotificationSeverity.Error, Summary = "Error", Detail = "AppSetting not found. Please contact the administrator.", Duration = 5000 });
-                NavigationManager.NavigateTo("/");
-                return;
-            }
-
-            CurrentSession = AppSetting.CurrentSessionId.HasValue ? await ceilappService.GetSessionById(AppSetting.CurrentSessionId.Value) : null;
-            if (CurrentSession == null) 
-            { 
-                NotificationService.Notify(new NotificationMessage { Severity = NotificationSeverity.Error, Summary = "Error", Detail = "Current session not found. Please contact the administrator.", Duration = 5000 });
-                NavigationManager.NavigateTo("/");
-                return;
-            }
-            if (isnew)
-            {
-               
-                await InitNewRegistration();
-
-            }
-            else
-            {
-                courseRegistration = await ceilappService.GetCourseRegistrationById(Id);
-
-            }
-        }
         protected bool errorVisible;
         protected Ceilapp.Models.ceilapp.CourseRegistration courseRegistration;
 
@@ -106,6 +59,98 @@ namespace Ceilapp.Components.Pages.CourseRegistrations
         public AppSetting AppSetting { get; private set; }
         public Session CurrentSession { get; private set; }
 
+        [Parameter]
+        public int Id { get; set; }
+
+        [Parameter]
+        public bool isnew { get; set; } = true;
+
+
+
+        protected override async Task OnInitializedAsync()
+        {
+            statesForBirthStateId = await ceilappService.GetStates();
+
+            municipalitiesForBirthMunicipalityId = await ceilappService.GetMunicipalities();
+
+            professionsForProfessionId = await ceilappService.GetProfessions();
+
+            coursesForCourseId = await ceilappService.GetCourses();
+
+            courseLevelsForCourseLevelId = await ceilappService.GetCourseLevels();
+
+            sessionsForSessionId = await ceilappService.GetSessions();
+
+            AppSetting = await ceilappService.GetAppSettingById(1);
+            if (AppSetting == null)
+            {
+                NotificationService.Notify(new NotificationMessage { Severity = NotificationSeverity.Error, Summary = "Error", Detail = "Param�tre d'application introuvable. Veuillez contacter l'administrateur.", Duration = 5000 });
+                NavigationManager.NavigateTo("/");
+                return;
+            }
+
+            CurrentSession = AppSetting.CurrentSessionId.HasValue ? await ceilappService.GetSessionById(AppSetting.CurrentSessionId.Value) : null;
+            if (CurrentSession == null) 
+            { 
+                NotificationService.Notify(new NotificationMessage { Severity = NotificationSeverity.Error, Summary = "Error", Detail = "Session en cours introuvable. Veuillez contacter l'administrateur.", Duration = 5000 });
+                NavigationManager.NavigateTo("/student-dashboard");
+                return;
+            }
+
+            if (isnew)
+            {
+               if(await RegistrationAllowed())
+               
+                    await InitNewRegistration();
+               else
+               {
+                    NotificationService.Notify(new NotificationMessage { Severity = NotificationSeverity.Error, Summary = "Error", Detail = "Vous n'�tes pas autoris� � vous inscrire pour le moment.", Duration = 5000 });
+                    NavigationManager.NavigateTo("/student-dashboard");
+               }
+
+            }
+            else
+            {
+
+                courseRegistration = await ceilappService.GetCourseRegistrationById(Id);
+                if(courseRegistration == null)
+                {
+                    NotificationService.Notify(new NotificationMessage { Severity = NotificationSeverity.Error, Summary = "Error", Detail = "Inscription introuvable.", Duration = 5000 });
+                    NavigationManager.NavigateTo("/student-dashboard");
+                    return;
+                }
+                // Check if the current user is authorized to edit this registration
+                
+               
+            }
+        }
+
+        protected override Task OnAfterRenderAsync(bool firstRender)
+        {
+            if (Security.IsInRole(Constants.STUDENT))
+            {
+                if (courseRegistration.UserId != Security.User.Id)
+                {
+                    NotificationService.Notify(new NotificationMessage
+                    {
+                        Severity = NotificationSeverity.Error,
+                        Summary = "Access Denied",
+                        Detail = "You are not authorized to edit this registration.",
+                        Duration = 5000
+                    });
+                    NavigationManager.NavigateTo("/student-dashboard");
+                }
+            }
+            return Task.CompletedTask;
+        }
+        private async Task<bool> RegistrationAllowed()
+        {
+            var nbrRegistrations = await ceilappService.dbContext.CourseRegistrations
+                .CountAsync(cr => cr.UserId == Security.User.Id && cr.SessionId == CurrentSession.Id);
+            return !(nbrRegistrations >= AppSetting.MaxRegistrationPerSession);
+        }
+
+       
         protected async Task FormSubmit()
         {
             
