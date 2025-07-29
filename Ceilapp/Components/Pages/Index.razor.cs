@@ -62,5 +62,6 @@ namespace Ceilapp.Components.Pages
         {
             NavigationManager.NavigateTo($"/register-application-user");
         }
+        
     }
 }

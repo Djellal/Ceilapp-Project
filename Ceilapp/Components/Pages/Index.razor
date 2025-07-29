@@ -28,10 +28,7 @@
                         <RadzenImage Style="height: 140px; width: 140px; object-fit: cover; border-radius: 8px;" Path="@context.Image" Class="rz-mb-2"/>
                     </div>
                     <RadzenHeading Text="@context.Name" Size="H4" Style="margin: 0; color: #2a2a2a; font-weight: 600; text-align: center;"/>
-                    <RadzenButton Text="Learn More" ButtonStyle="ButtonStyle.Secondary" 
-                                Size="ButtonSize.Medium" 
-                                Style="width: 100%; border-radius: 6px;"
-                                Class="learn-more-btn"/>
+                    <RadzenLink Text="S'inscrire" Icon="app_registration" Path="@($"/edit-course-registration/true/{context.Id}")" Style="font-weight: 600; font-style: italic; font-family: 'Comic Sans MS'; border-radius: 5px; border: 1px solid #e31c65; padding: 5px; width: 100%; text-align: center"></RadzenLink>
                 </RadzenStack>
             </RadzenCard>
         </Template>

@@ -99,9 +99,11 @@ namespace Ceilapp.Components.Pages.CourseRegistrations
 
             if (isnew)
             {
-               if(await RegistrationAllowed())
+                 if(await RegistrationAllowed())
+                {
                
                     await InitNewRegistration();
+                }
                else
                {
                     NotificationService.Notify(new NotificationMessage { Severity = NotificationSeverity.Error, Summary = "Error", Detail = "Vous n'�tes pas autoris� � vous inscrire pour le moment.", Duration = 5000 });
@@ -168,6 +170,15 @@ namespace Ceilapp.Components.Pages.CourseRegistrations
             courseRegistration.UserId = Security.User.Id;
             courseRegistration.SessionId = CurrentSession?.Id ?? 0; // Ensure SessionId is set to the current session
             courseRegistration.InscriptionCode = CurrentSession?.SessionCode + "/..";
+
+            var crs = coursesForCourseId.FirstOrDefault(c => c.Id == Id);
+
+            if (crs != null)
+            {
+                courseRegistration.CourseId = crs.Id;
+                courseRegistration.CourseLevelId = crs.CourseLevels?.FirstOrDefault()?.Id ?? 0; // Set default level to the first available level
+            }
+            
 
         }
 
