@@ -115,15 +115,18 @@ namespace Ceilapp.Components.Pages.CourseRegistrations
             {
 
                 courseRegistration = await ceilappService.GetCourseRegistrationById(Id);
-                if(courseRegistration == null)
+               
+                if (courseRegistration == null)
                 {
                     NotificationService.Notify(new NotificationMessage { Severity = NotificationSeverity.Error, Summary = "Error", Detail = "Inscription introuvable.", Duration = 5000 });
                     NavigationManager.NavigateTo("/student-dashboard");
                     return;
                 }
+
+                FeeValue = professionsForProfessionId.ToList().FirstOrDefault(x => x.Id == courseRegistration.ProfessionId)?.FeeValue.ToString("C") ?? "0.00";
                 // Check if the current user is authorized to edit this registration
-                
-               
+
+
             }
         }
 
@@ -257,6 +260,7 @@ namespace Ceilapp.Components.Pages.CourseRegistrations
                 else
                 {
                     await ceilappService.UpdateCourseRegistration(Id, courseRegistration);
+                    NotificationService.Notify(new NotificationMessage { Severity = NotificationSeverity.Success, Summary = "Success", Detail = "Inscription mise à jour avec succès.", Duration = 5000 });
                 }
                 
             }

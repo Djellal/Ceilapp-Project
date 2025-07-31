@@ -69,7 +69,7 @@
                     <RadzenFormField Text="State" Variant="Variant.Filled" Style="width: 100%">
                           <ChildContent>
                             <RadzenDropDown Data="@(statesForBirthStateId)" TextProperty="Name" ValueProperty="Id" AllowClear=true
-                                  style="display: block; width: 100%" @bind-Value="@(courseRegistration.BirthStateId)" Name="BirthStateId" Change="@BirthStateIdChange" AllowFiltering="true"
+                                  style="display: block; width: 100%" @bind-Value="@(courseRegistration.BirthStateId)" Name="BirthStateId" Change="@BirthStateIdChange" AllowFiltering="true" FilterCaseSensitivity="Radzen.FilterCaseSensitivity.CaseInsensitive"
                                    />
                       </ChildContent>
                     </RadzenFormField>
