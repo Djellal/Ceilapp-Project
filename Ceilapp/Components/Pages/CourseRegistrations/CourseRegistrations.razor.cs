@@ -1,12 +1,14 @@
+using Ceilapp.Components.Pages.Appsettings;
+using Ceilapp.Models.ceilapp;
+using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Web;
+using Microsoft.JSInterop;
+using Radzen;
+using Radzen.Blazor;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.JSInterop;
-using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Web;
-using Radzen;
-using Radzen.Blazor;
 
 namespace Ceilapp.Components.Pages.CourseRegistrations
 {
@@ -39,9 +41,35 @@ namespace Ceilapp.Components.Pages.CourseRegistrations
 
         [Inject]
         protected SecurityService Security { get; set; }
+
+        protected System.Linq.IQueryable<Ceilapp.Models.ceilapp.Session> sessions;
+        protected int? SelectedSession = null;
+
+        protected System.Linq.IQueryable<Ceilapp.Models.ceilapp.Course> courses;
+        protected int? SelectedCourse = null;
+        protected int? SelectedLevel = null;
+
+        protected System.Linq.IQueryable<Ceilapp.Models.ceilapp.CourseLevel> courseLevels;
+
+        public AppSetting AppSettings { get; private set; }
+        public Session CurrentSession { get; private set; }
+
         protected override async Task OnInitializedAsync()
         {
             courseRegistrations = await ceilappService.GetCourseRegistrations(new Query { Expand = "State,Municipality,Profession,Course,CourseLevel,Session" });
+            sessions = await ceilappService.GetSessions();
+            courses = await ceilappService.GetCourses();
+            courseLevels = await ceilappService.GetCourseLevels();
+
+            AppSettings = await ceilappService.GetAppSettingById(1);
+
+            if (AppSettings != null)
+            {
+                CurrentSession = AppSettings.CurrentSessionId.HasValue ? await ceilappService.GetSessionById(AppSettings.CurrentSessionId.Value) : null;
+            }
+
+            SelectedSession = CurrentSession?.Id;
+
         }
 
         protected async Task AddButtonClick(MouseEventArgs args)
@@ -77,6 +105,66 @@ namespace Ceilapp.Components.Pages.CourseRegistrations
                     Detail = $"Unable to delete CourseRegistration"
                 });
             }
+        }
+
+        protected async Task Filter()
+        {
+            try
+            {
+
+                IEnumerable<Ceilapp.Models.ceilapp.CourseRegistration> TempcourseRegistrations;
+                if (SelectedSession.HasValue)
+                {
+                    TempcourseRegistrations = await ceilappService.GetCourseRegistrations(new Radzen.Query { Filter = "i => i.SessionId == @0", FilterParameters = new object[] { SelectedSession.Value }, Expand = "State,Municipality,Profession,Course,CourseLevel,Session" });
+                }
+                else
+                {
+                    TempcourseRegistrations = await ceilappService.GetCourseRegistrations(new Query { Expand = "State,Municipality,Profession,Course,CourseLevel,Session" });
+                }
+
+                if (SelectedCourse.HasValue)
+                {
+                    TempcourseRegistrations = courseRegistrations.Where(cr => cr.CourseId == SelectedCourse.Value);
+                }
+
+                if (SelectedLevel.HasValue)
+                {
+                    TempcourseRegistrations = courseRegistrations.Where(cr => cr.CourseLevelId == SelectedLevel.Value);
+                }
+
+                courseRegistrations = TempcourseRegistrations;
+            }
+            catch (Exception ex)
+            {
+                NotificationService.Notify(new NotificationMessage
+                {
+                    Severity = NotificationSeverity.Error,
+                    Summary = "Error",
+                    Detail = "Unable to filter Course Registrations"
+                });
+                Console.WriteLine($"Error filtering Course Registrations: {ex.Message}");
+            }
+        }
+
+        protected async System.Threading.Tasks.Task DropDown0Change(System.Object args)
+        {
+            await Filter();
+        }
+
+        protected async System.Threading.Tasks.Task DropDown1Change(System.Object args)
+        {
+            courseLevels = await ceilappService.GetCourseLevels(new Radzen.Query { Filter = "i => i.CourseId == @0", FilterParameters = new object[] { SelectedCourse } });
+            await Filter();
+        }
+
+        protected async System.Threading.Tasks.Task DropDown2Change(System.Object args)
+        {
+            await Filter();
+        }
+
+        protected async System.Threading.Tasks.Task Button0Click(Microsoft.AspNetCore.Components.Web.MouseEventArgs args)
+        {
+            SelectedSession = CurrentSession?.Id;
         }
     }
 }
