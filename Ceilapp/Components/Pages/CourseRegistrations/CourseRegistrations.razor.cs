@@ -48,6 +48,8 @@ namespace Ceilapp.Components.Pages.CourseRegistrations
         protected System.Linq.IQueryable<Ceilapp.Models.ceilapp.Course> courses;
         protected int? SelectedCourse = null;
         protected int? SelectedLevel = null;
+        protected bool? Validated = null;
+
 
         protected System.Linq.IQueryable<Ceilapp.Models.ceilapp.CourseLevel> courseLevels;
 
@@ -122,6 +124,11 @@ namespace Ceilapp.Components.Pages.CourseRegistrations
                     TempcourseRegistrations = await ceilappService.GetCourseRegistrations(new Query { Expand = "State,Municipality,Profession,Course,CourseLevel,Session" });
                 }
 
+                if(Validated.HasValue)
+                {
+                    TempcourseRegistrations = TempcourseRegistrations.Where(cr => cr.RegistrationValidated == Validated.Value);
+                }
+
                 if (SelectedCourse.HasValue)
                 {
                     TempcourseRegistrations = courseRegistrations.Where(cr => cr.CourseId == SelectedCourse.Value);
@@ -153,7 +160,7 @@ namespace Ceilapp.Components.Pages.CourseRegistrations
 
         protected async System.Threading.Tasks.Task DropDown1Change(System.Object args)
         {
-            courseLevels = await ceilappService.GetCourseLevels(new Radzen.Query { Filter = "i => i.CourseId == @0", FilterParameters = new object[] { SelectedCourse } });
+           if(SelectedCourse.HasValue) courseLevels = await ceilappService.GetCourseLevels(new Radzen.Query { Filter = "i => i.CourseId == @0", FilterParameters = new object[] { SelectedCourse } });
             await Filter();
         }
 
@@ -165,6 +172,11 @@ namespace Ceilapp.Components.Pages.CourseRegistrations
         protected async System.Threading.Tasks.Task Button0Click(Microsoft.AspNetCore.Components.Web.MouseEventArgs args)
         {
             SelectedSession = CurrentSession?.Id;
+        }
+
+        protected async System.Threading.Tasks.Task SelectBar0Change(bool? args)
+        {
+            await Filter();
         }
     }
 }

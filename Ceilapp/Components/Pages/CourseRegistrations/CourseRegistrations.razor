@@ -17,12 +17,18 @@
 </RadzenRow>
 <RadzenPanel Text="Filtre" Icon="filter_alt" AllowCollapse="true">
     <RadzenStack>
-        <RadzenRow>
-            <RadzenColumn Size="12">
-                <RadzenDropDown TValue="int?" @bind-Value="@SelectedSession" ValueProperty="Id" TextProperty="SessionName" Data="@sessions" Placeholder="Filtrer par Session" Change="@DropDown0Change" AllowClear="true" FilterCaseSensitivity="Radzen.FilterCaseSensitivity.CaseInsensitive"/>
+        
+        <RadzenStack Orientation="Radzen.Orientation.Horizontal">
+        <RadzenDropDown TValue="int?" @bind-Value="@SelectedSession" ValueProperty="Id" TextProperty="SessionName" Data="@sessions" Placeholder="Filtrer par Session" Change="@DropDown0Change" AllowClear="true" FilterCaseSensitivity="Radzen.FilterCaseSensitivity.CaseInsensitive"/>
                 <RadzenButton Text="Session en cours" Icon="today" Click="@Button0Click"></RadzenButton>
-            </RadzenColumn>
-        </RadzenRow>
+                <RadzenSelectBar TValue="bool?" @bind-Value="@Validated" Size="Radzen.ButtonSize.Small">
+                    <Items>
+                        <RadzenSelectBarItem Text="TOUS" Value="null" Icon="list"></RadzenSelectBarItem>
+                        <RadzenSelectBarItem Text="VALIDES" Value="true" Icon="check"></RadzenSelectBarItem>
+                        <RadzenSelectBarItem Text="NON VALIDES" Value="false" Icon="check_indeterminate_small"></RadzenSelectBarItem>
+                    </Items>
+                </RadzenSelectBar>
+        </RadzenStack>
         <RadzenRow>
             <RadzenColumn Size="12" SizeXS="6">
                 <RadzenDropDown TValue="int?" @bind-Value="@SelectedCourse" ValueProperty="Id" TextProperty="Name" Data="@courses" Style="width: 100%" Placeholder="Filtrer par Course" Change="@DropDown1Change" AllowClear="true" AllowSelectAll="false" AllowFiltering="true" FilterCaseSensitivity="Radzen.FilterCaseSensitivity.CaseInsensitive" />
