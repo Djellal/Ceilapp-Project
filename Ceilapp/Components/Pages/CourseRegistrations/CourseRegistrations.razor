@@ -21,7 +21,7 @@
         <RadzenStack Orientation="Radzen.Orientation.Horizontal">
         <RadzenDropDown TValue="int?" @bind-Value="@SelectedSession" ValueProperty="Id" TextProperty="SessionName" Data="@sessions" Placeholder="Filtrer par Session" Change="@DropDown0Change" AllowClear="true" FilterCaseSensitivity="Radzen.FilterCaseSensitivity.CaseInsensitive"/>
                 <RadzenButton Text="Session en cours" Icon="today" Click="@Button0Click"></RadzenButton>
-                <RadzenSelectBar TValue="bool?" @bind-Value="@Validated" Size="Radzen.ButtonSize.Small">
+            <RadzenSelectBar TValue="bool?" @bind-Value="@Validated" Size="Radzen.ButtonSize.Small" Change="@ValidesSelectBarChange">
                     <Items>
                         <RadzenSelectBarItem Text="TOUS" Value="null" Icon="list"></RadzenSelectBarItem>
                         <RadzenSelectBarItem Text="VALIDES" Value="true" Icon="check"></RadzenSelectBarItem>

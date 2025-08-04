@@ -174,7 +174,10 @@ namespace Ceilapp.Components.Pages.CourseRegistrations
             SelectedSession = CurrentSession?.Id;
         }
 
-        protected async System.Threading.Tasks.Task SelectBar0Change(bool? args)
+        
+
+
+        protected async System.Threading.Tasks.Task ValidesSelectBarChange(bool? args)
         {
             await Filter();
         }
