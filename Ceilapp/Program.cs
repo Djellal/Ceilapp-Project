@@ -32,6 +32,7 @@ builder.Services.AddHeaderPropagation(o => o.Headers.Add("Cookie"));
 builder.Services.AddAuthentication();
 builder.Services.AddAuthorization();
 builder.Services.AddScoped<Ceilapp.SecurityService>();
+builder.Services.AddScoped<Ceilapp.ReportService>();
 builder.Services.AddDbContext<ApplicationIdentityDbContext>(options =>
 {
     options.UseNpgsql(builder.Configuration.GetConnectionString("ceilappConnection"));
