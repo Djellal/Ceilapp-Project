@@ -56,6 +56,9 @@ namespace Ceilapp.Components.Pages.CourseRegistrations
 
         [Inject]
         protected SecurityService Security { get; set; }
+
+        [Inject]
+        protected ReportService ReportService { get; set; }
         public AppSetting AppSetting { get; private set; }
         public Session CurrentSession { get; private set; }
 
@@ -290,6 +293,29 @@ namespace Ceilapp.Components.Pages.CourseRegistrations
             }
 
             return code;
+        }
+
+
+        protected async Task GenerateFicheInscription()
+        {
+            try
+            {
+                var uri = $"Document/FicheInsc?inscid={courseRegistration.Id}";
+                NavigationManager.NavigateTo(uri, true);
+
+            }
+            catch (Exception ex)
+            {
+                NotificationService.Notify(new NotificationMessage
+                {
+                    Severity = NotificationSeverity.Error,
+                    Summary = "Error",
+                    Detail = $"Erreur lors de la génération du PDF: {ex.Message}"
+                });
+#if DEBUG
+                throw ex;
+#endif
+            }
         }
     }
 
