@@ -300,12 +300,14 @@ namespace Ceilapp.Components.Pages.CourseRegistrations
         {
             try
             {
+
                 var uri = $"Document/FicheInsc?inscid={courseRegistration.Id}";
                 NavigationManager.NavigateTo(uri, true);
 
             }
             catch (Exception ex)
             {
+
                 NotificationService.Notify(new NotificationMessage
                 {
                     Severity = NotificationSeverity.Error,
