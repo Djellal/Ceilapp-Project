@@ -72,7 +72,7 @@ namespace Ceilapp
 
                                 column.Item().Text($"Nom:\t {registration.LastName} {registration.FirstName}");
                                 column.Item().Text($"Date de naissance:\t {registration.BirthDate:dd/MM/yyyy} à {registration.Municipality?.Name} - {registration.State?.Name}");
-                                column.Item().LineHorizontal(1);
+                                column.Item().LineHorizontal(2);
                                 column.Item().Text($"Cours: \t{registration.Course?.Name}");
                                 column.Item().Text($"Niveau: \t{registration.CourseLevel?.Name}");
                                 column.Item().Text($"Prfession:\t {registration.Profession?.Name} , (Droits d'inscriptions :{registration.Profession?.FeeValue:N2})");
