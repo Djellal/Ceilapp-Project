@@ -48,7 +48,7 @@ namespace Ceilapp.Controllers
                 //    return Forbid(); // Return forbidden if student tries to access another student's registration
                 //}
                 
-                var fileBytes = documentService.GenererFicheInscription(inscription);
+                var fileBytes = documentService.GenererFicheInscription(inscription.Id);
                 var stream = new MemoryStream(fileBytes);
                 return File(stream, "application/pdf");
             }
