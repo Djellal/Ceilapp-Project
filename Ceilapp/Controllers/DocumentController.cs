@@ -10,6 +10,7 @@ using System;
 using System.Net.Mail;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
+using System.Threading.Tasks;
 
 
 
@@ -32,7 +33,7 @@ namespace Ceilapp.Controllers
 
         [Authorize]
         [HttpGet("/Document/FicheInsc")]
-        public IActionResult FicheInsc([FromQuery] int inscid)
+        public async Task<IActionResult> FicheInsc([FromQuery] int inscid)
         {
             try
             {
@@ -48,7 +49,7 @@ namespace Ceilapp.Controllers
                 //    return Forbid(); // Return forbidden if student tries to access another student's registration
                 //}
                 
-                var fileBytes = documentService.GenererFicheInscription(inscription.Id);
+                var fileBytes = await documentService.GenererFicheInscriptionAsync(inscription.Id);
                 var stream = new MemoryStream(fileBytes);
                 return File(stream, "application/pdf");
             }
