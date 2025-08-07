@@ -44,7 +44,7 @@ namespace Ceilapp
                 byte[] termsImage = null;
                 if (!string.IsNullOrEmpty(AppSettings?.TermsAndConditions))
                 {
-                    termsImage = await RenderHtmlToImageAsync(AppSettings.TermsAndConditions, 800, 400);
+                    termsImage = await RenderHtmlToImageAsync(AppSettings.TermsAndConditions, 800, 300);
                 }
 
                 QuestPDF.Settings.License = LicenseType.Community;
@@ -65,47 +65,90 @@ namespace Ceilapp
                             });
                         
                         page.Size(PageSizes.A4);
-                        page.Margin(2, Unit.Centimetre);
+                        page.Margin(1f, Unit.Centimetre);
                         page.PageColor(Colors.White);
 
                         page.Content()
-                            .PaddingTop(2, Unit.Centimetre)
+                            .PaddingVertical(3, Unit.Centimetre)
                             .Column(column =>
                             {
-                                column.Spacing(7);
+                                column.Spacing(15);
                                 
-                                // Header
-                                column.Item().Text("FICHE D'INSCRIPTION")
+                                // Header with border
+                                column.Item()
+                                    .Border(1)
+                                    .BorderColor(Colors.Blue.Darken2)
+                                    .Padding(10)
+                                    .Text("FICHE D'INSCRIPTION")
                                     .AlignCenter()
-                                    .FontSize(20)
-                                    .SemiBold()
+                                    .FontSize(16)
+                                    .Bold()
                                     .FontColor(Colors.Blue.Darken2);
                                 
-                                // Registration Details
-                                column.Item().Text($"Session:\t {registration.Session?.SessionName}");
-                                column.Item().Text($"N° d'inscription:\t {registration.InscriptionCode}");
-                                column.Item().Text($"Nom:\t {registration.LastName} {registration.FirstName}");
-                                column.Item().Text($"Date de naissance:\t {registration.BirthDate:dd/MM/yyyy} à {registration.Municipality?.Name} - {registration.State?.Name}");
-                                
-                                column.Item().LineHorizontal(2);
-                                
-                                // Course Information
-                                column.Item().Text($"Cours: \t{registration.Course?.Name}");
-                                column.Item().Text($"Niveau: \t{registration.CourseLevel?.Name}");
-                                column.Item().Text($"Profession:\t {registration.Profession?.Name} , (Droits d'inscriptions :{registration.Profession?.FeeValue:N2})");
-                                
-                                column.Item().LineHorizontal(2);
-                                
-                                // Terms and Conditions as Image
-                                column.Item().Text("Conditions d'inscription:").SemiBold();
-                                if (termsImage != null)
+                                // Registration Details in a table-like format
+                                column.Item().Table(table =>
                                 {
-                                    column.Item().Image(termsImage).FitWidth();
-                                }
-                                else
+                                    table.ColumnsDefinition(columns =>
+                                    {
+                                        columns.RelativeColumn(1);
+                                        columns.RelativeColumn(2);
+                                    });
+                                    
+                                    AddTableRow(table, "Session", registration.Session?.SessionName);
+                                    AddTableRow(table, "N° d'inscription", registration.InscriptionCode);
+                                    AddTableRow(table, "Nom complet", $"{registration.LastName} {registration.FirstName}");
+                                    AddTableRow(table, "Date de naissance", 
+                                        $"{registration.BirthDate:dd/MM/yyyy} à {registration.Municipality?.Name} - {registration.State?.Name}");
+                                });
+                                
+                                // Course Information in a highlighted box
+                                column.Item()
+                                    .Background(Colors.Grey.Lighten3)
+                                    .Padding(10)
+                                    .Table(table =>
+                                    {
+                                        table.ColumnsDefinition(columns =>
+                                        {
+                                            columns.RelativeColumn(1);
+                                            columns.RelativeColumn(2);
+                                        });
+                                        
+                                        AddTableRow(table, "Cours", registration.Course?.Name);
+                                        AddTableRow(table, "Niveau", registration.CourseLevel?.Name);
+                                        AddTableRow(table, "Profession", 
+                                            $"{registration.Profession?.Name} - Droits d'inscriptions: {registration.Profession?.FeeValue:N2} DA");
+                                    });
+                                
+                                // Terms and Conditions section
+                                column.Item().ShowEntire().Column(tc =>
                                 {
-                                    column.Item().Text("Aucune condition spécifiée").FontColor("#808080");
-                                }
+                                                                     
+                                    if (termsImage != null)
+                                    {
+                                        tc.Item()
+                                            .Border(1)
+                                            .BorderColor(Colors.Grey.Lighten2)
+                                            .Padding(2)
+                                            .Background(Colors.Grey.Lighten5)
+                                            .Image(termsImage)
+                                            .FitWidth(); // Use FitWidth() instead of FitToWidth()
+                                    }
+                                   
+                                });
+                                
+                                // Signature section
+                                // column.Item()
+                                //     .AlignRight()
+                                //     .Text(text =>
+                                //     {
+                                //         text.Span("Date: ").SemiBold();
+                                //         text.Span(DateTime.Now.ToString("dd/MM/yyyy"));
+                                //         text.EmptyLine();
+                                //         text.EmptyLine();
+                                //         text.Span("Signature: ").SemiBold();
+                                //         text.EmptyLine();
+                                //         text.EmptyLine();
+                                //     });
                             });
                     });
                 }).GeneratePdf();
@@ -117,6 +160,14 @@ namespace Ceilapp
 #endif
                 return null;
             }
+        }
+
+        private static void AddTableRow(TableDescriptor table, string label, string value)
+        {
+            table.Cell().BorderBottom(1).BorderColor(Colors.Grey.Lighten2).Padding(5)
+                .Text(label).SemiBold();
+            table.Cell().BorderBottom(1).BorderColor(Colors.Grey.Lighten2).Padding(5)
+                .Text(value ?? "");
         }
 
         public async Task<byte[]> RenderHtmlToImageAsync(string htmlContent, int width = 800, int height = 600)
