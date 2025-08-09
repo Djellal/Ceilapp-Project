@@ -303,7 +303,7 @@ namespace Ceilapp.Components.Pages.CourseRegistrations
             {
 
                 var uri = $"Document/FicheInsc?inscid={courseRegistration.Id}";
-                NavigationManager.NavigateTo(uri, false);
+                NavigationManager.NavigateTo(uri, true);
 
             }
             catch (Exception ex)
