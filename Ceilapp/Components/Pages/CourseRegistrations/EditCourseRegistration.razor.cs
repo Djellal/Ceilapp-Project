@@ -257,7 +257,8 @@ namespace Ceilapp.Components.Pages.CourseRegistrations
                 if (isnew)
                 {
                     courseRegistration.InscriptionCode = GenerateInscriptionCode();
-                    await ceilappService.CreateCourseRegistration(courseRegistration);
+                    courseRegistration = await ceilappService.CreateCourseRegistration(courseRegistration);
+                    await GenerateFicheInscription();
                     NavigationManager.NavigateTo($"/student-dashboard");
                 }
                 else
@@ -302,7 +303,7 @@ namespace Ceilapp.Components.Pages.CourseRegistrations
             {
 
                 var uri = $"Document/FicheInsc?inscid={courseRegistration.Id}";
-                NavigationManager.NavigateTo(uri, true);
+                NavigationManager.NavigateTo(uri, false);
 
             }
             catch (Exception ex)

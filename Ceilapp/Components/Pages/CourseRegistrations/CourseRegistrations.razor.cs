@@ -81,7 +81,8 @@ namespace Ceilapp.Components.Pages.CourseRegistrations
 
         protected async Task EditRow(Ceilapp.Models.ceilapp.CourseRegistration args)
         {
-            await DialogService.OpenAsync<EditCourseRegistration>("Edit CourseRegistration", new Dictionary<string, object> { {"Id", args.Id} });
+           // await DialogService.OpenAsync<EditCourseRegistration>("Edit CourseRegistration", new Dictionary<string, object> { {"Id", args.Id} });
+            NavigationManager.NavigateTo($"edit-course-registration/false/{args.Id}"); 
         }
 
         protected async Task GridDeleteButtonClick(MouseEventArgs args, Ceilapp.Models.ceilapp.CourseRegistration courseRegistration)
