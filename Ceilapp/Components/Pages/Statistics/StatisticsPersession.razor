@@ -1,9 +1,274 @@
-@page "/statistics-persession"
+@page "/statistics-persession"
+@using Ceilapp.Models.ceilapp
 @attribute [Authorize]
 
-<PageTitle>StatisticsPersession</PageTitle>
-<RadzenRow>
-    <RadzenColumn Size="12">
-        <RadzenText Text="StatisticsPersession" TextStyle="TextStyle.H3" TagName="TagName.H1" />
-    </RadzenColumn>
-</RadzenRow>
+<PageTitle>Statistiques par Session</PageTitle>
+
+<div class="container-fluid py-4">
+    <RadzenStack Gap="2rem">
+        <!-- Header Section -->
+        <RadzenCard class="shadow-lg rounded-4 border-0">
+            <RadzenCardHeader class="bg-primary bg-opacity-10 border-bottom">
+                <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="1rem" JustifyContent="Radzen.JustifyContent.SpaceBetween">
+                    <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="1rem">
+                        <i class="bi bi-bar-chart-fill fs-3 text-primary"></i>
+                        <RadzenText TextStyle="TextStyle.H4" class="mb-0 fw-bold text-primary">Statistiques par Session</RadzenText>
+                    </RadzenStack>
+                    <RadzenButton Text="Exporter Excel" Icon="download" ButtonStyle="Radzen.ButtonStyle.Success" 
+                                  Class="btn-export" Click="@ExportToExcel" />
+                </RadzenStack>
+            </RadzenCardHeader>
+            <div class="p-4">
+                <RadzenFormField Text="Sélectionner une session" Variant="Variant.Filled" Style="width: 100%; max-width: 400px;">
+                    <RadzenDropDown TValue="int?" @bind-Value="selectedSessionId" 
+                                    Data="@sessions" ValueProperty="Id" TextProperty="SessionName"
+                                    Placeholder="Choisir une session" Change="@OnSessionChange"
+                                    Style="width: 100%" />
+                </RadzenFormField>
+            </div>
+        </RadzenCard>
+
+        @if (selectedSessionId.HasValue && sessionStats != null)
+        {
+            <!-- Summary Statistics Cards -->
+            <RadzenRow Gap="1rem">
+                <RadzenColumn Size="12" SizeMD="3">
+                    <RadzenCard class="shadow-sm h-100 border-start border-primary border-4">
+                        <RadzenStack Gap="0.5rem">
+                            <RadzenText TextStyle="TextStyle.Caption" class="text-muted mb-0">Total Inscriptions</RadzenText>
+                            <RadzenText TextStyle="TextStyle.H3" class="text-primary mb-0 fw-bold">@sessionStats.TotalRegistrations</RadzenText>
+                            <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="0.5rem">
+                                <RadzenBadge BadgeStyle="BadgeStyle.Success" Text="@($"{sessionStats.ValidatedRegistrations} validées")" />
+                                <RadzenBadge BadgeStyle="BadgeStyle.Warning" Text="@($"{sessionStats.PendingRegistrations} en attente")" />
+                            </RadzenStack>
+                        </RadzenStack>
+                    </RadzenCard>
+                </RadzenColumn>
+                
+                <RadzenColumn Size="12" SizeMD="3">
+                    <RadzenCard class="shadow-sm h-100 border-start border-success border-4">
+                        <RadzenStack Gap="0.5rem">
+                            <RadzenText TextStyle="TextStyle.Caption" class="text-muted mb-0">Taux de Validation</RadzenText>
+                            <RadzenText TextStyle="TextStyle.H3" class="text-success mb-0 fw-bold">@($"{sessionStats.ValidationRate:F1}%")</RadzenText>
+                            <RadzenProgressBar Value="@((double)sessionStats.ValidationRate)" Max="100d" class="w-100" />
+                        </RadzenStack>
+                    </RadzenCard>
+                </RadzenColumn>
+
+                <RadzenColumn Size="12" SizeMD="3">
+                    <RadzenCard class="shadow-sm h-100 border-start border-info border-4">
+                        <RadzenStack Gap="0.5rem">
+                            <RadzenText TextStyle="TextStyle.Caption" class="text-muted mb-0">Frais Collectés</RadzenText>
+                            <RadzenText TextStyle="TextStyle.H3" class="text-info mb-0 fw-bold">@($"{sessionStats.PaidFees:N0} DA")</RadzenText>
+                            <RadzenText TextStyle="TextStyle.Caption" class="text-muted">sur @($"{sessionStats.ExpectedFees:N0} DA attendus")</RadzenText>
+                        </RadzenStack>
+                    </RadzenCard>
+                </RadzenColumn>
+
+                <RadzenColumn Size="12" SizeMD="3">
+                    <RadzenCard class="shadow-sm h-100 border-start border-warning border-4">
+                        <RadzenStack Gap="0.5rem">
+                            <RadzenText TextStyle="TextStyle.Caption" class="text-muted mb-0">Réinscriptions</RadzenText>
+                            <RadzenText TextStyle="TextStyle.H3" class="text-warning mb-0 fw-bold">@sessionStats.ReregistrationCount</RadzenText>
+                            <RadzenText TextStyle="TextStyle.Caption" class="text-muted">@sessionStats.NewRegistrationCount nouvelles inscriptions</RadzenText>
+                        </RadzenStack>
+                    </RadzenCard>
+                </RadzenColumn>
+            </RadzenRow>
+
+            <!-- Charts Section -->
+            <RadzenRow Gap="1rem">
+                <RadzenColumn Size="12" SizeMD="6">
+                    <RadzenCard class="shadow-sm h-100">
+                        <RadzenCardHeader>
+                            <RadzenText TextStyle="TextStyle.H6" class="mb-0 fw-bold">Répartition par Cours</RadzenText>
+                        </RadzenCardHeader>
+                        <div class="p-3">
+                            @if (courseStats.Any())
+                            {
+                                <RadzenChart>
+                                    <RadzenDonutSeries Data="@courseStats" CategoryProperty="CourseName" ValueProperty="TotalRegistrations" 
+                                                       Title="Inscriptions par Cours" />
+                                </RadzenChart>
+                            }
+                            else
+                            {
+                                <div class="text-center text-muted p-4">
+                                    <i class="bi bi-pie-chart fs-1"></i>
+                                    <p class="mt-2">Aucune donnée disponible</p>
+                                </div>
+                            }
+                        </div>
+                    </RadzenCard>
+                </RadzenColumn>
+
+                <RadzenColumn Size="12" SizeMD="6">
+                    <RadzenCard class="shadow-sm h-100">
+                        <RadzenCardHeader>
+                            <RadzenText TextStyle="TextStyle.H6" class="mb-0 fw-bold">Répartition par Profession</RadzenText>
+                        </RadzenCardHeader>
+                        <div class="p-3">
+                            @if (professionStats.Any())
+                            {
+                                <RadzenChart>
+                                    <RadzenColumnSeries Data="@professionStats" CategoryProperty="ProfessionName" ValueProperty="TotalRegistrations" 
+                                                        Title="Inscriptions par Profession" />
+                                    <RadzenCategoryAxis Padding="20" />
+                                    <RadzenValueAxis>
+                                        <RadzenGridLines Visible="true" />
+                                    </RadzenValueAxis>
+                                </RadzenChart>
+                            }
+                            else
+                            {
+                                <div class="text-center text-muted p-4">
+                                    <i class="bi bi-bar-chart fs-1"></i>
+                                    <p class="mt-2">Aucune donnée disponible</p>
+                                </div>
+                            }
+                        </div>
+                    </RadzenCard>
+                </RadzenColumn>
+            </RadzenRow>
+
+            <!-- Detailed Tables -->
+            <RadzenTabs>
+                <Tabs>
+                    <RadzenTabsItem Text="Statistiques par Cours">
+                        <RadzenCard class="mt-3">
+                            <RadzenDataGrid Data="@courseStats" TItem="CourseStatistic" 
+                                            AllowSorting="true" AllowFiltering="true" 
+                                            class="table-responsive">
+                                <Columns>
+                                    <RadzenDataGridColumn TItem="CourseStatistic" Property="CourseName" Title="Cours" Width="200px" />
+                                    <RadzenDataGridColumn TItem="CourseStatistic" Property="TotalRegistrations" Title="Total Inscriptions" Width="150px" TextAlign="TextAlign.Center" />
+                                    <RadzenDataGridColumn TItem="CourseStatistic" Property="ValidatedRegistrations" Title="Validées" Width="100px" TextAlign="TextAlign.Center" />
+                                    <RadzenDataGridColumn TItem="CourseStatistic" Property="PendingRegistrations" Title="En Attente" Width="120px" TextAlign="TextAlign.Center" />
+                                    <RadzenDataGridColumn TItem="CourseStatistic" Property="ValidationRate" Title="Taux Validation" Width="130px" TextAlign="TextAlign.Center">
+                                        <Template Context="stat">
+                                            <RadzenBadge BadgeStyle="@(stat.ValidationRate >= 80 ? BadgeStyle.Success : stat.ValidationRate >= 50 ? BadgeStyle.Warning : BadgeStyle.Danger)" 
+                                                         Text="@($"{stat.ValidationRate:F1}%")" />
+                                        </Template>
+                                    </RadzenDataGridColumn>
+                                    <RadzenDataGridColumn TItem="CourseStatistic" Property="TotalFees" Title="Frais Collectés" Width="150px" TextAlign="TextAlign.Right">
+                                        <Template Context="stat">
+                                            @($"{stat.TotalFees:N0} DA")
+                                        </Template>
+                                    </RadzenDataGridColumn>
+                                </Columns>
+                            </RadzenDataGrid>
+                        </RadzenCard>
+                    </RadzenTabsItem>
+
+                    <RadzenTabsItem Text="Statistiques par Profession">
+                        <RadzenCard class="mt-3">
+                            <RadzenDataGrid Data="@professionStats" TItem="ProfessionStatistic" 
+                                            AllowSorting="true" AllowFiltering="true"
+                                            class="table-responsive">
+                                <Columns>
+                                    <RadzenDataGridColumn TItem="ProfessionStatistic" Property="ProfessionName" Title="Profession" Width="200px" />
+                                    <RadzenDataGridColumn TItem="ProfessionStatistic" Property="TotalRegistrations" Title="Total Inscriptions" Width="150px" TextAlign="TextAlign.Center" />
+                                    <RadzenDataGridColumn TItem="ProfessionStatistic" Property="ValidatedRegistrations" Title="Validées" Width="100px" TextAlign="TextAlign.Center" />
+                                    <RadzenDataGridColumn TItem="ProfessionStatistic" Property="ExpectedFeeValue" Title="Tarif" Width="120px" TextAlign="TextAlign.Right">
+                                        <Template Context="stat">
+                                            @($"{stat.ExpectedFeeValue:N0} DA")
+                                        </Template>
+                                    </RadzenDataGridColumn>
+                                    <RadzenDataGridColumn TItem="ProfessionStatistic" Property="ValidationRate" Title="Taux Validation" Width="130px" TextAlign="TextAlign.Center">
+                                        <Template Context="stat">
+                                            <RadzenBadge BadgeStyle="@(stat.ValidationRate >= 80 ? BadgeStyle.Success : stat.ValidationRate >= 50 ? BadgeStyle.Warning : BadgeStyle.Danger)" 
+                                                         Text="@($"{stat.ValidationRate:F1}%")" />
+                                        </Template>
+                                    </RadzenDataGridColumn>
+                                    <RadzenDataGridColumn TItem="ProfessionStatistic" Property="TotalFees" Title="Frais Collectés" Width="150px" TextAlign="TextAlign.Right">
+                                        <Template Context="stat">
+                                            @($"{stat.TotalFees:N0} DA")
+                                        </Template>
+                                    </RadzenDataGridColumn>
+                                </Columns>
+                            </RadzenDataGrid>
+                        </RadzenCard>
+                    </RadzenTabsItem>
+
+                    <RadzenTabsItem Text="Détail Cours/Niveaux">
+                        <RadzenCard class="mt-3">
+                            <RadzenDataGrid Data="@courseLevelStats" TItem="CourseLevelStatistic" 
+                                            AllowSorting="true" AllowFiltering="true" AllowGrouping="true"
+                                            class="table-responsive">
+                                <Columns>
+                                    <RadzenDataGridColumn TItem="CourseLevelStatistic" Property="CourseName" Title="Cours" Width="200px" />
+                                    <RadzenDataGridColumn TItem="CourseLevelStatistic" Property="LevelName" Title="Niveau" Width="150px" />
+                                    <RadzenDataGridColumn TItem="CourseLevelStatistic" Property="TotalRegistrations" Title="Total Inscriptions" Width="150px" TextAlign="TextAlign.Center" />
+                                    <RadzenDataGridColumn TItem="CourseLevelStatistic" Property="ValidatedRegistrations" Title="Validées" Width="100px" TextAlign="TextAlign.Center" />
+                                    <RadzenDataGridColumn TItem="CourseLevelStatistic" Property="ValidationRate" Title="Taux Validation" Width="130px" TextAlign="TextAlign.Center">
+                                        <Template Context="stat">
+                                            <RadzenBadge BadgeStyle="@(stat.ValidationRate >= 80 ? BadgeStyle.Success : stat.ValidationRate >= 50 ? BadgeStyle.Warning : BadgeStyle.Danger)" 
+                                                         Text="@($"{stat.ValidationRate:F1}%")" />
+                                        </Template>
+                                    </RadzenDataGridColumn>
+                                    <RadzenDataGridColumn TItem="CourseLevelStatistic" Property="TotalFees" Title="Frais Collectés" Width="150px" TextAlign="TextAlign.Right">
+                                        <Template Context="stat">
+                                            @($"{stat.TotalFees:N0} DA")
+                                        </Template>
+                                    </RadzenDataGridColumn>
+                                </Columns>
+                            </RadzenDataGrid>
+                        </RadzenCard>
+                    </RadzenTabsItem>
+                </Tabs>
+            </RadzenTabs>
+        }
+        else if (selectedSessionId.HasValue)
+        {
+            <RadzenCard class="text-center p-5">
+                <RadzenStack AlignItems="AlignItems.Center" Gap="1rem">
+                    <RadzenProgressBarCircular ShowValue="true" Mode="ProgressBarMode.Indeterminate" Size="ProgressBarCircularSize.Large" />
+                    <RadzenText TextStyle="TextStyle.H6" class="text-muted">Chargement des statistiques...</RadzenText>
+                </RadzenStack>
+            </RadzenCard>
+        }
+        else
+        {
+            <RadzenCard class="text-center p-5">
+                <RadzenStack AlignItems="AlignItems.Center" Gap="1rem">
+                    <i class="bi bi-bar-chart fs-1 text-muted opacity-50"></i>
+                    <RadzenText TextStyle="TextStyle.H6" class="text-muted">Sélectionnez une session pour afficher les statistiques</RadzenText>
+                </RadzenStack>
+            </RadzenCard>
+        }
+    </RadzenStack>
+</div>
+
+<style>
+    .btn-export {
+        border-radius: 8px;
+        font-weight: 500;
+    }
+
+    .table-responsive {
+        border-radius: 8px;
+        overflow: hidden;
+    }
+
+    .border-4 {
+        border-width: 4px !important;
+    }
+
+    .border-start {
+        border-left: var(--bs-border-width) var(--bs-border-style) var(--bs-border-color) !important;
+    }
+
+    .rz-progressbar {
+        height: 8px;
+        border-radius: 4px;
+    }
+
+    .rz-card {
+        transition: all 0.2s ease-in-out;
+    }
+
+    .rz-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(0,0,0,0.1) !important;
+    }
+</style>

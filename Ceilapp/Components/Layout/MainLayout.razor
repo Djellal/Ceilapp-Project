@@ -51,7 +51,7 @@
             <RadzenPanelMenuItem Path="login" Text="Connexion" Icon="passkey" Visible="!Security.IsAuthenticated()"></RadzenPanelMenuItem>
             <RadzenPanelMenuItem Text="Se déconnecter" Icon="logout" Value=@Logout Visible="Security.IsAuthenticated()"></RadzenPanelMenuItem>
             <RadzenPanelMenuItem Text="Dashboard" Path="student-dashboard" Icon="dashboard" />
-            <RadzenPanelMenuItem Text="StatisticsPersession" Path="statistics-persession" />
+            <RadzenPanelMenuItem Text="Statistiques" Path="statistics-persession" Icon="bar_chart_4_bars" Visible="Security.IsInRole(Constants.ADMIN)" />
         </RadzenPanelMenu>
         <RadzenCard>
             @if (AppSettings != null)
