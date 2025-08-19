@@ -1,5 +1,5 @@
 @page "/add-application-role"
-@attribute [Authorize]
+@attribute [Authorize(Roles="ADMIN")]
 @inject Microsoft.Extensions.Localization.IStringLocalizer<AddApplicationRole> L
 
 <RadzenRow>

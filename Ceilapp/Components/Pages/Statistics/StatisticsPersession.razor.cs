@@ -76,13 +76,13 @@ namespace Ceilapp.Components.Pages.Statistics
         {
             if (!selectedSessionId.HasValue) return;
 
-            var registrations = await ceilappService.dbContext.CourseRegistrations
+            var registrations = ceilappService.dbContext.CourseRegistrations
                 .Include(r => r.Course)
                 .Include(r => r.CourseLevel)
                 .Include(r => r.Profession)
                 .Include(r => r.Session)
                 .Where(r => r.SessionId == selectedSessionId.Value).AsNoTracking()
-                .ToListAsync();
+                .ToList();
 
             // Calculate session-wide statistics
             sessionStats = new SessionStatistics
