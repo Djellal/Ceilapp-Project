@@ -35,6 +35,9 @@ namespace Ceilapp
             this.baseUri = new Uri($"{navigationManager.BaseUri}odata/Identity/");
             this.httpClient = factory.CreateClient("Ceilapp");
             this.navigationManager = navigationManager;
+
+            // Set the base address so we can use relative URIs consistently
+            this.httpClient.BaseAddress = navigationManager.ToAbsoluteUri("/");
         }
 
         public bool IsInRole(params string[] roles)

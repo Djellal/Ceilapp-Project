@@ -21,7 +21,7 @@ namespace Ceilapp
     {
         public async Task RegisterWithRole(string userName, string password,string role)
         {
-            var uri = new Uri($"{navigationManager.BaseUri}Account/RegisterWithRole");
+            var uri = new Uri("Account/RegisterWithRole", UriKind.Relative);
 
             var content = new FormUrlEncodedContent(new Dictionary<string, string> {
                 { "userName", userName },

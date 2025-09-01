@@ -9,6 +9,7 @@ using Microsoft.OData.ModelBuilder;
 using Microsoft.AspNetCore.Components.Authorization;
 using Ceilapp.Models.ceilapp;
 using Ceilapp.Data.Seeders;
+using Microsoft.AspNetCore.HttpOverrides;
 
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 var builder = WebApplication.CreateBuilder(args);
@@ -27,7 +28,20 @@ builder.Services.AddDbContext<Ceilapp.Data.ceilappContext>(options =>
 {
     options.UseNpgsql(builder.Configuration.GetConnectionString("ceilappConnection"));
 });
-builder.Services.AddHttpClient("Ceilapp").ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler { UseCookies = false }).AddHeaderPropagation(o => o.Headers.Add("Cookie"));
+builder.Services.AddHttpClient("Ceilapp")
+#if DEBUG
+    .ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler
+    {
+        UseCookies = false,
+        ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
+    })
+#else
+    .ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler
+    {
+        UseCookies = false
+    })
+#endif
+    .AddHeaderPropagation(o => o.Headers.Add("Cookie"));
 builder.Services.AddHeaderPropagation(o => o.Headers.Add("Cookie"));
 builder.Services.AddAuthentication();
 builder.Services.AddAuthorization();
@@ -57,15 +71,17 @@ builder.Services.AddControllers().AddOData(o =>
 });
 builder.Services.AddScoped<AuthenticationStateProvider, Ceilapp.ApplicationAuthenticationStateProvider>();
 builder.Services.AddLocalization();
-var app = builder.Build();
-var forwardingOptions = new ForwardedHeadersOptions()
+builder.Services.Configure<ForwardedHeadersOptions>(options =>
 {
-    ForwardedHeaders = Microsoft.AspNetCore.HttpOverrides.ForwardedHeaders.XForwardedFor | Microsoft.AspNetCore.HttpOverrides.ForwardedHeaders.XForwardedProto
-};
-forwardingOptions.KnownNetworks.Clear();
-forwardingOptions.KnownProxies.Clear();
-app.UseForwardedHeaders(forwardingOptions);
+    options.ForwardedHeaders =
+        ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
+
+    // If Apache is on the same box reverse proxying to Kestrel:
+    options.KnownProxies.Add(System.Net.IPAddress.Parse("127.0.0.1"));
+});
 // Configure the HTTP request pipeline.
+var app = builder.Build();
+
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Error", createScopeForErrors: true);

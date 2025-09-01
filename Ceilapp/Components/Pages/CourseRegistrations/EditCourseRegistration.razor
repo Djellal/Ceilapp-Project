@@ -178,10 +178,10 @@
                           Icon="shield_person" 
                           Style="border: 2px solid #6366F1; border-radius: 8px; background-color: #F9FAFB; padding: 1.5rem; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
                 
-                <RadzenRow class="align-items-center mb-4">
+                <RadzenRow class="align-items-center mb-4" Style="margin: 5px">
                     <RadzenColumn SizeMD="4">
                         <div class="d-flex align-items-center justify-content-end">
-                            <RadzenLabel Text="Registration Validated" 
+                            <RadzenLabel Text="Inscription validée" 
                                        Component="RegistrationValidated"
                                        Style="margin-right: 1rem; font-weight: 500;" />
                             <RadzenCheckBox @bind-Value="@(courseRegistration.RegistrationValidated)" 
@@ -191,9 +191,9 @@
                     </RadzenColumn>
                 </RadzenRow>
 
-                <RadzenRow class="align-items-center mb-4">
+                <RadzenRow class="align-items-center mb-4" Style="margin: 5px">
                     <RadzenColumn SizeMD="4">
-                        <RadzenFormField Text="Paid Fee Value" 
+                        <RadzenFormField Text="Montant payé" 
                                        Variant="Variant.Filled" 
                                        Style="width: 100%">
                             <ChildContent>
@@ -206,24 +206,12 @@
                     </RadzenColumn>
                 </RadzenRow>
 
-                <RadzenRow class="align-items-center mb-4">
-                    <RadzenColumn SizeMD="4">
-                        <div class="d-flex align-items-center justify-content-end">
-                            <RadzenLabel Text="Is Reregistration" 
-                                       Component="IsReregistration"
-                                       Style="margin-right: 1rem; font-weight: 500;" />
-                            <RadzenCheckBox @bind-Value="@(courseRegistration.IsReregistration)" 
-                                          Name="IsReregistration"
-                                          Style="width: 20px; height: 20px;" />
-                        </div>
-                    </RadzenColumn>
-                </RadzenRow>
 
                 <RadzenFormField Text="Notes" 
                                Variant="Variant.Filled" 
-                               Style="width: 100%">
+                               Style="width: 100%; margin: 5px">
                     <ChildContent>
-                        <RadzenTextBox Style="width: 100%; min-height: 100px;" 
+                        <RadzenTextBox Style="width: 100%; min-height: 100px; margin: 5px" 
                                      @bind-Value="@(courseRegistration.Notes)" 
                                      Name="Notes"
                                      Class="rounded-lg" />
