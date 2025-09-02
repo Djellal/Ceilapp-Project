@@ -32,17 +32,6 @@ namespace Ceilapp.Controllers
             {
                 try
                 {
-    //                var code = await userManager.GenerateEmailConfirmationTokenAsync(user);
-
-    //                var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code }, protocol: Request.Scheme);
-
-    //                var text = $@"Hi, <br /> <br />  
-    //We received your registration request for Ceilapp. <br /> <br />  
-    //To confirm your registration please click the following link: <a href=""{callbackUrl}"">confirm your registration</a> <br /> <br />  
-    //If you didn't request this registration, you can safely ignore this email. Someone else might have typed your email address by mistake.";
-
-    //                await SendEmailAsync(user.Email, "Confirm your registration", text);
-
                     return Ok();
                 }
                 catch (Exception ex)
