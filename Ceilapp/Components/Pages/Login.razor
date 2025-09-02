@@ -1,4 +1,4 @@
-@layout LoginLayout
+
 @inject Microsoft.Extensions.Localization.IStringLocalizer<Login> L
 
 @page "/login"
@@ -19,5 +19,5 @@
 </RadzenRow>
 <RadzenStack Orientation="Radzen.Orientation.Vertical" AlignItems="Radzen.AlignItems.Center" JustifyContent="Radzen.JustifyContent.SpaceBetween" Reverse="false" Style="margin-top: 2em">
     <RadzenLabel Text="Vous n'avez pas encore de compte ?" />
-    <RadzenButton Text="INSCRIPTION" Icon="app_registration" Size="Radzen.ButtonSize.Medium" ButtonStyle="Radzen.ButtonStyle.Success" Click="@Button0Click" Style="width: 100%; border-radius: 8px"></RadzenButton>
+    <RadzenButton Text="INSCRIPTION" Icon="app_registration" Size="Radzen.ButtonSize.Medium" ButtonStyle="Radzen.ButtonStyle.Success" Click="@Button0Click" Style="border-radius: 8px"></RadzenButton>
 </RadzenStack>

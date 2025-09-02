@@ -8,12 +8,12 @@
     <RadzenImage Path="images/ceillogo.png" Style="width: 150px"></RadzenImage>
     <RadzenText TextStyle="Radzen.Blazor.TextStyle.H6" TextAlign="Radzen.TextAlign.Center" Style="font-style: italic; font-family: 'Comic Sans MS'" Text="Le Centre d'Enseignement Intensif des Langues (CEIL-UFAS-1) fait partie des services communs de l'université. Il propose un service public d'enseignement des langues destiné en premier lieu aux membres de la communauté universitaire (étudiants, enseignants et fonctionnaires) mais aussi aux externes dans le cadre de conventions ou à tout individu voulant améliorer son niveau de langue." />
     <RadzenStack AlignItems="Radzen.AlignItems.Center" JustifyContent="Radzen.JustifyContent.SpaceAround" Orientation="Radzen.Orientation.Horizontal" Gap="2rem" Style="margin-top: 3em">
-        <RadzenButton Icon="login" Size="Radzen.ButtonSize.Large" 
+        <RadzenButton Icon="login" Size="Radzen.ButtonSize.Small" 
                     Click="@LoginButtonClick"
                     Style="background: #007bff; padding: 0.8rem 2rem; font-weight: 600;"
                     class="auth-button" Text="Se connecter" Visible="!Security.IsAuthenticated()"></RadzenButton>
         <RadzenButton ButtonStyle="Radzen.ButtonStyle.Success" 
-                    Icon="how_to_reg" Size="Radzen.ButtonSize.Large"
+                    Icon="how_to_reg" Size="Radzen.ButtonSize.Small"
                     Style="padding: 0.8rem 2rem; font-weight: 600;"
                     class="auth-button" Click="@RegisterButtonClick" Text="S'enregistrer" Visible="!Security.IsAuthenticated()"></RadzenButton>
     </RadzenStack>
@@ -27,7 +27,7 @@
                     <div class="image-container" style="background-color: rgba(255, 255, 255, 0)">
                         <RadzenImage Style="height: 140px; width: 140px; object-fit: cover; border-radius: 8px;" Path="@context.Image" Class="rz-mb-2"/>
                     </div>
-                    <RadzenHeading Text="@context.Name" Size="H4" Style="margin: 0; color: #2a2a2a; font-weight: 600; text-align: center;"/>
+                    <RadzenHeading Text="@context.Name" Size="H4" Style="margin: 0; font-weight: 600; text-align: center"/>
                     <RadzenLink Text="S'inscrire" Icon="app_registration" Path="@($"/edit-course-registration/true/{context.Id}")" Style="font-weight: 600; font-style: italic; font-family: 'Comic Sans MS'; border-radius: 5px; border: 1px solid #e31c65; padding: 5px; width: 100%; text-align: center"></RadzenLink>
                 </RadzenStack>
             </RadzenCard>

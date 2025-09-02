@@ -1,4 +1,4 @@
-@layout LoginLayout
+
 @page "/register-application-user"
 
 @inject Microsoft.Extensions.Localization.IStringLocalizer<RegisterApplicationUser> L
@@ -73,22 +73,24 @@
                     </RadzenStack>
 
                     <div class="mt-8 space-y-4 sm:space-y-0 sm:flex sm:justify-between sm:items-center">
-                        <RadzenButton ButtonType="ButtonType.Submit" 
-                           
-                            Text="Créer le compte" 
-                            IsBusy="@isBusy" 
-                            BusyText="Configuration de votre compte..." 
-                            ButtonStyle="ButtonStyle.Primary"
-                            Size="ButtonSize.Large"
-                            Icon="how_to_reg" Style="width: 100%" />
                         
-                        <RadzenButton ButtonStyle="Radzen.ButtonStyle.Light" 
-                           
-                            Text="Annuler" 
-                            Click="@CancelClick" 
-                            Variant="Radzen.Variant.Filled"
-                            Size="ButtonSize.Large"
-                            Icon="cancel" Style="width: 100%" />
                     </div>
+                    <RadzenStack Orientation="Radzen.Orientation.Horizontal" JustifyContent="Radzen.JustifyContent.SpaceBetween">
+                        <RadzenButton ButtonType="ButtonType.Submit" 
+                                                   
+                                                    Text="Créer le compte" 
+                                                    IsBusy="@isBusy" 
+                                                    BusyText="Configuration de votre compte..." 
+                                                    ButtonStyle="ButtonStyle.Primary"
+                                                    Size="Radzen.ButtonSize.Medium"
+                                                    Icon="how_to_reg" />
+                        <RadzenButton ButtonStyle="Radzen.ButtonStyle.Light" 
+                                                   
+                                                    Text="Annuler" 
+                                                    Click="@CancelClick" 
+                                                    Variant="Radzen.Variant.Filled"
+                                                    Size="Radzen.ButtonSize.Medium"
+                                                    Icon="cancel" />
+                    </RadzenStack>
                 </RadzenTemplateForm>
 </RadzenStack>
