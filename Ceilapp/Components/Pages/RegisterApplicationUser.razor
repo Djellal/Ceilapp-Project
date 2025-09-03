@@ -21,7 +21,7 @@
                             <ChildContent>
                                 <div class="input-group">
                                     <span class="input-group-text"><i class="bi bi-envelope-fill"></i></span>
-                                    <RadzenTextBox class="w-100" 
+                                    <RadzenTextBox style="display: block; width: 100%"  
                                         @bind-Value="@(user.Email)" 
                                         Name="UserName"
                                         Placeholder="vous@exemple.com"
@@ -39,7 +39,7 @@
                             <ChildContent>
                                 <div class="input-group">
                                     <span class="input-group-text"><i class="bi bi-lock-fill"></i></span>
-                                    <RadzenPassword class="w-100"
+                                    <RadzenPassword style="display: block; width: 100%" 
                                         @bind-Value="@(user.Password)" 
                                         Name="Password"
                                         Placeholder="••••••••"
@@ -57,7 +57,7 @@
                             <ChildContent>
                                 <div class="input-group">
                                     <span class="input-group-text"><i class="bi bi-shield-lock-fill"></i></span>
-                                    <RadzenPassword class="w-100"
+                                    <RadzenPassword style="display: block; width: 100%" 
                                         @bind-Value="@(user.ConfirmPassword)" 
                                         Name="ConfirmPassword"
                                         Placeholder="••••••••"
@@ -82,14 +82,14 @@
                                                     IsBusy="@isBusy" 
                                                     BusyText="Configuration de votre compte..." 
                                                     ButtonStyle="ButtonStyle.Primary"
-                                                    Size="Radzen.ButtonSize.Medium"
+                                                    Size="Radzen.ButtonSize.Small"
                                                     Icon="how_to_reg" />
                         <RadzenButton ButtonStyle="Radzen.ButtonStyle.Light" 
                                                    
                                                     Text="Annuler" 
                                                     Click="@CancelClick" 
                                                     Variant="Radzen.Variant.Filled"
-                                                    Size="Radzen.ButtonSize.Medium"
+                                                    Size="Radzen.ButtonSize.Small"
                                                     Icon="cancel" />
                     </RadzenStack>
                 </RadzenTemplateForm>
