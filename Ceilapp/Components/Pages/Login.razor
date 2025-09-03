@@ -4,22 +4,31 @@
 @page "/login"
 
 <PageTitle>Login</PageTitle>
-<RadzenRow AlignItems="Radzen.AlignItems.Center" JustifyContent="Radzen.JustifyContent.Center">
-    <RadzenColumn Size="6" Style="text-align: center">
+<RadzenRow>
+    <RadzenColumn Size="12" SizeSM="6" Class="rz-background-color-primary rz-p-12" style="background-image: linear-gradient(135deg, var(--rz-primary) 0%, var(--rz-primary-darker) 100%); position: relative; text-align: center">
+        <div class="rz-mt-8">
+            <RadzenImage Path="images/ceillogo.png" style="width: 200px; height: auto; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.2))"></RadzenImage>
+            <RadzenText TextStyle="Radzen.Blazor.TextStyle.H3" Class="rz-color-white rz-mt-6 rz-mb-2" style="font-weight: 600; letter-spacing: 0.5px">
+                Bienvenue sur CEIL UFAS1</RadzenText>
+            <RadzenText TextStyle="Radzen.Blazor.TextStyle.Body1" Class="rz-color-white rz-mt-4" style="line-height: 1.6">
+                Procédez à l'inscription pour utiliser notre plateforme
+            </RadzenText>
+        </div>
+    </RadzenColumn>
+    <RadzenColumn Size="12" SizeXS="6">
         <RadzenTemplateForm Action="@($"account/login?redirectUrl={redirectUrl}")" Data="@("login")" Method="post">
         <RadzenStack Style="text-align: center">
-    <RadzenAlert Shade="Radzen.Shade.Lighter" Variant="Radzen.Variant.Flat" Size="Radzen.AlertSize.Small" AlertStyle="Radzen.AlertStyle.Danger" Visible="@errorVisible">@error</RadzenAlert>
-    <RadzenAlert Shade="Radzen.Shade.Lighter" Variant="Radzen.Variant.Flat" Size="Radzen.AlertSize.Small" AlertStyle="Radzen.AlertStyle.Info" Visible="@infoVisible">@info</RadzenAlert>
-    <RadzenLogin AllowResetPassword="false" AllowRegister="false" FormFieldVariant="Variant.Filled"
+            <RadzenAlert Shade="Radzen.Shade.Lighter" Variant="Radzen.Variant.Flat" Size="Radzen.AlertSize.Small" AlertStyle="Radzen.AlertStyle.Danger" Visible="@errorVisible">@error</RadzenAlert>
+            <RadzenAlert Shade="Radzen.Shade.Lighter" Variant="Radzen.Variant.Flat" Size="Radzen.AlertSize.Small" AlertStyle="Radzen.AlertStyle.Info" Visible="@infoVisible">@info</RadzenAlert>
+            <RadzenLogin AllowResetPassword="false" AllowRegister="false" FormFieldVariant="Variant.Filled"
                         ResetPassword="@ResetPassword"
                         Register="@Register" AllowRememberMe="true" RememberMe="true" UserText="Nom d'utilisateur" UserRequired="Le nom d'utilisateur est requis" PasswordText="Mot de passe " PasswordRequired="Mot de passe  est requit" ResetPasswordText="Mot de passe oublié ?" RememberMeText="souviens-toi de moi" LoginText="Connexion" RegisterText="Inscription" RegisterMessageText="Vous n'avez pas encore de compte ?" Style="padding-top: 1em; padding-bottom: 1em; font-style: normal; text-align: center"
                 />
-    <RadzenStack Orientation="Radzen.Orientation.Vertical" AlignItems="Radzen.AlignItems.Center" JustifyContent="Radzen.JustifyContent.SpaceBetween" Reverse="false" Style="margin-top: 2em">
+            <RadzenStack Orientation="Radzen.Orientation.Vertical" AlignItems="Radzen.AlignItems.Center" JustifyContent="Radzen.JustifyContent.SpaceBetween" Reverse="false" Style="margin-top: 2em">
         <RadzenLabel Text="Vous n'avez pas encore de compte ?" />
         <RadzenButton Text="INSCRIPTION" Icon="app_registration" Size="Radzen.ButtonSize.Medium" ButtonStyle="Radzen.ButtonStyle.Success" Click="@Button0Click" Style="border-radius: 8px"></RadzenButton>
-    </RadzenStack>
-</RadzenStack>
+            </RadzenStack>
+        </RadzenStack>
         </RadzenTemplateForm>
     </RadzenColumn>
 </RadzenRow>
-
