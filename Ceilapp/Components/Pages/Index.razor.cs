@@ -55,7 +55,7 @@ namespace Ceilapp.Components.Pages
 
         protected override async Task OnInitializedAsync()
         {
-            courses = await ceilappService.GetCourses();
+            courses = await ceilappService.GetCourses(new Radzen.Query { OrderBy = "Order asc", Expand = "CourseType" });
         }
 
         protected async System.Threading.Tasks.Task RegisterButtonClick(Microsoft.AspNetCore.Components.Web.MouseEventArgs args)
