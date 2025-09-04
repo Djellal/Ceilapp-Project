@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DataModel.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250713122719_initdb")]
+    [Migration("20250904091300_initdb")]
     partial class initdb
     {
         /// <inheritdoc />
@@ -139,6 +139,9 @@ namespace DataModel.Migrations
                         .IsRequired()
                         .HasMaxLength(250)
                         .HasColumnType("character varying(250)");
+
+                    b.Property<int>("Order")
+                        .HasColumnType("integer");
 
                     b.HasKey("Id");
 

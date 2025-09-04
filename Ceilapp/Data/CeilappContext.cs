@@ -88,12 +88,6 @@ namespace Ceilapp.Data
               .HasForeignKey(i => i.CourseTypeId)
               .HasPrincipalKey(i => i.Id);
 
-            builder.Entity<Ceilapp.Models.ceilapp.Municipality>()
-              .HasOne(i => i.State)
-              .WithMany(i => i.Municipalities)
-              .HasForeignKey(i => i.StateId)
-              .HasPrincipalKey(i => i.Id);
-
             builder.Entity<Ceilapp.Models.ceilapp.Evaluation>()
               .HasOne(i => i.Course)
               .WithMany(i => i.Evaluations)
@@ -124,6 +118,12 @@ namespace Ceilapp.Data
               .HasForeignKey(i => i.CurrentSessionId)
               .HasPrincipalKey(i => i.Id);
 
+            builder.Entity<Ceilapp.Models.ceilapp.Municipality>()
+              .HasOne(i => i.State)
+              .WithMany(i => i.Municipalities)
+              .HasForeignKey(i => i.StateId)
+              .HasPrincipalKey(i => i.Id);
+
             builder.Entity<Ceilapp.Models.ceilapp.CourseRegistration>()
               .Property(p => p.PaidFeeValue)
               .HasPrecision(18,2);
@@ -146,6 +146,10 @@ namespace Ceilapp.Data
 
         public DbSet<Ceilapp.Models.ceilapp.CourseType> CourseTypes { get; set; }
 
+        public DbSet<Ceilapp.Models.ceilapp.Evaluation> Evaluations { get; set; }
+
+        public DbSet<Ceilapp.Models.ceilapp.Groupe> Groupes { get; set; }
+
         public DbSet<Ceilapp.Models.ceilapp.Municipality> Municipalities { get; set; }
 
         public DbSet<Ceilapp.Models.ceilapp.Profession> Professions { get; set; }
@@ -153,10 +157,6 @@ namespace Ceilapp.Data
         public DbSet<Ceilapp.Models.ceilapp.Session> Sessions { get; set; }
 
         public DbSet<Ceilapp.Models.ceilapp.State> States { get; set; }
-
-        public DbSet<Ceilapp.Models.ceilapp.Evaluation> Evaluations { get; set; }
-
-        public DbSet<Ceilapp.Models.ceilapp.Groupe> Groupes { get; set; }
 
         protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)
         {

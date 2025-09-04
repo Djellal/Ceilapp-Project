@@ -15,6 +15,12 @@
                     <RadzenRequiredValidator Component="Code" Text="Code is required" />
                   </Helper>
             </RadzenFormField>
+              <RadzenFormField Text="Order" Variant="Variant.Filled">
+                  <ChildContent>
+                         <RadzenNumeric style="display: block; width: 100%" @bind-Value="@(course.Order)" Name="Order" />
+                  </ChildContent>    
+                  
+            </RadzenFormField>
             <RadzenFormField Text="Name" Variant="Variant.Filled">
                   <ChildContent>
                     <RadzenTextBox style="display: block; width: 100%" @bind-Value="@(course.Name)" Name="Name" />

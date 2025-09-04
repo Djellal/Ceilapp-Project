@@ -152,11 +152,6 @@
                                         Text="@(level.IsActive ? "Active" : "Inactive")" />
                                 </Template>
                             </RadzenDataGridColumn>
-                            <RadzenDataGridColumn TItem="Ceilapp.Models.ceilapp.CourseLevel" Property="Course.Image" Title="Course">
-                                <Template Context="level">
-                                    <RadzenImage Path="@level.Course?.Image" Style="height: 32px; width: 32px; object-fit: cover; border-radius: 4px;" />
-                                </Template>
-                            </RadzenDataGridColumn>
                             <RadzenDataGridColumn TItem="Ceilapp.Models.ceilapp.CourseLevel" Property="CourseLevel1.NameAr" Title="Previous Level" />
                             <RadzenDataGridColumn TItem="Ceilapp.Models.ceilapp.CourseLevel" Filterable="false" Sortable="false" Width="70px" TextAlign="TextAlign.Center">
                                 <Template Context="courseLevelChild">

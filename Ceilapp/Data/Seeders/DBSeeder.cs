@@ -162,6 +162,7 @@ namespace Ceilapp.Data.Seeders
                     Image = "",
                     CourseTypeId = Langid,
                     IsActive = true,
+                    Order = 1
                 });
 
                 await ceilappdb.CreateCourseLevel(new Models.ceilapp.CourseLevel { CourseId = c.Id, Name = "Pré-A1", NameAr = "Pré-A1", IsActive = true });
@@ -183,6 +184,7 @@ namespace Ceilapp.Data.Seeders
                     Image = "",
                     CourseTypeId = Langid,
                     IsActive = true,
+                    Order = 2
                 });
 
                 await ceilappdb.CreateCourseLevel(new Models.ceilapp.CourseLevel { CourseId = c.Id, Name = "Pré-A1", NameAr = "Pré-A1", IsActive = true });
@@ -204,6 +206,7 @@ namespace Ceilapp.Data.Seeders
                     Image = "",
                     CourseTypeId = Langid,
                     IsActive = true,
+                    Order = 3
                 });
                 await ceilappdb.CreateCourseLevel(new Models.ceilapp.CourseLevel { CourseId = c.Id, Name = "Pré-A1", NameAr = "Pré-A1", IsActive = true });
                 await ceilappdb.CreateCourseLevel(new Models.ceilapp.CourseLevel { CourseId = c.Id, Name = "A1.1", NameAr = "A1.1", IsActive = true });
@@ -224,6 +227,7 @@ namespace Ceilapp.Data.Seeders
                     Image = "",
                     CourseTypeId = Langid,
                     IsActive = true,
+                    Order = 6
                 });
                 await ceilappdb.CreateCourseLevel(new Models.ceilapp.CourseLevel { CourseId = c.Id, Name = "Pré-A1", NameAr = "Pré-A1", IsActive = true });
                 await ceilappdb.CreateCourseLevel(new Models.ceilapp.CourseLevel { CourseId = c.Id, Name = "A1.1", NameAr = "A1.1", IsActive = true });
@@ -245,6 +249,7 @@ namespace Ceilapp.Data.Seeders
                     Image = "",
                     CourseTypeId = Langid,
                     IsActive = true,
+                    Order = 5
 
                 });
                 await ceilappdb.CreateCourseLevel(new Models.ceilapp.CourseLevel { CourseId = c.Id, Name = "Pré-A1", NameAr = "Pré-A1", IsActive = true });
@@ -267,6 +272,7 @@ namespace Ceilapp.Data.Seeders
                     Image = "",
                     CourseTypeId = Langid,
                     IsActive = true,
+                    Order = 4
                 });
                 await ceilappdb.CreateCourseLevel(new Models.ceilapp.CourseLevel { CourseId = c.Id, Name = "Pré-A1", NameAr = "Pré-A1", IsActive = true });
                 await ceilappdb.CreateCourseLevel(new Models.ceilapp.CourseLevel { CourseId = c.Id, Name = "A1.1", NameAr = "A1.1", IsActive = true });
@@ -287,6 +293,7 @@ namespace Ceilapp.Data.Seeders
                     Image = "",
                     CourseTypeId = Langid,
                     IsActive = true,
+                    Order = 7
                 });
 
                 await ceilappdb.CreateCourseLevel(new Models.ceilapp.CourseLevel { CourseId = c.Id, Name = "Pré-A1", NameAr = "Pré-A1", IsActive = true });
@@ -308,6 +315,7 @@ namespace Ceilapp.Data.Seeders
                     Image = "",
                     CourseTypeId = Langid,
                     IsActive = true,
+                    Order = 8
                 });
                 await ceilappdb.CreateCourseLevel(new Models.ceilapp.CourseLevel { CourseId = c.Id, Name = "Pré-A1", NameAr = "Pré-A1", IsActive = true });
                 await ceilappdb.CreateCourseLevel(new Models.ceilapp.CourseLevel { CourseId = c.Id, Name = "A1.1", NameAr = "A1.1", IsActive = true });
@@ -328,6 +336,7 @@ namespace Ceilapp.Data.Seeders
                     Image = "",
                     CourseTypeId = atlid,
                     IsActive = true,
+                    Order = 9
                 });
                 await ceilappdb.CreateCourseLevel(new Models.ceilapp.CourseLevel { CourseId = c.Id, Name = "-", NameAr = "-", IsActive = true });
                 c = await ceilappdb.CreateCourse(new Models.ceilapp.Course
@@ -338,6 +347,7 @@ namespace Ceilapp.Data.Seeders
                     Image = "",
                     CourseTypeId = atlid,
                     IsActive = true,
+                    Order = 10
                 });
                 await ceilappdb.CreateCourseLevel(new Models.ceilapp.CourseLevel { CourseId = c.Id, Name = "-", NameAr = "-", IsActive = true });
                 c = await ceilappdb.CreateCourse(new Models.ceilapp.Course
@@ -348,6 +358,7 @@ namespace Ceilapp.Data.Seeders
                     Image = "",
                     CourseTypeId = atlid,
                     IsActive = true,
+                    Order = 11
                 });
                 await ceilappdb.CreateCourseLevel(new Models.ceilapp.CourseLevel { CourseId = c.Id, Name = "-", NameAr = "-", IsActive = true });
             }

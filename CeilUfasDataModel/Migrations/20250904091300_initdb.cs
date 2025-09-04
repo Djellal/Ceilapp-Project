@@ -83,7 +83,8 @@ namespace DataModel.Migrations
                     NameAr = table.Column<string>(type: "character varying(250)", maxLength: 250, nullable: false),
                     IsActive = table.Column<bool>(type: "boolean", nullable: false),
                     Image = table.Column<string>(type: "text", nullable: false),
-                    CourseTypeId = table.Column<int>(type: "integer", nullable: false)
+                    CourseTypeId = table.Column<int>(type: "integer", nullable: false),
+                    Order = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {

@@ -532,8 +532,8 @@ namespace Ceilapp
         {
             var itemToDelete = Context.CourseLevels
                               .Where(i => i.Id == id)
-                              .Include(i => i.CourseLevels1)
                               .Include(i => i.CourseRegistrations)
+                              .Include(i => i.CourseLevels1)
                               .Include(i => i.Groupes)
                               .FirstOrDefault();
 
@@ -872,11 +872,11 @@ namespace Ceilapp
         {
             var itemToDelete = Context.Courses
                               .Where(i => i.Id == id)
-                              .Include(i => i.Evaluations)
-                              .Include(i => i.CourseLevels)
-                              .Include(i => i.CourseComponents)
                               .Include(i => i.CourseRegistrations)
+                              .Include(i => i.CourseComponents)
+                              .Include(i => i.CourseLevels)
                               .Include(i => i.Groupes)
+                              .Include(i => i.Evaluations)
                               .FirstOrDefault();
 
             if (itemToDelete == null)
@@ -1062,6 +1062,338 @@ namespace Ceilapp
             }
 
             OnAfterCourseTypeDeleted(itemToDelete);
+
+            return itemToDelete;
+        }
+    
+        public async Task ExportEvaluationsToExcel(Query query = null, string fileName = null)
+        {
+            navigationManager.NavigateTo(query != null ? query.ToUrl($"export/ceilapp/evaluations/excel(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')") : $"export/ceilapp/evaluations/excel(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')", true);
+        }
+
+        public async Task ExportEvaluationsToCSV(Query query = null, string fileName = null)
+        {
+            navigationManager.NavigateTo(query != null ? query.ToUrl($"export/ceilapp/evaluations/csv(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')") : $"export/ceilapp/evaluations/csv(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')", true);
+        }
+
+        partial void OnEvaluationsRead(ref IQueryable<Ceilapp.Models.ceilapp.Evaluation> items);
+
+        public async Task<IQueryable<Ceilapp.Models.ceilapp.Evaluation>> GetEvaluations(Query query = null)
+        {
+            var items = Context.Evaluations.AsQueryable();
+
+            items = items.Include(i => i.Course);
+            items = items.Include(i => i.CourseRegistration);
+
+            if (query != null)
+            {
+                if (!string.IsNullOrEmpty(query.Expand))
+                {
+                    var propertiesToExpand = query.Expand.Split(',');
+                    foreach(var p in propertiesToExpand)
+                    {
+                        items = items.Include(p.Trim());
+                    }
+                }
+
+                ApplyQuery(ref items, query);
+            }
+
+            OnEvaluationsRead(ref items);
+
+            return await Task.FromResult(items);
+        }
+
+        partial void OnEvaluationGet(Ceilapp.Models.ceilapp.Evaluation item);
+        partial void OnGetEvaluationById(ref IQueryable<Ceilapp.Models.ceilapp.Evaluation> items);
+
+
+        public async Task<Ceilapp.Models.ceilapp.Evaluation> GetEvaluationById(int id)
+        {
+            var items = Context.Evaluations
+                              .AsNoTracking()
+                              .Where(i => i.Id == id);
+
+            items = items.Include(i => i.Course);
+            items = items.Include(i => i.CourseRegistration);
+ 
+            OnGetEvaluationById(ref items);
+
+            var itemToReturn = items.FirstOrDefault();
+
+            OnEvaluationGet(itemToReturn);
+
+            return await Task.FromResult(itemToReturn);
+        }
+
+        partial void OnEvaluationCreated(Ceilapp.Models.ceilapp.Evaluation item);
+        partial void OnAfterEvaluationCreated(Ceilapp.Models.ceilapp.Evaluation item);
+
+        public async Task<Ceilapp.Models.ceilapp.Evaluation> CreateEvaluation(Ceilapp.Models.ceilapp.Evaluation evaluation)
+        {
+            OnEvaluationCreated(evaluation);
+
+            var existingItem = Context.Evaluations
+                              .Where(i => i.Id == evaluation.Id)
+                              .FirstOrDefault();
+
+            if (existingItem != null)
+            {
+               throw new Exception("Item already available");
+            }            
+
+            try
+            {
+                Context.Evaluations.Add(evaluation);
+                Context.SaveChanges();
+            }
+            catch
+            {
+                Context.Entry(evaluation).State = EntityState.Detached;
+                throw;
+            }
+
+            OnAfterEvaluationCreated(evaluation);
+
+            return evaluation;
+        }
+
+        public async Task<Ceilapp.Models.ceilapp.Evaluation> CancelEvaluationChanges(Ceilapp.Models.ceilapp.Evaluation item)
+        {
+            var entityToCancel = Context.Entry(item);
+            if (entityToCancel.State == EntityState.Modified)
+            {
+              entityToCancel.CurrentValues.SetValues(entityToCancel.OriginalValues);
+              entityToCancel.State = EntityState.Unchanged;
+            }
+
+            return item;
+        }
+
+        partial void OnEvaluationUpdated(Ceilapp.Models.ceilapp.Evaluation item);
+        partial void OnAfterEvaluationUpdated(Ceilapp.Models.ceilapp.Evaluation item);
+
+        public async Task<Ceilapp.Models.ceilapp.Evaluation> UpdateEvaluation(int id, Ceilapp.Models.ceilapp.Evaluation evaluation)
+        {
+            OnEvaluationUpdated(evaluation);
+
+            var itemToUpdate = Context.Evaluations
+                              .Where(i => i.Id == evaluation.Id)
+                              .FirstOrDefault();
+
+            if (itemToUpdate == null)
+            {
+               throw new Exception("Item no longer available");
+            }
+                
+            var entryToUpdate = Context.Entry(itemToUpdate);
+            entryToUpdate.CurrentValues.SetValues(evaluation);
+            entryToUpdate.State = EntityState.Modified;
+
+            Context.SaveChanges();
+
+            OnAfterEvaluationUpdated(evaluation);
+
+            return evaluation;
+        }
+
+        partial void OnEvaluationDeleted(Ceilapp.Models.ceilapp.Evaluation item);
+        partial void OnAfterEvaluationDeleted(Ceilapp.Models.ceilapp.Evaluation item);
+
+        public async Task<Ceilapp.Models.ceilapp.Evaluation> DeleteEvaluation(int id)
+        {
+            var itemToDelete = Context.Evaluations
+                              .Where(i => i.Id == id)
+                              .FirstOrDefault();
+
+            if (itemToDelete == null)
+            {
+               throw new Exception("Item no longer available");
+            }
+
+            OnEvaluationDeleted(itemToDelete);
+
+
+            Context.Evaluations.Remove(itemToDelete);
+
+            try
+            {
+                Context.SaveChanges();
+            }
+            catch
+            {
+                Context.Entry(itemToDelete).State = EntityState.Unchanged;
+                throw;
+            }
+
+            OnAfterEvaluationDeleted(itemToDelete);
+
+            return itemToDelete;
+        }
+    
+        public async Task ExportGroupesToExcel(Query query = null, string fileName = null)
+        {
+            navigationManager.NavigateTo(query != null ? query.ToUrl($"export/ceilapp/groupes/excel(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')") : $"export/ceilapp/groupes/excel(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')", true);
+        }
+
+        public async Task ExportGroupesToCSV(Query query = null, string fileName = null)
+        {
+            navigationManager.NavigateTo(query != null ? query.ToUrl($"export/ceilapp/groupes/csv(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')") : $"export/ceilapp/groupes/csv(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')", true);
+        }
+
+        partial void OnGroupesRead(ref IQueryable<Ceilapp.Models.ceilapp.Groupe> items);
+
+        public async Task<IQueryable<Ceilapp.Models.ceilapp.Groupe>> GetGroupes(Query query = null)
+        {
+            var items = Context.Groupes.AsQueryable();
+
+            items = items.Include(i => i.Course);
+            items = items.Include(i => i.CourseLevel);
+            items = items.Include(i => i.Session);
+
+            if (query != null)
+            {
+                if (!string.IsNullOrEmpty(query.Expand))
+                {
+                    var propertiesToExpand = query.Expand.Split(',');
+                    foreach(var p in propertiesToExpand)
+                    {
+                        items = items.Include(p.Trim());
+                    }
+                }
+
+                ApplyQuery(ref items, query);
+            }
+
+            OnGroupesRead(ref items);
+
+            return await Task.FromResult(items);
+        }
+
+        partial void OnGroupeGet(Ceilapp.Models.ceilapp.Groupe item);
+        partial void OnGetGroupeById(ref IQueryable<Ceilapp.Models.ceilapp.Groupe> items);
+
+
+        public async Task<Ceilapp.Models.ceilapp.Groupe> GetGroupeById(int id)
+        {
+            var items = Context.Groupes
+                              .AsNoTracking()
+                              .Where(i => i.Id == id);
+
+            items = items.Include(i => i.Course);
+            items = items.Include(i => i.CourseLevel);
+            items = items.Include(i => i.Session);
+ 
+            OnGetGroupeById(ref items);
+
+            var itemToReturn = items.FirstOrDefault();
+
+            OnGroupeGet(itemToReturn);
+
+            return await Task.FromResult(itemToReturn);
+        }
+
+        partial void OnGroupeCreated(Ceilapp.Models.ceilapp.Groupe item);
+        partial void OnAfterGroupeCreated(Ceilapp.Models.ceilapp.Groupe item);
+
+        public async Task<Ceilapp.Models.ceilapp.Groupe> CreateGroupe(Ceilapp.Models.ceilapp.Groupe groupe)
+        {
+            OnGroupeCreated(groupe);
+
+            var existingItem = Context.Groupes
+                              .Where(i => i.Id == groupe.Id)
+                              .FirstOrDefault();
+
+            if (existingItem != null)
+            {
+               throw new Exception("Item already available");
+            }            
+
+            try
+            {
+                Context.Groupes.Add(groupe);
+                Context.SaveChanges();
+            }
+            catch
+            {
+                Context.Entry(groupe).State = EntityState.Detached;
+                throw;
+            }
+
+            OnAfterGroupeCreated(groupe);
+
+            return groupe;
+        }
+
+        public async Task<Ceilapp.Models.ceilapp.Groupe> CancelGroupeChanges(Ceilapp.Models.ceilapp.Groupe item)
+        {
+            var entityToCancel = Context.Entry(item);
+            if (entityToCancel.State == EntityState.Modified)
+            {
+              entityToCancel.CurrentValues.SetValues(entityToCancel.OriginalValues);
+              entityToCancel.State = EntityState.Unchanged;
+            }
+
+            return item;
+        }
+
+        partial void OnGroupeUpdated(Ceilapp.Models.ceilapp.Groupe item);
+        partial void OnAfterGroupeUpdated(Ceilapp.Models.ceilapp.Groupe item);
+
+        public async Task<Ceilapp.Models.ceilapp.Groupe> UpdateGroupe(int id, Ceilapp.Models.ceilapp.Groupe groupe)
+        {
+            OnGroupeUpdated(groupe);
+
+            var itemToUpdate = Context.Groupes
+                              .Where(i => i.Id == groupe.Id)
+                              .FirstOrDefault();
+
+            if (itemToUpdate == null)
+            {
+               throw new Exception("Item no longer available");
+            }
+                
+            var entryToUpdate = Context.Entry(itemToUpdate);
+            entryToUpdate.CurrentValues.SetValues(groupe);
+            entryToUpdate.State = EntityState.Modified;
+
+            Context.SaveChanges();
+
+            OnAfterGroupeUpdated(groupe);
+
+            return groupe;
+        }
+
+        partial void OnGroupeDeleted(Ceilapp.Models.ceilapp.Groupe item);
+        partial void OnAfterGroupeDeleted(Ceilapp.Models.ceilapp.Groupe item);
+
+        public async Task<Ceilapp.Models.ceilapp.Groupe> DeleteGroupe(int id)
+        {
+            var itemToDelete = Context.Groupes
+                              .Where(i => i.Id == id)
+                              .FirstOrDefault();
+
+            if (itemToDelete == null)
+            {
+               throw new Exception("Item no longer available");
+            }
+
+            OnGroupeDeleted(itemToDelete);
+
+
+            Context.Groupes.Remove(itemToDelete);
+
+            try
+            {
+                Context.SaveChanges();
+            }
+            catch
+            {
+                Context.Entry(itemToDelete).State = EntityState.Unchanged;
+                throw;
+            }
+
+            OnAfterGroupeDeleted(itemToDelete);
 
             return itemToDelete;
         }
@@ -1526,8 +1858,8 @@ namespace Ceilapp
         {
             var itemToDelete = Context.Sessions
                               .Where(i => i.Id == id)
-                              .Include(i => i.CourseRegistrations)
                               .Include(i => i.AppSettings)
+                              .Include(i => i.CourseRegistrations)
                               .Include(i => i.Groupes)
                               .FirstOrDefault();
 
@@ -1715,338 +2047,6 @@ namespace Ceilapp
             }
 
             OnAfterStateDeleted(itemToDelete);
-
-            return itemToDelete;
-        }
-    
-        public async Task ExportEvaluationsToExcel(Query query = null, string fileName = null)
-        {
-            navigationManager.NavigateTo(query != null ? query.ToUrl($"export/ceilapp/evaluations/excel(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')") : $"export/ceilapp/evaluations/excel(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')", true);
-        }
-
-        public async Task ExportEvaluationsToCSV(Query query = null, string fileName = null)
-        {
-            navigationManager.NavigateTo(query != null ? query.ToUrl($"export/ceilapp/evaluations/csv(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')") : $"export/ceilapp/evaluations/csv(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')", true);
-        }
-
-        partial void OnEvaluationsRead(ref IQueryable<Ceilapp.Models.ceilapp.Evaluation> items);
-
-        public async Task<IQueryable<Ceilapp.Models.ceilapp.Evaluation>> GetEvaluations(Query query = null)
-        {
-            var items = Context.Evaluations.AsQueryable();
-
-            items = items.Include(i => i.Course);
-            items = items.Include(i => i.CourseRegistration);
-
-            if (query != null)
-            {
-                if (!string.IsNullOrEmpty(query.Expand))
-                {
-                    var propertiesToExpand = query.Expand.Split(',');
-                    foreach(var p in propertiesToExpand)
-                    {
-                        items = items.Include(p.Trim());
-                    }
-                }
-
-                ApplyQuery(ref items, query);
-            }
-
-            OnEvaluationsRead(ref items);
-
-            return await Task.FromResult(items);
-        }
-
-        partial void OnEvaluationGet(Ceilapp.Models.ceilapp.Evaluation item);
-        partial void OnGetEvaluationById(ref IQueryable<Ceilapp.Models.ceilapp.Evaluation> items);
-
-
-        public async Task<Ceilapp.Models.ceilapp.Evaluation> GetEvaluationById(int id)
-        {
-            var items = Context.Evaluations
-                              .AsNoTracking()
-                              .Where(i => i.Id == id);
-
-            items = items.Include(i => i.Course);
-            items = items.Include(i => i.CourseRegistration);
- 
-            OnGetEvaluationById(ref items);
-
-            var itemToReturn = items.FirstOrDefault();
-
-            OnEvaluationGet(itemToReturn);
-
-            return await Task.FromResult(itemToReturn);
-        }
-
-        partial void OnEvaluationCreated(Ceilapp.Models.ceilapp.Evaluation item);
-        partial void OnAfterEvaluationCreated(Ceilapp.Models.ceilapp.Evaluation item);
-
-        public async Task<Ceilapp.Models.ceilapp.Evaluation> CreateEvaluation(Ceilapp.Models.ceilapp.Evaluation evaluation)
-        {
-            OnEvaluationCreated(evaluation);
-
-            var existingItem = Context.Evaluations
-                              .Where(i => i.Id == evaluation.Id)
-                              .FirstOrDefault();
-
-            if (existingItem != null)
-            {
-               throw new Exception("Item already available");
-            }            
-
-            try
-            {
-                Context.Evaluations.Add(evaluation);
-                Context.SaveChanges();
-            }
-            catch
-            {
-                Context.Entry(evaluation).State = EntityState.Detached;
-                throw;
-            }
-
-            OnAfterEvaluationCreated(evaluation);
-
-            return evaluation;
-        }
-
-        public async Task<Ceilapp.Models.ceilapp.Evaluation> CancelEvaluationChanges(Ceilapp.Models.ceilapp.Evaluation item)
-        {
-            var entityToCancel = Context.Entry(item);
-            if (entityToCancel.State == EntityState.Modified)
-            {
-              entityToCancel.CurrentValues.SetValues(entityToCancel.OriginalValues);
-              entityToCancel.State = EntityState.Unchanged;
-            }
-
-            return item;
-        }
-
-        partial void OnEvaluationUpdated(Ceilapp.Models.ceilapp.Evaluation item);
-        partial void OnAfterEvaluationUpdated(Ceilapp.Models.ceilapp.Evaluation item);
-
-        public async Task<Ceilapp.Models.ceilapp.Evaluation> UpdateEvaluation(int id, Ceilapp.Models.ceilapp.Evaluation evaluation)
-        {
-            OnEvaluationUpdated(evaluation);
-
-            var itemToUpdate = Context.Evaluations
-                              .Where(i => i.Id == evaluation.Id)
-                              .FirstOrDefault();
-
-            if (itemToUpdate == null)
-            {
-               throw new Exception("Item no longer available");
-            }
-                
-            var entryToUpdate = Context.Entry(itemToUpdate);
-            entryToUpdate.CurrentValues.SetValues(evaluation);
-            entryToUpdate.State = EntityState.Modified;
-
-            Context.SaveChanges();
-
-            OnAfterEvaluationUpdated(evaluation);
-
-            return evaluation;
-        }
-
-        partial void OnEvaluationDeleted(Ceilapp.Models.ceilapp.Evaluation item);
-        partial void OnAfterEvaluationDeleted(Ceilapp.Models.ceilapp.Evaluation item);
-
-        public async Task<Ceilapp.Models.ceilapp.Evaluation> DeleteEvaluation(int id)
-        {
-            var itemToDelete = Context.Evaluations
-                              .Where(i => i.Id == id)
-                              .FirstOrDefault();
-
-            if (itemToDelete == null)
-            {
-               throw new Exception("Item no longer available");
-            }
-
-            OnEvaluationDeleted(itemToDelete);
-
-
-            Context.Evaluations.Remove(itemToDelete);
-
-            try
-            {
-                Context.SaveChanges();
-            }
-            catch
-            {
-                Context.Entry(itemToDelete).State = EntityState.Unchanged;
-                throw;
-            }
-
-            OnAfterEvaluationDeleted(itemToDelete);
-
-            return itemToDelete;
-        }
-    
-        public async Task ExportGroupesToExcel(Query query = null, string fileName = null)
-        {
-            navigationManager.NavigateTo(query != null ? query.ToUrl($"export/ceilapp/groupes/excel(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')") : $"export/ceilapp/groupes/excel(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')", true);
-        }
-
-        public async Task ExportGroupesToCSV(Query query = null, string fileName = null)
-        {
-            navigationManager.NavigateTo(query != null ? query.ToUrl($"export/ceilapp/groupes/csv(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')") : $"export/ceilapp/groupes/csv(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')", true);
-        }
-
-        partial void OnGroupesRead(ref IQueryable<Ceilapp.Models.ceilapp.Groupe> items);
-
-        public async Task<IQueryable<Ceilapp.Models.ceilapp.Groupe>> GetGroupes(Query query = null)
-        {
-            var items = Context.Groupes.AsQueryable();
-
-            items = items.Include(i => i.Course);
-            items = items.Include(i => i.CourseLevel);
-            items = items.Include(i => i.Session);
-
-            if (query != null)
-            {
-                if (!string.IsNullOrEmpty(query.Expand))
-                {
-                    var propertiesToExpand = query.Expand.Split(',');
-                    foreach(var p in propertiesToExpand)
-                    {
-                        items = items.Include(p.Trim());
-                    }
-                }
-
-                ApplyQuery(ref items, query);
-            }
-
-            OnGroupesRead(ref items);
-
-            return await Task.FromResult(items);
-        }
-
-        partial void OnGroupeGet(Ceilapp.Models.ceilapp.Groupe item);
-        partial void OnGetGroupeById(ref IQueryable<Ceilapp.Models.ceilapp.Groupe> items);
-
-
-        public async Task<Ceilapp.Models.ceilapp.Groupe> GetGroupeById(int id)
-        {
-            var items = Context.Groupes
-                              .AsNoTracking()
-                              .Where(i => i.Id == id);
-
-            items = items.Include(i => i.Course);
-            items = items.Include(i => i.CourseLevel);
-            items = items.Include(i => i.Session);
- 
-            OnGetGroupeById(ref items);
-
-            var itemToReturn = items.FirstOrDefault();
-
-            OnGroupeGet(itemToReturn);
-
-            return await Task.FromResult(itemToReturn);
-        }
-
-        partial void OnGroupeCreated(Ceilapp.Models.ceilapp.Groupe item);
-        partial void OnAfterGroupeCreated(Ceilapp.Models.ceilapp.Groupe item);
-
-        public async Task<Ceilapp.Models.ceilapp.Groupe> CreateGroupe(Ceilapp.Models.ceilapp.Groupe groupe)
-        {
-            OnGroupeCreated(groupe);
-
-            var existingItem = Context.Groupes
-                              .Where(i => i.Id == groupe.Id)
-                              .FirstOrDefault();
-
-            if (existingItem != null)
-            {
-               throw new Exception("Item already available");
-            }            
-
-            try
-            {
-                Context.Groupes.Add(groupe);
-                Context.SaveChanges();
-            }
-            catch
-            {
-                Context.Entry(groupe).State = EntityState.Detached;
-                throw;
-            }
-
-            OnAfterGroupeCreated(groupe);
-
-            return groupe;
-        }
-
-        public async Task<Ceilapp.Models.ceilapp.Groupe> CancelGroupeChanges(Ceilapp.Models.ceilapp.Groupe item)
-        {
-            var entityToCancel = Context.Entry(item);
-            if (entityToCancel.State == EntityState.Modified)
-            {
-              entityToCancel.CurrentValues.SetValues(entityToCancel.OriginalValues);
-              entityToCancel.State = EntityState.Unchanged;
-            }
-
-            return item;
-        }
-
-        partial void OnGroupeUpdated(Ceilapp.Models.ceilapp.Groupe item);
-        partial void OnAfterGroupeUpdated(Ceilapp.Models.ceilapp.Groupe item);
-
-        public async Task<Ceilapp.Models.ceilapp.Groupe> UpdateGroupe(int id, Ceilapp.Models.ceilapp.Groupe groupe)
-        {
-            OnGroupeUpdated(groupe);
-
-            var itemToUpdate = Context.Groupes
-                              .Where(i => i.Id == groupe.Id)
-                              .FirstOrDefault();
-
-            if (itemToUpdate == null)
-            {
-               throw new Exception("Item no longer available");
-            }
-                
-            var entryToUpdate = Context.Entry(itemToUpdate);
-            entryToUpdate.CurrentValues.SetValues(groupe);
-            entryToUpdate.State = EntityState.Modified;
-
-            Context.SaveChanges();
-
-            OnAfterGroupeUpdated(groupe);
-
-            return groupe;
-        }
-
-        partial void OnGroupeDeleted(Ceilapp.Models.ceilapp.Groupe item);
-        partial void OnAfterGroupeDeleted(Ceilapp.Models.ceilapp.Groupe item);
-
-        public async Task<Ceilapp.Models.ceilapp.Groupe> DeleteGroupe(int id)
-        {
-            var itemToDelete = Context.Groupes
-                              .Where(i => i.Id == id)
-                              .FirstOrDefault();
-
-            if (itemToDelete == null)
-            {
-               throw new Exception("Item no longer available");
-            }
-
-            OnGroupeDeleted(itemToDelete);
-
-
-            Context.Groupes.Remove(itemToDelete);
-
-            try
-            {
-                Context.SaveChanges();
-            }
-            catch
-            {
-                Context.Entry(itemToDelete).State = EntityState.Unchanged;
-                throw;
-            }
-
-            OnAfterGroupeDeleted(itemToDelete);
 
             return itemToDelete;
         }
