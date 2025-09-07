@@ -115,8 +115,21 @@ namespace Ceilapp
                                         
                                         AddTableRow(table, "Cours", registration.Course?.Name);
                                         AddTableRow(table, "Niveau", registration.CourseLevel?.Name);
+
+                                        var feeValue = "";
+                                        if(registration.Profession != null)
+                                        {
+                                            if(registration.Profession.FeeValue>=0)
+                                            feeValue = registration.Profession.FeeValue.ToString("N2", CultureInfo.InvariantCulture) + " DA";
+                                            else
+                                            feeValue = "Indéfini";
+                                        }else
+                                        {
+                                            feeValue = "Indéfini";
+                                        }   
+
                                         AddTableRow(table, "Profession", 
-                                            $"{registration.Profession?.Name} - Droits d'inscriptions: {registration.Profession?.FeeValue:N2} DA");
+                                            $"{registration.Profession?.Name} - Droits d'inscriptions: {feeValue} DA");
                                     });
                                 
                                 // Terms and Conditions section
