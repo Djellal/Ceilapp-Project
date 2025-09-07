@@ -38,5 +38,27 @@ namespace Ceilapp
                 throw new ApplicationException(message);
             }
         }
+       
+
+        public async Task<IEnumerable<ApplicationUser>> GetUsers(string roleFilter = null)
+        {
+            var uri = new Uri(baseUri, $"ApplicationUsers");
+            
+            if (!string.IsNullOrEmpty(roleFilter))
+            {
+                uri = new Uri(baseUri, $"ApplicationUsers?$filter=Roles/any(r: r/Name eq '{roleFilter}')&$expand=Roles");
+            }
+            else
+            {
+                uri = new Uri(baseUri, $"ApplicationUsers?$expand=Roles");
+            }
+
+            uri = uri.GetODataUri();
+            var response = await httpClient.GetAsync(uri);
+            var result = await response.ReadAsync<ODataServiceResult<ApplicationUser>>();
+            return result.Value;
+        }
+
+
     }
 }

@@ -38,23 +38,37 @@ namespace Ceilapp.Components.Pages
         [Inject]
         protected SecurityService Security { get; set; }
 
+        protected IEnumerable<Ceilapp.Models.ApplicationRole> roles;
+        protected string selectedRole;
+
         protected override async Task OnInitializedAsync()
         {
-            users = await Security.GetUsers();
+            await LoadData();
+            roles = await Security.GetRoles();
         }
 
+        protected async Task LoadData()
+        {
+            users = await Security.GetUsers(selectedRole);
+        }
+
+        protected async Task OnRoleFilterChange(string role)
+        {
+            selectedRole = role;
+            await LoadData();
+        }
+
+        // Update all methods that refresh user data to use LoadData()
         protected async Task AddClick()
         {
             await DialogService.OpenAsync<AddApplicationUser>("Add Application User");
-
-            users = await Security.GetUsers();
+            await LoadData();
         }
 
         protected async Task RowSelect(Ceilapp.Models.ApplicationUser user)
         {
             await DialogService.OpenAsync<EditApplicationUser>("Edit Application User", new Dictionary<string, object>{ {"Id", user.Id} });
-
-            users = await Security.GetUsers();
+            await LoadData();
         }
 
         protected async Task DeleteClick(Ceilapp.Models.ApplicationUser user)
@@ -64,8 +78,7 @@ namespace Ceilapp.Components.Pages
                 if (await DialogService.Confirm("Are you sure you want to delete this user?") == true)
                 {
                     await Security.DeleteUser($"{user.Id}");
-
-                    users = await Security.GetUsers();
+                    await LoadData();
                 }
             }
             catch (Exception ex)

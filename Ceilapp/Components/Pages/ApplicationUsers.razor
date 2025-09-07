@@ -10,6 +10,9 @@
         </RadzenColumn>
         <RadzenColumn Size="12" SizeMD="6">
             <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.End" Gap="0.5rem">
+                <RadzenDropDown @bind-Value="selectedRole" Data="roles" TextProperty="Name" ValueProperty="Name" 
+                               Placeholder="Filter by role" Change="@(async (args) => await OnRoleFilterChange((string)args))" 
+                               AllowClear="true" Style="min-width: 150px;" />
                 <RadzenButton Icon="add_circle_outline" Text="Add" Click="@AddClick" Variant="Variant.Flat" />
             </RadzenStack>
         </RadzenColumn>
@@ -22,10 +25,18 @@
                 <Columns>
                     <RadzenDataGridColumn TItem="Ceilapp.Models.ApplicationUser" Property="UserName" Title="User Name" />
                     <RadzenDataGridColumn TItem="Ceilapp.Models.ApplicationUser" Property="Email" Title="Email" />
+                    <RadzenDataGridColumn TItem="Ceilapp.Models.ApplicationUser" Title="Roles">
+                        <Template Context="user">
+                            @if (user.Roles != null)
+                            {
+                                @string.Join(", ", user.Roles.Select(r => r.Name))
+                            }
+                        </Template>
+                    </RadzenDataGridColumn>
                     <RadzenDataGridColumn TItem="Ceilapp.Models.ApplicationUser" Filterable="false" Sortable="false" TextAlign="TextAlign.Center" Width="70px">
                         <Template Context="user">
                             <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="close" Size="ButtonSize.Small"
-                                Variant="Variant.Flat" Shade="Shade.Lighter" Click="@(() => DeleteClick(user))" @onclick:stopPropagation="true" />
+                                        Variant="Variant.Flat" Shade="Shade.Lighter" Click="@(() => DeleteClick(user))" @onclick:stopPropagation="true" />
                         </Template>
                     </RadzenDataGridColumn>
                 </Columns>
