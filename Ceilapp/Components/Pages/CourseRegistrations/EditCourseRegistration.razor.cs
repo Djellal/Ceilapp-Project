@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure.Internal;
+using Microsoft.EntityFrameworkCore.Query.Internal;
 using Microsoft.JSInterop;
 using Radzen;
 using Radzen.Blazor;
@@ -155,7 +156,7 @@ namespace Ceilapp.Components.Pages.CourseRegistrations
         {
             var nbrRegistrations = await ceilappService.dbContext.CourseRegistrations
                 .CountAsync(cr => cr.UserId == Security.User.Id && cr.SessionId == CurrentSession.Id);
-            return !(nbrRegistrations >= AppSetting.MaxRegistrationPerSession);
+            return !(nbrRegistrations >= AppSetting.MaxRegistrationPerSession) && AppSetting.IsRegistrationOpened;
         }
 
        
@@ -182,7 +183,7 @@ namespace Ceilapp.Components.Pages.CourseRegistrations
             if (crs != null)
             {
                 courseRegistration.CourseId = crs.Id;
-                courseRegistration.CourseLevelId = crs.CourseLevels?.FirstOrDefault()?.Id ?? 0; // Set default level to the first available level
+                courseRegistration.CourseLevelId = GetFirstLevelId(crs.Id); // Set default level to the first available level
             }
             
 
@@ -204,13 +205,13 @@ namespace Ceilapp.Components.Pages.CourseRegistrations
         {
             try
             {
-                courseLevelsForCourseLevelId = await ceilappService.GetCourseLevels(new Radzen.Query { Filter = "i => i.CourseId == @0", FilterParameters = new object[] { args } });
-                if (isnew)
-                {
-                    courseRegistration.CourseLevelId = courseLevelsForCourseLevelId?.FirstOrDefault()?.Id ?? 0;
-                }
-                else
-                    await GetNextLevel();
+               // courseLevelsForCourseLevelId = await ceilappService.GetCourseLevels(new Radzen.Query { Filter = "i => i.CourseId == @0", FilterParameters = new object[] { args } });
+                //if (isnew)
+                //{
+                    courseRegistration.CourseLevelId = GetFirstLevelId(Id);//courseLevelsForCourseLevelId?.FirstOrDefault()?.Id ?? 0;
+               // }
+               // else
+                //     courseRegistration.CourseLevelId = await GetNextLevel(coursID);
             }
             catch (Exception ex)
             {
@@ -224,7 +225,7 @@ namespace Ceilapp.Components.Pages.CourseRegistrations
                 });
             }
         }
-        protected async System.Threading.Tasks.Task GetNextLevel()
+        protected async System.Threading.Tasks.Task GetNextLevel(int coursID)
         {
             NotificationService.Notify(new NotificationMessage { 
                 Severity = NotificationSeverity.Info, 
@@ -295,7 +296,17 @@ namespace Ceilapp.Components.Pages.CourseRegistrations
 
             return code;
         }
+       private int GetFirstLevelId(int coursID)
+        {
+            // Get all active course levels for the specified course
+            var courseLevels = ceilappService.dbContext.CourseLevels
+                .Where(cl => cl.CourseId == coursID && cl.IsActive)
+                .OrderBy(cl => cl.LevelOrder)
+                .ToList();
 
+            // Return the level with the smallest LevelOrder value, or 0 if none found
+            return courseLevels.FirstOrDefault()?.Id ?? 0;
+        }
 
         protected async Task GenerateFicheInscription()
         {
@@ -324,3 +335,6 @@ namespace Ceilapp.Components.Pages.CourseRegistrations
 
 
 }
+
+
+

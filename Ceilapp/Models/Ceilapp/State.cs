@@ -18,8 +18,8 @@ namespace Ceilapp.Models.ceilapp
         [Required]
         public string NameAr { get; set; }
 
-        public ICollection<Municipality> Municipalities { get; set; }
-
         public ICollection<CourseRegistration> CourseRegistrations { get; set; }
+
+        public ICollection<Municipality> Municipalities { get; set; }
     }
 }

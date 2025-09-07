@@ -28,5 +28,7 @@ namespace DataModel
         [ForeignKey("NextLevel")]
         public int? NextLevelId { get; set; }
         public CourseLevel? NextLevel { get; set; }
+
+        public int LevelOrder { get; set; }
     }
 }

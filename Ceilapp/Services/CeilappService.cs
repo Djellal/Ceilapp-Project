@@ -394,174 +394,6 @@ namespace Ceilapp
             return itemToDelete;
         }
     
-        public async Task ExportCourseLevelsToExcel(Query query = null, string fileName = null)
-        {
-            navigationManager.NavigateTo(query != null ? query.ToUrl($"export/ceilapp/courselevels/excel(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')") : $"export/ceilapp/courselevels/excel(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')", true);
-        }
-
-        public async Task ExportCourseLevelsToCSV(Query query = null, string fileName = null)
-        {
-            navigationManager.NavigateTo(query != null ? query.ToUrl($"export/ceilapp/courselevels/csv(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')") : $"export/ceilapp/courselevels/csv(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')", true);
-        }
-
-        partial void OnCourseLevelsRead(ref IQueryable<Ceilapp.Models.ceilapp.CourseLevel> items);
-
-        public async Task<IQueryable<Ceilapp.Models.ceilapp.CourseLevel>> GetCourseLevels(Query query = null)
-        {
-            var items = Context.CourseLevels.AsQueryable();
-
-            items = items.Include(i => i.Course);
-            items = items.Include(i => i.CourseLevel1);
-
-            if (query != null)
-            {
-                if (!string.IsNullOrEmpty(query.Expand))
-                {
-                    var propertiesToExpand = query.Expand.Split(',');
-                    foreach(var p in propertiesToExpand)
-                    {
-                        items = items.Include(p.Trim());
-                    }
-                }
-
-                ApplyQuery(ref items, query);
-            }
-
-            OnCourseLevelsRead(ref items);
-
-            return await Task.FromResult(items);
-        }
-
-        partial void OnCourseLevelGet(Ceilapp.Models.ceilapp.CourseLevel item);
-        partial void OnGetCourseLevelById(ref IQueryable<Ceilapp.Models.ceilapp.CourseLevel> items);
-
-
-        public async Task<Ceilapp.Models.ceilapp.CourseLevel> GetCourseLevelById(int id)
-        {
-            var items = Context.CourseLevels
-                              .AsNoTracking()
-                              .Where(i => i.Id == id);
-
-            items = items.Include(i => i.Course);
-            items = items.Include(i => i.CourseLevel1);
- 
-            OnGetCourseLevelById(ref items);
-
-            var itemToReturn = items.FirstOrDefault();
-
-            OnCourseLevelGet(itemToReturn);
-
-            return await Task.FromResult(itemToReturn);
-        }
-
-        partial void OnCourseLevelCreated(Ceilapp.Models.ceilapp.CourseLevel item);
-        partial void OnAfterCourseLevelCreated(Ceilapp.Models.ceilapp.CourseLevel item);
-
-        public async Task<Ceilapp.Models.ceilapp.CourseLevel> CreateCourseLevel(Ceilapp.Models.ceilapp.CourseLevel courselevel)
-        {
-            OnCourseLevelCreated(courselevel);
-
-            var existingItem = Context.CourseLevels
-                              .Where(i => i.Id == courselevel.Id)
-                              .FirstOrDefault();
-
-            if (existingItem != null)
-            {
-               throw new Exception("Item already available");
-            }            
-
-            try
-            {
-                Context.CourseLevels.Add(courselevel);
-                Context.SaveChanges();
-            }
-            catch
-            {
-                Context.Entry(courselevel).State = EntityState.Detached;
-                throw;
-            }
-
-            OnAfterCourseLevelCreated(courselevel);
-
-            return courselevel;
-        }
-
-        public async Task<Ceilapp.Models.ceilapp.CourseLevel> CancelCourseLevelChanges(Ceilapp.Models.ceilapp.CourseLevel item)
-        {
-            var entityToCancel = Context.Entry(item);
-            if (entityToCancel.State == EntityState.Modified)
-            {
-              entityToCancel.CurrentValues.SetValues(entityToCancel.OriginalValues);
-              entityToCancel.State = EntityState.Unchanged;
-            }
-
-            return item;
-        }
-
-        partial void OnCourseLevelUpdated(Ceilapp.Models.ceilapp.CourseLevel item);
-        partial void OnAfterCourseLevelUpdated(Ceilapp.Models.ceilapp.CourseLevel item);
-
-        public async Task<Ceilapp.Models.ceilapp.CourseLevel> UpdateCourseLevel(int id, Ceilapp.Models.ceilapp.CourseLevel courselevel)
-        {
-            OnCourseLevelUpdated(courselevel);
-
-            var itemToUpdate = Context.CourseLevels
-                              .Where(i => i.Id == courselevel.Id)
-                              .FirstOrDefault();
-
-            if (itemToUpdate == null)
-            {
-               throw new Exception("Item no longer available");
-            }
-                
-            var entryToUpdate = Context.Entry(itemToUpdate);
-            entryToUpdate.CurrentValues.SetValues(courselevel);
-            entryToUpdate.State = EntityState.Modified;
-
-            Context.SaveChanges();
-
-            OnAfterCourseLevelUpdated(courselevel);
-
-            return courselevel;
-        }
-
-        partial void OnCourseLevelDeleted(Ceilapp.Models.ceilapp.CourseLevel item);
-        partial void OnAfterCourseLevelDeleted(Ceilapp.Models.ceilapp.CourseLevel item);
-
-        public async Task<Ceilapp.Models.ceilapp.CourseLevel> DeleteCourseLevel(int id)
-        {
-            var itemToDelete = Context.CourseLevels
-                              .Where(i => i.Id == id)
-                              .Include(i => i.CourseRegistrations)
-                              .Include(i => i.CourseLevels1)
-                              .Include(i => i.Groupes)
-                              .FirstOrDefault();
-
-            if (itemToDelete == null)
-            {
-               throw new Exception("Item no longer available");
-            }
-
-            OnCourseLevelDeleted(itemToDelete);
-
-
-            Context.CourseLevels.Remove(itemToDelete);
-
-            try
-            {
-                Context.SaveChanges();
-            }
-            catch
-            {
-                Context.Entry(itemToDelete).State = EntityState.Unchanged;
-                throw;
-            }
-
-            OnAfterCourseLevelDeleted(itemToDelete);
-
-            return itemToDelete;
-        }
-    
         public async Task ExportCourseRegistrationsToExcel(Query query = null, string fileName = null)
         {
             navigationManager.NavigateTo(query != null ? query.ToUrl($"export/ceilapp/courseregistrations/excel(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')") : $"export/ceilapp/courseregistrations/excel(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')", true);
@@ -872,11 +704,11 @@ namespace Ceilapp
         {
             var itemToDelete = Context.Courses
                               .Where(i => i.Id == id)
+                              .Include(i => i.Evaluations)
                               .Include(i => i.CourseRegistrations)
                               .Include(i => i.CourseComponents)
-                              .Include(i => i.CourseLevels)
                               .Include(i => i.Groupes)
-                              .Include(i => i.Evaluations)
+                              .Include(i => i.CourseLevels)
                               .FirstOrDefault();
 
             if (itemToDelete == null)
@@ -2022,8 +1854,8 @@ namespace Ceilapp
         {
             var itemToDelete = Context.States
                               .Where(i => i.Id == id)
-                              .Include(i => i.Municipalities)
                               .Include(i => i.CourseRegistrations)
+                              .Include(i => i.Municipalities)
                               .FirstOrDefault();
 
             if (itemToDelete == null)
@@ -2047,6 +1879,174 @@ namespace Ceilapp
             }
 
             OnAfterStateDeleted(itemToDelete);
+
+            return itemToDelete;
+        }
+    
+        public async Task ExportCourseLevelsToExcel(Query query = null, string fileName = null)
+        {
+            navigationManager.NavigateTo(query != null ? query.ToUrl($"export/ceilapp/courselevels/excel(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')") : $"export/ceilapp/courselevels/excel(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')", true);
+        }
+
+        public async Task ExportCourseLevelsToCSV(Query query = null, string fileName = null)
+        {
+            navigationManager.NavigateTo(query != null ? query.ToUrl($"export/ceilapp/courselevels/csv(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')") : $"export/ceilapp/courselevels/csv(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')", true);
+        }
+
+        partial void OnCourseLevelsRead(ref IQueryable<Ceilapp.Models.ceilapp.CourseLevel> items);
+
+        public async Task<IQueryable<Ceilapp.Models.ceilapp.CourseLevel>> GetCourseLevels(Query query = null)
+        {
+            var items = Context.CourseLevels.AsQueryable();
+
+            items = items.Include(i => i.Course);
+            items = items.Include(i => i.CourseLevel1);
+
+            if (query != null)
+            {
+                if (!string.IsNullOrEmpty(query.Expand))
+                {
+                    var propertiesToExpand = query.Expand.Split(',');
+                    foreach(var p in propertiesToExpand)
+                    {
+                        items = items.Include(p.Trim());
+                    }
+                }
+
+                ApplyQuery(ref items, query);
+            }
+
+            OnCourseLevelsRead(ref items);
+
+            return await Task.FromResult(items);
+        }
+
+        partial void OnCourseLevelGet(Ceilapp.Models.ceilapp.CourseLevel item);
+        partial void OnGetCourseLevelById(ref IQueryable<Ceilapp.Models.ceilapp.CourseLevel> items);
+
+
+        public async Task<Ceilapp.Models.ceilapp.CourseLevel> GetCourseLevelById(int id)
+        {
+            var items = Context.CourseLevels
+                              .AsNoTracking()
+                              .Where(i => i.Id == id);
+
+            items = items.Include(i => i.Course);
+            items = items.Include(i => i.CourseLevel1);
+ 
+            OnGetCourseLevelById(ref items);
+
+            var itemToReturn = items.FirstOrDefault();
+
+            OnCourseLevelGet(itemToReturn);
+
+            return await Task.FromResult(itemToReturn);
+        }
+
+        partial void OnCourseLevelCreated(Ceilapp.Models.ceilapp.CourseLevel item);
+        partial void OnAfterCourseLevelCreated(Ceilapp.Models.ceilapp.CourseLevel item);
+
+        public async Task<Ceilapp.Models.ceilapp.CourseLevel> CreateCourseLevel(Ceilapp.Models.ceilapp.CourseLevel courselevel)
+        {
+            OnCourseLevelCreated(courselevel);
+
+            var existingItem = Context.CourseLevels
+                              .Where(i => i.Id == courselevel.Id)
+                              .FirstOrDefault();
+
+            if (existingItem != null)
+            {
+               throw new Exception("Item already available");
+            }            
+
+            try
+            {
+                Context.CourseLevels.Add(courselevel);
+                Context.SaveChanges();
+            }
+            catch
+            {
+                Context.Entry(courselevel).State = EntityState.Detached;
+                throw;
+            }
+
+            OnAfterCourseLevelCreated(courselevel);
+
+            return courselevel;
+        }
+
+        public async Task<Ceilapp.Models.ceilapp.CourseLevel> CancelCourseLevelChanges(Ceilapp.Models.ceilapp.CourseLevel item)
+        {
+            var entityToCancel = Context.Entry(item);
+            if (entityToCancel.State == EntityState.Modified)
+            {
+              entityToCancel.CurrentValues.SetValues(entityToCancel.OriginalValues);
+              entityToCancel.State = EntityState.Unchanged;
+            }
+
+            return item;
+        }
+
+        partial void OnCourseLevelUpdated(Ceilapp.Models.ceilapp.CourseLevel item);
+        partial void OnAfterCourseLevelUpdated(Ceilapp.Models.ceilapp.CourseLevel item);
+
+        public async Task<Ceilapp.Models.ceilapp.CourseLevel> UpdateCourseLevel(int id, Ceilapp.Models.ceilapp.CourseLevel courselevel)
+        {
+            OnCourseLevelUpdated(courselevel);
+
+            var itemToUpdate = Context.CourseLevels
+                              .Where(i => i.Id == courselevel.Id)
+                              .FirstOrDefault();
+
+            if (itemToUpdate == null)
+            {
+               throw new Exception("Item no longer available");
+            }
+                
+            var entryToUpdate = Context.Entry(itemToUpdate);
+            entryToUpdate.CurrentValues.SetValues(courselevel);
+            entryToUpdate.State = EntityState.Modified;
+
+            Context.SaveChanges();
+
+            OnAfterCourseLevelUpdated(courselevel);
+
+            return courselevel;
+        }
+
+        partial void OnCourseLevelDeleted(Ceilapp.Models.ceilapp.CourseLevel item);
+        partial void OnAfterCourseLevelDeleted(Ceilapp.Models.ceilapp.CourseLevel item);
+
+        public async Task<Ceilapp.Models.ceilapp.CourseLevel> DeleteCourseLevel(int id)
+        {
+            var itemToDelete = Context.CourseLevels
+                              .Where(i => i.Id == id)
+                              .Include(i => i.CourseRegistrations)
+                              .Include(i => i.Groupes)
+                              .Include(i => i.CourseLevels1)
+                              .FirstOrDefault();
+
+            if (itemToDelete == null)
+            {
+               throw new Exception("Item no longer available");
+            }
+
+            OnCourseLevelDeleted(itemToDelete);
+
+
+            Context.CourseLevels.Remove(itemToDelete);
+
+            try
+            {
+                Context.SaveChanges();
+            }
+            catch
+            {
+                Context.Entry(itemToDelete).State = EntityState.Unchanged;
+                throw;
+            }
+
+            OnAfterCourseLevelDeleted(itemToDelete);
 
             return itemToDelete;
         }

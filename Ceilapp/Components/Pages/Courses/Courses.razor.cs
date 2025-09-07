@@ -82,9 +82,10 @@ namespace Ceilapp.Components.Pages.Courses
         {
             courseChild = args;
             var CourseLevelsResult = await ceilappService.GetCourseLevels(new Query { Filter = $@"i => i.CourseId == {args.Id}", Expand = "Course,CourseLevel1" });
+            
             if (CourseLevelsResult != null)
             {
-                args.CourseLevels = CourseLevelsResult.ToList();
+                args.CourseLevels = CourseLevelsResult.OrderBy(c=>c.LevelOrder).ToList();
             }
             var CourseComponentsResult = await ceilappService.GetCourseComponents(new Query { Filter = $@"i => i.CourseId == {args.Id}", Expand = "Course" });
             if (CourseComponentsResult != null)

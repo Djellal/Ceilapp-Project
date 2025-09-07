@@ -133,7 +133,7 @@
                   <RadzenFormField Text="Course Level" Variant="Variant.Filled" Style="width: 100%">
                   <ChildContent>
                     <RadzenDropDown Data="@(courseLevelsForCourseLevelId)" TextProperty="Name" ValueProperty="Id" AllowClear=false
-                          style="display: block; width: 100%" @bind-Value="@(courseRegistration.CourseLevelId)" Name="CourseLevelId" Placeholder="Course level" ReadOnly="true"
+                          style="display: block; width: 100%" @bind-Value="@(courseRegistration.CourseLevelId)" Name="CourseLevelId" Placeholder="Course level" ReadOnly="false"
                            />
               </ChildContent>
             </RadzenFormField>

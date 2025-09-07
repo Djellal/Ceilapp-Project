@@ -1,4 +1,5 @@
-@page "/add-course-level"
+@page "/add-course-level"
+
 @attribute [Authorize]
 
 <PageTitle>Add CourseLevel</PageTitle>
@@ -40,17 +41,23 @@
             </RadzenRow>
             <RadzenFormField Text="Course" Variant="Variant.Filled">
                   <ChildContent>
-                    <RadzenDropDown Data="@(coursesForCourseId)" TextProperty="Image" ValueProperty="Id" AllowClear=true
+                    <RadzenDropDown Data="@(coursesForCourseId)" TextProperty="Name" ValueProperty="Id" AllowClear=true
                         Disabled=@(hasCourseIdValue)  style="display: block; width: 100%" @bind-Value="@(courseLevel.CourseId)" Name="CourseId"
                            />
               </ChildContent>
             </RadzenFormField>
-            <RadzenFormField Text="Course Level1" Variant="Variant.Filled">
+            <RadzenFormField Text="Next Level" Variant="Variant.Filled">
                   <ChildContent>
                     <RadzenDropDown Data="@(courseLevelsForNextLevelId)" TextProperty="NameAr" ValueProperty="Id" AllowClear=true
                         Disabled=@(hasNextLevelIdValue)  style="display: block; width: 100%" @bind-Value="@(courseLevel.NextLevelId)" Name="NextLevelId"
                            />
               </ChildContent>
+            </RadzenFormField>
+            <RadzenFormField Text="Order" Variant="Variant.Filled">
+                  <ChildContent>
+                         <RadzenNumeric style="display: block; width: 100%" @bind-Value="@(courseLevel.LevelOrder)" Name="Order" />
+                  </ChildContent>    
+                  
             </RadzenFormField>
           </RadzenStack>
           <RadzenStack style="margin-top:1rem;" Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.End" Gap="0.5rem">

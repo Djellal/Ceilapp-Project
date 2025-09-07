@@ -32,10 +32,13 @@ namespace Ceilapp.Models.ceilapp
 
         public CourseLevel CourseLevel1 { get; set; }
 
+        [Required]
+        public int LevelOrder { get; set; }
+
         public ICollection<CourseRegistration> CourseRegistrations { get; set; }
 
-        public ICollection<CourseLevel> CourseLevels1 { get; set; }
-
         public ICollection<Groupe> Groupes { get; set; }
+
+        public ICollection<CourseLevel> CourseLevels1 { get; set; }
     }
 }
