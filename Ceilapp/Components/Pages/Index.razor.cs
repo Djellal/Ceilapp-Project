@@ -40,6 +40,11 @@ namespace Ceilapp.Components.Pages
 
         protected System.Linq.IQueryable<Ceilapp.Models.ceilapp.Course> courses;
 
+         protected string redirectUrl;
+        protected string error;
+        protected string info;
+        protected bool errorVisible;
+        protected bool infoVisible;
         
 
         protected async System.Threading.Tasks.Task Button2Click(Microsoft.AspNetCore.Components.Web.MouseEventArgs args)
@@ -56,12 +61,51 @@ namespace Ceilapp.Components.Pages
         protected override async Task OnInitializedAsync()
         {
             courses = await ceilappService.GetCourses(new Radzen.Query { OrderBy = "Order asc", Expand = "CourseType" });
+
+             var query = System.Web.HttpUtility.ParseQueryString(new Uri(NavigationManager.ToAbsoluteUri(NavigationManager.Uri).ToString()).Query);
+
+            error = query.Get("error");
+
+            info = query.Get("info");
+
+            redirectUrl = query.Get("redirectUrl");
+
+            errorVisible = !string.IsNullOrEmpty(error);
+
+            infoVisible = !string.IsNullOrEmpty(info);
         }
 
         protected async System.Threading.Tasks.Task RegisterButtonClick(Microsoft.AspNetCore.Components.Web.MouseEventArgs args)
         {
             NavigationManager.NavigateTo($"/register-application-user");
         }
-        
+        protected async Task ResetPassword()
+        {
+            var result = await DialogService.OpenAsync<ResetPassword>("Reset password");
+
+            if (result == true)
+            {
+                infoVisible = true;
+
+                info = "Password reset successfully. Please check your email for further instructions.";
+            }
+        }
+
+        protected async System.Threading.Tasks.Task Button0Click(Microsoft.AspNetCore.Components.Web.MouseEventArgs args)
+        {
+            NavigationManager.NavigateTo($"/register-application-user");
+        }
+
+    protected async Task Register()
+        {
+            var result = await DialogService.OpenAsync<RegisterApplicationUser>("S'enregistrer");
+
+            // if (result == true)
+            // {
+            //     infoVisible = true;
+
+            //     info = "Registration accepted. Please check your email for further instructions.";
+            // }
+        }
     }
 }

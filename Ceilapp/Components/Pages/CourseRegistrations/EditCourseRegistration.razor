@@ -61,7 +61,6 @@
                     <RadzenDatePicker DateFormat="dd/MM/yyyy" style="display: block; width: 100%" @bind-Value="@(courseRegistration.BirthDate)" Name="BirthDate" />
                   </ChildContent>    
                   <Helper>
-                    <RadzenRequiredValidator Component="BirthDate" Text="BirthDate is required" />
                   </Helper>
             </RadzenFormField></RadzenColumn></RadzenRow>
              <RadzenRow Style="margin-top: 1em">
@@ -89,7 +88,6 @@
                     <RadzenTextBox style="display: block; width: 100%" @bind-Value="@(courseRegistration.Address)" Name="Address" />
                   </ChildContent>    
                   <Helper>
-                    <RadzenRequiredValidator Component="Address" Text="Address is required" />
                   </Helper>
             </RadzenFormField>
            <RadzenFormField Text="Tel" Variant="Variant.Filled" Style="width: 100%; margin-top: 1em">
@@ -97,7 +95,6 @@
                     <RadzenTextBox style="display: block; width: 100%" @bind-Value="@(courseRegistration.Tel)" Name="Tel" />
                   </ChildContent>    
                   <Helper>
-                    <RadzenRequiredValidator Component="Tel" Text="Tel is required" />
                   </Helper>
             </RadzenFormField>
              

@@ -7,16 +7,25 @@
 <RadzenCard Style="text-align: center; padding-top: 0px">
     <RadzenImage Path="images/ceillogo.png" Style="width: 150px"></RadzenImage>
     <RadzenText TextStyle="Radzen.Blazor.TextStyle.H6" TextAlign="Radzen.TextAlign.Center" Style="font-style: italic; font-family: 'Comic Sans MS'" Text="Le Centre d'Enseignement Intensif des Langues (CEIL-UFAS-1) fait partie des services communs de l'université. Il propose un service public d'enseignement des langues destiné en premier lieu aux membres de la communauté universitaire (étudiants, enseignants et fonctionnaires) mais aussi aux externes dans le cadre de conventions ou à tout individu voulant améliorer son niveau de langue." />
-    <RadzenStack AlignItems="Radzen.AlignItems.Center" JustifyContent="Radzen.JustifyContent.SpaceAround" Orientation="Radzen.Orientation.Horizontal" Gap="2rem" Style="margin-top: 3em">
-        <RadzenButton Icon="login" Size="Radzen.ButtonSize.Small" 
-                    Click="@LoginButtonClick"
-                    Style="background: #007bff; padding: 0.8rem 2rem; font-weight: 600;"
-                    class="auth-button" Text="Se connecter" Visible="!Security.IsAuthenticated()"></RadzenButton>
-        <RadzenButton ButtonStyle="Radzen.ButtonStyle.Success" 
-                    Icon="how_to_reg" Size="Radzen.ButtonSize.Small"
-                    Style="padding: 0.8rem 2rem; font-weight: 600;"
-                    class="auth-button" Click="@RegisterButtonClick" Text="S'enregistrer" Visible="!Security.IsAuthenticated()"></RadzenButton>
-    </RadzenStack>
+    <RadzenTemplateForm Action="@($"account/login?redirectUrl={redirectUrl}")" Data="@("login")" Method="post" Visible="!Security.IsAuthenticated()" Style="margin: 10px; padding: 10px; border-radius: 15px; border: 5px solid #423dc8; background-color: rgba(65, 61, 200, 0.14)">
+         <RadzenRow AlignItems="Radzen.AlignItems.Center">
+        <RadzenColumn Size="12" SizeXS="6">
+            <RadzenAlert Shade="Radzen.Shade.Lighter" Variant="Radzen.Variant.Flat" Size="Radzen.AlertSize.Small" AlertStyle="Radzen.AlertStyle.Danger" Visible="@errorVisible">@error</RadzenAlert>
+            <RadzenAlert Shade="Radzen.Shade.Lighter" Variant="Radzen.Variant.Flat" Size="Radzen.AlertSize.Small" AlertStyle="Radzen.AlertStyle.Info" Visible="@infoVisible">@info</RadzenAlert>
+            <RadzenLogin AllowResetPassword="false" AllowRegister="false" FormFieldVariant="Variant.Filled"
+                                    ResetPassword="@ResetPassword"
+                                    Register="@Register" AllowRememberMe="true" RememberMe="true" UserText="Nom d'utilisateur" UserRequired="Le nom d'utilisateur est requis" PasswordText="Mot de passe " PasswordRequired="Mot de passe  est requit" ResetPasswordText="Mot de passe oublié ?" RememberMeText="souviens-toi de moi" LoginText="Connexion" RegisterText="Inscription" RegisterMessageText="Vous n'avez pas encore de compte ?" Style="padding-top: 1em; padding-bottom: 1em; font-style: normal; text-align: center"
+                            />
+        </RadzenColumn>
+        <RadzenColumn Size="12" SizeXS="6">
+            <RadzenStack Orientation="Radzen.Orientation.Vertical" AlignItems="Radzen.AlignItems.Center" JustifyContent="Radzen.JustifyContent.SpaceBetween" Reverse="false" Style="margin-top: 2em">
+                    <RadzenHeading Text="Vous n'avez pas encore de compte ?" Size="H2"></RadzenHeading>
+                    <RadzenButton Text="INSCRIPTION" Icon="app_registration" Size="Radzen.ButtonSize.Medium" ButtonStyle="Radzen.ButtonStyle.Success" Click="@Button0Click" Style="border-radius: 8px"></RadzenButton>
+            </RadzenStack>
+        </RadzenColumn>
+    </RadzenRow>
+        </RadzenTemplateForm>
+   
 </RadzenCard>
 <RadzenCard Style="margin-top: 2em">
     <RadzenText TextStyle="Radzen.Blazor.TextStyle.H5" Class="rz-mb-6" TextAlign="TextAlign.Center" Style="font-weight: 700" Text="Cours disponibles"/>
