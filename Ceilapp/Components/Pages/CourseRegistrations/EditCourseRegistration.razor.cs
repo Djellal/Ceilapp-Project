@@ -177,6 +177,8 @@ namespace Ceilapp.Components.Pages.CourseRegistrations
             courseRegistration.UserId = Security.User.Id;
             courseRegistration.SessionId = CurrentSession?.Id ?? 0; // Ensure SessionId is set to the current session
             courseRegistration.InscriptionCode = CurrentSession?.SessionCode + "/..";
+            courseRegistration.Tel = "";
+            courseRegistration.Address = "";
 
             var crs = coursesForCourseId.FirstOrDefault(c => c.Id == Id);
 
@@ -194,7 +196,10 @@ namespace Ceilapp.Components.Pages.CourseRegistrations
             var selectedprofession = professionsForProfessionId.FirstOrDefault(x => x.Id == (int)args);
             if (selectedprofession != null)
             {
+                if(selectedprofession.FeeValue>=0)
                 FeeValue = selectedprofession.FeeValue.ToString("C");
+                else
+                    FeeValue = "Indéfini";
             }else
             {
                 FeeValue = 0.ToString("C");
