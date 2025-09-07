@@ -129,7 +129,7 @@ namespace Ceilapp
                                         }   
 
                                         AddTableRow(table, "Profession", 
-                                            $"{registration.Profession?.Name} - Droits d'inscriptions: {feeValue} DA");
+                                            $"{registration.Profession?.Name} - Droits d'inscriptions: {feeValue}");
                                     });
                                 
                                 // Terms and Conditions section
