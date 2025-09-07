@@ -127,8 +127,8 @@ namespace Ceilapp.Components.Pages.CourseRegistrations
                     return;
                 }
 
-                FeeValue = professionsForProfessionId.ToList().FirstOrDefault(x => x.Id == courseRegistration.ProfessionId)?.FeeValue.ToString("C") ?? "0.00";
-                // Check if the current user is authorized to edit this registration
+                
+               await  SetFees(courseRegistration.ProfessionId);
 
 
             }
@@ -192,6 +192,11 @@ namespace Ceilapp.Components.Pages.CourseRegistrations
         }
 
         protected async System.Threading.Tasks.Task ProfessionIdChange(System.Object args)
+        {
+           await  SetFees(args);
+        }
+
+        protected async Task SetFees(object args)
         {
             var selectedprofession = professionsForProfessionId.FirstOrDefault(x => x.Id == (int)args);
             if (selectedprofession != null)
