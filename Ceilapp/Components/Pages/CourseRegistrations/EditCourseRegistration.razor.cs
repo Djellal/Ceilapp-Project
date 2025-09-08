@@ -290,7 +290,8 @@ namespace Ceilapp.Components.Pages.CourseRegistrations
             try
             {
                 if(RequiredFieldsAreNotFilled()){
-                    NotificationService.Notify(new NotificationMessage { Severity = NotificationSeverity.Error, Summary = "Error", Detail = "Veuillez remplir tous les champs requis.", Duration = 5000 });
+                    NotificationService.Notify(new NotificationMessage { Severity = NotificationSeverity.Error, Summary = "Veuillez remplir tous les champs requis.", Detail = RequiredNotFilledInfo, Duration = 10000 });
+                    //DialogService.Show("Error", RequiredNotFilledInfo, new DialogOptions { Width = "400px" });
                     return;
                 }
                 if (isnew)
