@@ -69,6 +69,8 @@ namespace Ceilapp.Components.Pages.CourseRegistrations
         [Parameter]
         public bool isnew { get; set; } = true;
 
+        [Parameter]
+        public bool isreinsc { get; set; } = true;
 
 
         protected override async Task OnInitializedAsync()
@@ -179,7 +181,7 @@ namespace Ceilapp.Components.Pages.CourseRegistrations
             courseRegistration.InscriptionCode = CurrentSession?.SessionCode + "/..";
             courseRegistration.Tel = "";
             courseRegistration.Address = "";
-
+            courseRegistration.IsReregistration = isreinsc;
             var crs = coursesForCourseId.FirstOrDefault(c => c.Id == Id);
 
             if (crs != null)

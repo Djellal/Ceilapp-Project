@@ -47,9 +47,14 @@ namespace Ceilapp.Components.Pages
         protected bool infoVisible;
         
 
-        protected async System.Threading.Tasks.Task Button2Click(Microsoft.AspNetCore.Components.Web.MouseEventArgs args)
+        protected async System.Threading.Tasks.Task InscriptionClick(Microsoft.AspNetCore.Components.Web.MouseEventArgs args)
         {
-            NavigationManager.NavigateTo($"/edit-course-registration/true");
+            NavigationManager.NavigateTo($"/register-application-user");
+
+        }
+        protected async System.Threading.Tasks.Task reinscriptionClick(Microsoft.AspNetCore.Components.Web.MouseEventArgs args)
+        {
+            NavigationManager.NavigateTo($"/edit-course-registration/true/true");
 
         }
 

@@ -10,6 +10,7 @@
                     <i class="bi bi-calendar-check fs-3 text-primary"></i>
                     <RadzenText TextStyle="TextStyle.H5" class="mb-0 fw-bold">Inscriptions de la session actuelle</RadzenText>
                     <RadzenButton Text="S'inscrire à un cours" Icon="add_circle" ButtonStyle="Radzen.ButtonStyle.Success" Class="mt-3" Click="@Button0Click" />
+                    <RadzenButton Text="Réinscrire à un cours" Icon="add_circle" ButtonStyle="Radzen.ButtonStyle.Success" Class="mt-3" Click="@Button0Click2" />
                 </RadzenStack>
             </RadzenCardHeader>
             <div class="p-4">
@@ -63,7 +64,7 @@
                                                 </span>
                                             }
                                         </div>                                        
-                                        <div><RadzenLink Text="Voir les détails de l'inscription" Path="@($"/edit-course-registration/false/{context.Id}")" Icon="visibility"></RadzenLink></div>
+                                        <div><RadzenLink Text="Voir les détails de l'inscription" Path="@($"/edit-course-registration/false/{context.Id}/false")" Icon="visibility"></RadzenLink></div>
                                     </RadzenStack>
                                 </RadzenStack>
                                 

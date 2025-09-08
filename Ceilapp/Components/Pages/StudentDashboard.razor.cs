@@ -86,7 +86,11 @@ namespace Ceilapp.Components.Pages
 
         protected async System.Threading.Tasks.Task Button0Click(Microsoft.AspNetCore.Components.Web.MouseEventArgs args)
         {
-            NavigationManager.NavigateTo($"/edit-course-registration/true/0");
+            NavigationManager.NavigateTo($"/edit-course-registration/true/0/false");
+        }
+        protected async System.Threading.Tasks.Task Button0Click2(Microsoft.AspNetCore.Components.Web.MouseEventArgs args)
+        {
+            NavigationManager.NavigateTo($"/edit-course-registration/true/0/true");
         }
     }
 }

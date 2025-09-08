@@ -1,8 +1,8 @@
-@page "/edit-course-registration/{isnew:bool}/{Id:int}"
+@page "/edit-course-registration/{isnew:bool}/{Id:int}/{isreinsc:bool}"
 
 @attribute [Authorize]
 
-<PageTitle>Modifier l'inscription au cours</PageTitle>
+<PageTitle>Inscription au cours</PageTitle>
 
     <RadzenColumn SizeMD=12>
         <RadzenAlert Shade="Shade.Lighter" Variant="Variant.Flat" Size="AlertSize.Small" AlertStyle="AlertStyle.Danger" Visible="@errorVisible" Text="@L["Alert0.Text"]">Erreur de sauvegarde de l'inscription</RadzenAlert>
@@ -125,7 +125,7 @@
               </RadzenFormField>
                 </RadzenColumn>
                 <RadzenColumn Size="12" SizeXS="6">
-                  <RadzenFormField Text="Niveau" Variant="Variant.Filled" Style="width: 100%">
+                  <RadzenFormField Text="Niveau" Variant="Variant.Filled" Style="width: 100%" Visible="@(!isnew || isreinsc)">
                   <ChildContent>
                     <RadzenDropDown Data="@(courseLevelsForCourseLevelId)" TextProperty="Name" ValueProperty="Id" AllowClear=false
                           style="display: block; width: 100%" @bind-Value="@(courseRegistration.CourseLevelId)" Name="CourseLevelId" Placeholder="Niveau de formation" ReadOnly="false"

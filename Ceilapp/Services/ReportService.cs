@@ -41,11 +41,11 @@ namespace Ceilapp
                 var AppSettings = await ceilappService.GetAppSettingById(1);
                 
                 // Render terms and conditions as image
-                byte[] termsImage = null;
-                if (!string.IsNullOrEmpty(AppSettings?.TermsAndConditions))
-                {
-                    termsImage = await RenderHtmlToImageAsync(AppSettings.TermsAndConditions, 800, 300);
-                }
+                //byte[] termsImage = null;
+                //if (!string.IsNullOrEmpty(AppSettings?.TermsAndConditions))
+                //{
+                //    termsImage = await RenderHtmlToImageAsync(AppSettings.TermsAndConditions, 800, 300);
+                //}
 
                 QuestPDF.Settings.License = LicenseType.Community;
 
@@ -131,37 +131,37 @@ namespace Ceilapp
                                         AddTableRow(table, "Profession", 
                                             $"{registration.Profession?.Name} - Droits d'inscriptions: {feeValue}");
                                     });
-                                
+
                                 // Terms and Conditions section
-                                column.Item().ShowEntire().Column(tc =>
-                                {
-                                                                     
-                                    if (termsImage != null)
-                                    {
-                                        tc.Item()
-                                            .Border(1)
-                                            .BorderColor(Colors.Grey.Lighten2)
-                                            .Padding(2)
-                                            .Background(Colors.Grey.Lighten5)
-                                            .Image(termsImage)
-                                            .FitWidth(); // Use FitWidth() instead of FitToWidth()
-                                    }
-                                   
-                                });
-                                
-                                // Signature section
-                                // column.Item()
-                                //     .AlignRight()
-                                //     .Text(text =>
-                                //     {
-                                //         text.Span("Date: ").SemiBold();
-                                //         text.Span(DateTime.Now.ToString("dd/MM/yyyy"));
-                                //         text.EmptyLine();
-                                //         text.EmptyLine();
-                                //         text.Span("Signature: ").SemiBold();
-                                //         text.EmptyLine();
-                                //         text.EmptyLine();
-                                //     });
+                                //column.Item().ShowEntire().Column(tc =>
+                                //{
+
+                                //    if (termsImage != null)
+                                //    {
+                                //        tc.Item()
+                                //            .Border(1)
+                                //            .BorderColor(Colors.Grey.Lighten2)
+                                //            .Padding(2)
+                                //            .Background(Colors.Grey.Lighten5)
+                                //            .Image(termsImage)
+                                //            .FitWidth(); // Use FitWidth() instead of FitToWidth()
+                                //    }
+
+                                //});
+
+                                //Signature section
+                                 column.Item()
+                                     .AlignRight()
+                                     .Text(text =>
+                                     {
+                                         text.Span("Date: ").SemiBold();
+                                         text.Span(DateTime.Now.ToString("dd/MM/yyyy"));
+                                         text.EmptyLine();
+                                         text.EmptyLine();
+                                         text.Span("Signature: ").SemiBold();
+                                         text.EmptyLine();
+                                         text.EmptyLine();
+                                     });
                             });
                     });
                 }).GeneratePdf();

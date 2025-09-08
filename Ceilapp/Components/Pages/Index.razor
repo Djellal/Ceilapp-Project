@@ -6,12 +6,12 @@
 
 <RadzenCard Style="text-align: center; padding-top: 0px">
     <RadzenImage Path="images/ceillogo.png" Style="width: 150px"></RadzenImage>
-    <RadzenText TextStyle="Radzen.Blazor.TextStyle.H6" TextAlign="Radzen.TextAlign.Center" Style="font-style: italic; font-family: 'Comic Sans MS'" Text="Le Centre d'Enseignement Intensif des Langues (CEIL-UFAS-1) fait partie des services communs de l'université. Il propose un service public d'enseignement des langues destiné en premier lieu aux membres de la communauté universitaire (étudiants, enseignants et fonctionnaires) mais aussi aux externes dans le cadre de conventions ou à tout individu voulant améliorer son niveau de langue." />
+    <RadzenText TextStyle="Radzen.Blazor.TextStyle.H6" TextAlign="Radzen.TextAlign.Center" Style="font-style: italic; font-family: 'Comic Sans MS'" Text=" مركز التعليم المكثف للغات مصلحة من المصالح المشتركة التابعة للجامعة. يقدم المركز خدمة عمومية لتعليم اللغات موجهة بالدرجة الأولى لكافة أفراد الأسرة الجامعية من طلبة و أساتذة و موظفين إلا أنه مفتوح للخارجيين في إطار الاتفاقيات المبرمة مع مختلف القطاعات أو للأفراد الراغبين في تحسين مستواهم في اللغات." />
     <RadzenTemplateForm Action="@($"account/login?redirectUrl={redirectUrl}")" Data="@("login")" Method="post" Visible="!Security.IsAuthenticated()" Style="margin: 10px; padding: 10px; border-radius: 15px; border: 5px solid #423dc8; background-color: rgba(65, 61, 200, 0.14)">
          <RadzenRow AlignItems="Radzen.AlignItems.Center">
         <RadzenColumn Size="12" SizeXS="6">
-            <RadzenAlert Shade="Radzen.Shade.Lighter" Variant="Radzen.Variant.Flat" Size="Radzen.AlertSize.Small" AlertStyle="Radzen.AlertStyle.Danger" Visible="@errorVisible">@error</RadzenAlert>
-            <RadzenAlert Shade="Radzen.Shade.Lighter" Variant="Radzen.Variant.Flat" Size="Radzen.AlertSize.Small" AlertStyle="Radzen.AlertStyle.Info" Visible="@infoVisible">@info</RadzenAlert>
+            <RadzenAlert Shade="Radzen.Shade.Lighter" Variant="Radzen.Variant.Flat" Size="Radzen.AlertSize.Small" AlertStyle="Radzen.AlertStyle.Danger" Visible="@errorVisible" Text="@error">@error</RadzenAlert>
+            <RadzenAlert Shade="Radzen.Shade.Lighter" Variant="Radzen.Variant.Flat" Size="Radzen.AlertSize.Small" AlertStyle="Radzen.AlertStyle.Info" Visible="@infoVisible" Text="@info">@info</RadzenAlert>
             <RadzenLogin AllowResetPassword="false" AllowRegister="false" FormFieldVariant="Variant.Filled"
                                     ResetPassword="@ResetPassword"
                                     Register="@Register" AllowRememberMe="true" RememberMe="true" UserText="Nom d'utilisateur" UserRequired="Le nom d'utilisateur est requis" PasswordText="Mot de passe " PasswordRequired="Mot de passe  est requit" ResetPasswordText="Mot de passe oublié ?" RememberMeText="souviens-toi de moi" LoginText="Connexion" RegisterText="Inscription" RegisterMessageText="Vous n'avez pas encore de compte ?" Style="padding-top: 1em; padding-bottom: 1em; font-style: normal; text-align: center"
@@ -20,8 +20,8 @@
         <RadzenColumn Size="12" SizeXS="6">
             <RadzenStack Orientation="Radzen.Orientation.Vertical" AlignItems="Radzen.AlignItems.Center" JustifyContent="Radzen.JustifyContent.SpaceBetween" Reverse="false" Style="margin-top: 2em">
                     <RadzenHeading Text="Vous n'avez pas encore de compte ?" Size="H2"></RadzenHeading>
-                    <RadzenButton Text="INSCRIPTION" Icon="app_registration" Size="Radzen.ButtonSize.Medium" ButtonStyle="Radzen.ButtonStyle.Success" Click="@Button0Click" Style="border-radius: 8px"></RadzenButton>
-            </RadzenStack>
+                    <RadzenButton Text="Inscription" Icon="app_registration" Size="Radzen.ButtonSize.Medium" ButtonStyle="Radzen.ButtonStyle.Success" Click="@InscriptionClick" Style="border-radius: 8px"></RadzenButton>
+             </RadzenStack>
         </RadzenColumn>
     </RadzenRow>
         </RadzenTemplateForm>
@@ -36,9 +36,10 @@
                     <div class="image-container" style="background-color: rgba(255, 255, 255, 0)">
                         <RadzenImage Style="height: 140px; width: 140px; object-fit: cover; border-radius: 8px;" Path="@context.Image" Class="rz-mb-2"/>
                     </div>
-                    <RadzenHeading Text="@context.Name" Size="H4" Style="margin: 0; font-weight: 600; text-align: center"/>
-<RadzenHeading Text="@context.NameAr" Size="H4" Style="margin: 0; font-weight: 600; text-align: center"/>
-                    <RadzenLink Text="S'inscrire" Icon="app_registration" Path="@($"/edit-course-registration/true/{context.Id}")" Style="font-weight: 600; font-style: italic; font-family: 'Comic Sans MS'; border-radius: 5px; border: 1px solid #e31c65; padding: 5px; width: 100%; text-align: center"></RadzenLink>
+                    <RadzenHeading Text="@(context.Name +" - "+ context.NameAr)" Size="H5" Style="margin: 0; font-weight: 600; text-align: center" />
+
+                    <RadzenLink Text="Inscription" Icon="app_registration" Path="@($"/edit-course-registration/true/{context.Id}/false")" Style="font-weight: 600; font-style: italic; font-family: 'Comic Sans MS'; border-radius: 5px; border: 1px solid #e31c65; padding: 5px; width: 100%; text-align: center"></RadzenLink>
+                    <RadzenLink Text="Réinscription" Icon="app_registration" Path="@($"/edit-course-registration/true/{context.Id}/true")" Style="font-weight: 600; font-style: italic; font-family: 'Comic Sans MS'; border-radius: 5px; border: 1px solid #e31200; padding: 5px; width: 100%; text-align: center"></RadzenLink>
                 </RadzenStack>
             </RadzenCard>
         </Template>
