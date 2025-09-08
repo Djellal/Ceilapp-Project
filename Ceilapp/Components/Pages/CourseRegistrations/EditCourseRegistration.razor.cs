@@ -72,6 +72,28 @@ namespace Ceilapp.Components.Pages.CourseRegistrations
         [Parameter]
         public bool isreinsc { get; set; } = true;
 
+        public bool CanEditLevel {
+            get
+            {
+                if (Security.IsInRole(Constants.ADMIN))
+                {
+                    return true;
+                }
+                else
+                {
+                    if (courseRegistration.IsReregistration)
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+
+            }
+        }
+
 
         protected override async Task OnInitializedAsync()
         {

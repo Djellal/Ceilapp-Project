@@ -125,7 +125,7 @@
               </RadzenFormField>
                 </RadzenColumn>
                 <RadzenColumn Size="12" SizeXS="6">
-                  <RadzenFormField Text="Niveau" Variant="Variant.Filled" Style="width: 100%" Visible="@(!isnew || isreinsc)">
+                  <RadzenFormField Text="Niveau" Variant="Variant.Filled" Style="width: 100%" Visible="@CanEditLevel">
                   <ChildContent>
                     <RadzenDropDown Data="@(courseLevelsForCourseLevelId)" TextProperty="Name" ValueProperty="Id" AllowClear=false
                           style="display: block; width: 100%" @bind-Value="@(courseRegistration.CourseLevelId)" Name="CourseLevelId" Placeholder="Niveau de formation" ReadOnly="false"
