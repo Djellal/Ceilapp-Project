@@ -289,8 +289,12 @@ namespace Ceilapp.Components.Pages.CourseRegistrations
         {
             try
             {
+                if(RequiredFieldsAreNotFilled()){
+                    NotificationService.Notify(new NotificationMessage { Severity = NotificationSeverity.Error, Summary = "Error", Detail = "Veuillez remplir tous les champs requis.", Duration = 5000 });
+                    return;
+                }
                 if (isnew)
-                {
+                {                    
                     courseRegistration.InscriptionCode = GenerateInscriptionCode();
                     courseRegistration = await ceilappService.CreateCourseRegistration(courseRegistration);
                     await GenerateFicheInscription();
@@ -365,6 +369,44 @@ namespace Ceilapp.Components.Pages.CourseRegistrations
 #endif
             }
         }
+
+        
+        public string RequiredNotFilledInfo { get; set; }
+private bool RequiredFieldsAreNotFilled()
+{
+    // Check if any required fields are null, empty, or have default values
+    RequiredNotFilledInfo = "";
+    if (string.IsNullOrEmpty(courseRegistration?.FirstName))
+        RequiredNotFilledInfo += "Prénom, ";
+    if (string.IsNullOrEmpty(courseRegistration?.LastName))
+        RequiredNotFilledInfo += "Nom, ";
+         if (string.IsNullOrEmpty(courseRegistration?.FirstNameAr))
+        RequiredNotFilledInfo += "Prénom arabe, ";
+    if (string.IsNullOrEmpty(courseRegistration?.LastNameAr))
+        RequiredNotFilledInfo += "Nom arabe, ";
+    if (courseRegistration.BirthMunicipalityId == 0)
+        RequiredNotFilledInfo += "Commune de naissance, ";
+    if (courseRegistration?.BirthDate == default(DateTime))
+        RequiredNotFilledInfo += "Date de naissance, ";
+    if (courseRegistration?.BirthStateId == null)
+        RequiredNotFilledInfo += "Wilaya de naissance, ";
+    if (courseRegistration?.BirthMunicipalityId == 0)
+        RequiredNotFilledInfo += "Municipalité de naissance, ";
+    if (string.IsNullOrEmpty(courseRegistration?.Address))
+        RequiredNotFilledInfo += "Adresse, ";
+    if (string.IsNullOrEmpty(courseRegistration?.Tel))
+        RequiredNotFilledInfo += "Téléphone, ";
+    if (courseRegistration?.ProfessionId == 0)
+        RequiredNotFilledInfo += "Profession, ";
+    if (courseRegistration?.CourseId == 0)
+        RequiredNotFilledInfo += "Cours, ";
+    if (courseRegistration?.CourseLevelId == 0)
+        RequiredNotFilledInfo += "Niveau, ";    
+
+
+    return !string.IsNullOrEmpty(RequiredNotFilledInfo);
+}
+
     }
 
 
