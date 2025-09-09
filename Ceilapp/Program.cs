@@ -1,14 +1,15 @@
-using Radzen;
 using Ceilapp.Components;
-using Microsoft.EntityFrameworkCore;
 using Ceilapp.Data;
-using Microsoft.AspNetCore.Identity;
-using Ceilapp.Models;
-using Microsoft.AspNetCore.OData;
-using Microsoft.OData.ModelBuilder;
-using Microsoft.AspNetCore.Components.Authorization;
-using Ceilapp.Models.ceilapp;
 using Ceilapp.Data.Seeders;
+using Ceilapp.Models;
+using Ceilapp.Models.ceilapp;
+using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.OData;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.OData.ModelBuilder;
+using Radzen;
 
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 var builder = WebApplication.CreateBuilder(args);
@@ -60,7 +61,17 @@ builder.Services.AddLocalization();
 var app = builder.Build();
 var forwardingOptions = new ForwardedHeadersOptions()
 {
-    ForwardedHeaders = Microsoft.AspNetCore.HttpOverrides.ForwardedHeaders.XForwardedFor | Microsoft.AspNetCore.HttpOverrides.ForwardedHeaders.XForwardedProto
+    ForwardedHeaders = ForwardedHeaders.XForwardedFor |
+                      ForwardedHeaders.XForwardedProto |
+                      ForwardedHeaders.XForwardedHost,
+
+    // Clear default values and trust all proxies (use with caution)
+    KnownProxies = { },
+    KnownNetworks = { },
+
+    // This tells the middleware to trust any proxy
+    RequireHeaderSymmetry = false,
+    ForwardLimit = null
 };
 forwardingOptions.KnownNetworks.Clear();
 forwardingOptions.KnownProxies.Clear();
