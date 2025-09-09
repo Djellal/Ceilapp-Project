@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.OData;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OData.ModelBuilder;
 using Radzen;
+using System.Net;
 
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 var builder = WebApplication.CreateBuilder(args);
@@ -65,13 +66,20 @@ var forwardingOptions = new ForwardedHeadersOptions()
                       ForwardedHeaders.XForwardedProto |
                       ForwardedHeaders.XForwardedHost,
 
-    // Clear default values and trust all proxies (use with caution)
-    KnownProxies = { },
-    KnownNetworks = { },
+    // Trust Nginx (localhost since Nginx and app are on same server)
+    KnownProxies = {
+        IPAddress.Parse("127.0.0.1"),
+        IPAddress.Parse("::1")
+    },
 
-    // This tells the middleware to trust any proxy
-    RequireHeaderSymmetry = false,
-    ForwardLimit = null
+    // Trust local network
+    KnownNetworks = {
+        new Microsoft.AspNetCore.HttpOverrides.IPNetwork(IPAddress.Parse("127.0.0.0"), 8),
+        new Microsoft.AspNetCore.HttpOverrides.IPNetwork(IPAddress.Parse("::1"), 128)
+    },
+
+    ForwardLimit = 1,
+    RequireHeaderSymmetry = false
 };
 forwardingOptions.KnownNetworks.Clear();
 forwardingOptions.KnownProxies.Clear();
