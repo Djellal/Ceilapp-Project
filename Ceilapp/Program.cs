@@ -8,9 +8,9 @@ using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.OData;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Microsoft.OData.ModelBuilder;
 using Radzen;
-using System.Net;
 
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 var builder = WebApplication.CreateBuilder(args);
@@ -60,30 +60,32 @@ builder.Services.AddControllers().AddOData(o =>
 builder.Services.AddScoped<AuthenticationStateProvider, Ceilapp.ApplicationAuthenticationStateProvider>();
 builder.Services.AddLocalization();
 var app = builder.Build();
+// Remove the following invalid lines from the ForwardedHeadersOptions object initializer:
+//     KnownNetworks.Clear(),
+//     KnownProxies.Clear(),
+// These are not valid in an object initializer and cause CS0747 and CS0103.
+// Instead, call Clear() on the properties after the object is created, as already done below.
+
 var forwardingOptions = new ForwardedHeadersOptions()
 {
     ForwardedHeaders = ForwardedHeaders.XForwardedFor |
                       ForwardedHeaders.XForwardedProto |
                       ForwardedHeaders.XForwardedHost,
 
-    // Trust Nginx (localhost since Nginx and app are on same server)
-    KnownProxies = {
-        IPAddress.Parse("127.0.0.1"),
-        IPAddress.Parse("::1")
-    },
+    // Clear default values and trust all proxies (use with caution)
+    KnownProxies = { },
+    KnownNetworks = { },
 
-    // Trust local network
-    KnownNetworks = {
-        new Microsoft.AspNetCore.HttpOverrides.IPNetwork(IPAddress.Parse("127.0.0.0"), 8),
-        new Microsoft.AspNetCore.HttpOverrides.IPNetwork(IPAddress.Parse("::1"), 128)
-    },
-
-    ForwardLimit = 1,
-    RequireHeaderSymmetry = false
+    // This tells the middleware to trust any proxy
+    RequireHeaderSymmetry = false,
+    ForwardLimit = null
 };
+// Clear known networks and proxies to accept from any
 forwardingOptions.KnownNetworks.Clear();
 forwardingOptions.KnownProxies.Clear();
+
 app.UseForwardedHeaders(forwardingOptions);
+
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
