@@ -68,6 +68,7 @@ var app = builder.Build();
 
 var forwardingOptions = new ForwardedHeadersOptions()
 {
+<<<<<<< HEAD
     ForwardedHeaders = ForwardedHeaders.XForwardedFor |
                       ForwardedHeaders.XForwardedProto |
                       ForwardedHeaders.XForwardedHost,
@@ -79,6 +80,12 @@ var forwardingOptions = new ForwardedHeadersOptions()
     // This tells the middleware to trust any proxy
     RequireHeaderSymmetry = false,
     ForwardLimit = null
+=======
+    ForwardedHeaders = ForwardedHeaders.All,
+    ForwardedForHeaderName = "X-Forwarded-For",
+    ForwardedProtoHeaderName = "X-Forwarded-Proto",
+    ForwardedHostHeaderName = "X-Forwarded-Host"
+>>>>>>> c2ae6d47ba1e88ab0ab008fb44fd78ba7000daaf
 };
 // Clear known networks and proxies to accept from any
 forwardingOptions.KnownNetworks.Clear();
