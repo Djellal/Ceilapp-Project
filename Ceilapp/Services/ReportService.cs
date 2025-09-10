@@ -1,4 +1,4 @@
-using QuestPDF.Fluent;
+﻿using QuestPDF.Fluent;
 using QuestPDF.Helpers;
 using QuestPDF.Infrastructure;
 using PuppeteerSharp;
@@ -75,11 +75,12 @@ namespace Ceilapp
                                 column.Spacing(15);
                                 
                                 // Header with border
+                                var title=registration.IsReregistration?"FICHE DE RÉINSCRIPTION":"FICHE D'INSCRIPTION";
                                 column.Item()
                                     .Border(1)
                                     .BorderColor(Colors.Blue.Darken2)
                                     .Padding(10)
-                                    .Text("FICHE D'INSCRIPTION")
+                                    .Text(title)
                                     .AlignCenter()
                                     .FontSize(16)
                                     .Bold()
@@ -114,7 +115,7 @@ namespace Ceilapp
                                         });
                                         
                                         AddTableRow(table, "Cours", registration.Course?.Name);
-                                        AddTableRow(table, "Niveau", registration.CourseLevel?.Name);
+                                        if(registration.IsReregistration) AddTableRow(table, "Niveau", registration.CourseLevel?.Name);
 
                                         var feeValue = "";
                                         if(registration.Profession != null)
