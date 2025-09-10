@@ -14,6 +14,25 @@
             </RadzenStack>
         </RadzenColumn>
     </RadzenRow>
+    
+    <!-- Filter Section -->
+    <RadzenRow>
+        <RadzenColumn Size="12" SizeMD="4">
+            <RadzenLabel Text="Filter by Course:" />
+            <RadzenDropDown Data="@courses" TextProperty="Name" ValueProperty="Id" @bind-Value="@selectedCourseId" 
+                          Change="@OnCourseFilterChange" Placeholder="Select Course" Style="width: 100%" />
+        </RadzenColumn>
+        <RadzenColumn Size="12" SizeMD="4">
+            <RadzenLabel Text="Filter by Course Level:" />
+            <RadzenDropDown Data="@courseLevels" TextProperty="Name" ValueProperty="Id" @bind-Value="@selectedCourseLevelId" 
+                          Change="@OnCourseLevelFilterChange" Placeholder="Select Course Level" Style="width: 100%" />
+        </RadzenColumn>
+        <RadzenColumn Size="12" SizeMD="4" Style="display: flex; align-items: flex-end;">
+            <RadzenButton Icon="clear" Text="Clear Filters" Click="@ClearFilters" Variant="Variant.Outlined" 
+                         Style="margin-top: 24px; width: 100%" />
+        </RadzenColumn>
+    </RadzenRow>
+    
     <RadzenRow>
       <RadzenColumn SizeMD=12>
         <RadzenDataGrid @ref="grid0" ColumnWidth="200px"   AllowFiltering="true" FilterMode="FilterMode.Advanced" AllowPaging="true" AllowSorting="true" ShowPagingSummary="true" PageSizeOptions=@(new int[]{5, 10, 20, 30})
@@ -21,9 +40,7 @@
             <Columns>
                 <RadzenDataGridColumn TItem="Ceilapp.Models.ceilapp.Groupe" Property="GroupeName" Title="Groupe Name">
                 </RadzenDataGridColumn>
-                <RadzenDataGridColumn TItem="Ceilapp.Models.ceilapp.Groupe" Property="TeacherId" Title="Teacher Id">
-                </RadzenDataGridColumn>
-                <RadzenDataGridColumn TItem="Ceilapp.Models.ceilapp.Groupe" Property="Course.Image" Title="Course">
+                <RadzenDataGridColumn TItem="Ceilapp.Models.ceilapp.Groupe" Property="Course.Name" Title="Course">
                 </RadzenDataGridColumn>
                 <RadzenDataGridColumn TItem="Ceilapp.Models.ceilapp.Groupe" Property="CourseLevel.NameAr" Title="Course Level">
                 </RadzenDataGridColumn>
@@ -40,9 +57,7 @@
                     </Template>
                 </RadzenDataGridColumn>
             </Columns>
-
         </RadzenDataGrid>
-
     </RadzenColumn>
   </RadzenRow>
 </RadzenStack>

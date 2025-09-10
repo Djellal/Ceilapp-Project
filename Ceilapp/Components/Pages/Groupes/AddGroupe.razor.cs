@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using Radzen;
 using Radzen.Blazor;
+using Ceilapp.Models.ceilapp;
 
 namespace Ceilapp.Components.Pages.Groupes
 {
@@ -41,6 +42,16 @@ namespace Ceilapp.Components.Pages.Groupes
             courseLevelsForCourseLevelId = await ceilappService.GetCourseLevels();
 
             sessionsForCurrentSessionId = await ceilappService.GetSessions();
+
+            Teachers = await Security.GetUsers(Constants.TEACHER);
+
+            AppSetting = await ceilappService.GetAppSettingById(1);
+            if (AppSetting != null)
+            {
+                groupe.CurrentSessionId = AppSetting.CurrentSessionId;
+            }
+
+            groupe.NbrPlaces = 30;
         }
         protected bool errorVisible;
         protected Ceilapp.Models.ceilapp.Groupe groupe;
@@ -50,6 +61,9 @@ namespace Ceilapp.Components.Pages.Groupes
         protected IEnumerable<Ceilapp.Models.ceilapp.CourseLevel> courseLevelsForCourseLevelId;
 
         protected IEnumerable<Ceilapp.Models.ceilapp.Session> sessionsForCurrentSessionId;
+
+        public AppSetting AppSetting { get; private set; }
+        protected IEnumerable<Ceilapp.Models.ApplicationUser> Teachers;
 
         [Inject]
         protected SecurityService Security { get; set; }
@@ -70,6 +84,11 @@ namespace Ceilapp.Components.Pages.Groupes
         protected async Task CancelButtonClick(MouseEventArgs args)
         {
             DialogService.Close(null);
+        }
+
+        protected async System.Threading.Tasks.Task CourseIdChange(System.Object args)
+        {
+           courseLevelsForCourseLevelId = await ceilappService.GetCourseLevels(new Radzen.Query { Filter = "i => i.CourseId == @0", FilterParameters = new object[] { args }, OrderBy = "LevelOrder asc" });
         }
     }
 }

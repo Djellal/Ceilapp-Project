@@ -34,15 +34,92 @@ namespace Ceilapp.Components.Pages.Groupes
         public ceilappService ceilappService { get; set; }
 
         protected IEnumerable<Ceilapp.Models.ceilapp.Groupe> groupes;
+protected IEnumerable<Ceilapp.Models.ceilapp.Course> courses;
+protected IEnumerable<Ceilapp.Models.ceilapp.CourseLevel> courseLevels;
 
-        protected RadzenDataGrid<Ceilapp.Models.ceilapp.Groupe> grid0;
+protected int? selectedCourseId;
+protected int? selectedCourseLevelId;
 
-        [Inject]
-        protected SecurityService Security { get; set; }
-        protected override async Task OnInitializedAsync()
+protected RadzenDataGrid<Ceilapp.Models.ceilapp.Groupe> grid0;
+
+[Inject]
+protected SecurityService Security { get; set; }
+
+protected override async Task OnInitializedAsync()
+{
+    await LoadCourses();
+    await LoadCourseLevels();
+    await LoadGroupes();
+}
+
+protected async Task LoadCourses()
+{
+    courses = await ceilappService.GetCourses();
+}
+
+protected async Task LoadCourseLevels()
+{
+    courseLevels = await ceilappService.GetCourseLevels(new Query { Expand = "Course" });
+}
+
+protected async Task LoadGroupes()
+{
+    var query = new Query { Expand = "Course,CourseLevel,Session" };
+    
+    if (selectedCourseId.HasValue)
+    {
+        query.Filter = $"i => i.CourseId == {selectedCourseId.Value}";
+    }
+    
+    if (selectedCourseLevelId.HasValue)
+    {
+        if (!string.IsNullOrEmpty(query.Filter))
         {
-            groupes = await ceilappService.GetGroupes(new Query { Expand = "Course,CourseLevel,Session" });
+            query.Filter += $" && i.CourseLevelId == {selectedCourseLevelId.Value}";
         }
+        else
+        {
+            query.Filter = $"i => i.CourseLevelId == {selectedCourseLevelId.Value}";
+        }
+    }
+
+    groupes = await ceilappService.GetGroupes(query);
+}
+
+protected async Task OnCourseFilterChange(object value)
+{
+   try
+   {
+     courseLevels = await ceilappService.GetCourseLevels(new Radzen.Query { Filter = "i => i.CourseId == @0", FilterParameters = new object[] { value }, OrderBy = "LevelOrder asc" });
+     selectedCourseId = value as int?;
+     await LoadGroupes();
+     await grid0.Reload();
+   }
+   catch (System.Exception ex)
+   {
+    NotificationService.Notify(new NotificationMessage
+    {
+        Severity = NotificationSeverity.Error,
+        Summary = $"Error",
+        Detail = $"Unable to load course levels: {ex.Message}"
+    });   
+   }
+}
+
+protected async Task OnCourseLevelFilterChange(object value)
+{
+    selectedCourseLevelId = value as int?;
+    await LoadGroupes();
+    await grid0.Reload();
+}
+
+protected async Task ClearFilters()
+{
+    selectedCourseId = null;
+    selectedCourseLevelId = null;
+    await LoadGroupes();
+    await grid0.Reload();
+}
 
         protected async Task AddButtonClick(MouseEventArgs args)
         {

@@ -1,4 +1,5 @@
-@page "/add-groupe"
+@page "/add-groupe"
+
 @attribute [Authorize]
 
 <PageTitle>Add Groupe</PageTitle>
@@ -14,24 +15,23 @@
                     <RadzenRequiredValidator Component="GroupeName" Text="GroupeName is required" />
                   </Helper>
             </RadzenFormField>
-            <RadzenFormField Text="Teacher Id" Variant="Variant.Filled">
+             <RadzenFormField Text="Enseignant" Variant="Variant.Filled">
                   <ChildContent>
-                    <RadzenTextBox style="display: block; width: 100%" @bind-Value="@(groupe.TeacherId)" Name="TeacherId" />
-                  </ChildContent>    
-                  <Helper>
-                    <RadzenRequiredValidator Component="TeacherId" Text="TeacherId is required" />
-                  </Helper>
+                    <RadzenDropDown TextProperty="Name" ValueProperty="Id" AllowClear=true
+                          style="display: block; width: 100%" @bind-Value="@(groupe.TeacherId)" Name="TeacherId" Data="@Teachers"
+                           />
+              </ChildContent>
             </RadzenFormField>
-            <RadzenFormField Text="Course" Variant="Variant.Filled">
+            <RadzenFormField Text="Cours" Variant="Variant.Filled">
                   <ChildContent>
-                    <RadzenDropDown Data="@(coursesForCourseId)" TextProperty="Image" ValueProperty="Id" AllowClear=true
-                          style="display: block; width: 100%" @bind-Value="@(groupe.CourseId)" Name="CourseId"
+                    <RadzenDropDown Data="@(coursesForCourseId)" TextProperty="Name" ValueProperty="Id" AllowClear=true
+                          style="display: block; width: 100%" @bind-Value="@(groupe.CourseId)" Name="CourseId" Change="@CourseIdChange"
                            />
               </ChildContent>
             </RadzenFormField>
             <RadzenFormField Text="Course Level" Variant="Variant.Filled">
                   <ChildContent>
-                    <RadzenDropDown Data="@(courseLevelsForCourseLevelId)" TextProperty="NameAr" ValueProperty="Id" AllowClear=true
+                    <RadzenDropDown Data="@(courseLevelsForCourseLevelId)" TextProperty="Name" ValueProperty="Id" AllowClear=true
                           style="display: block; width: 100%" @bind-Value="@(groupe.CourseLevelId)" Name="CourseLevelId"
                            />
               </ChildContent>

@@ -1,4 +1,5 @@
-@page "/edit-groupe"
+@page "/edit-groupe"
+
 @attribute [Authorize]
 
 <PageTitle>Edit Groupe</PageTitle>
@@ -15,18 +16,17 @@
                     <RadzenRequiredValidator Component="GroupeName" Text="GroupeName is required" />
                   </Helper>
             </RadzenFormField>
-            <RadzenFormField Text="Teacher Id" Variant="Variant.Filled">
+            <RadzenFormField Text="Enseignant" Variant="Variant.Filled">
                   <ChildContent>
-                    <RadzenTextBox style="display: block; width: 100%" @bind-Value="@(groupe.TeacherId)" Name="TeacherId" />
-                  </ChildContent>    
-                  <Helper>
-                    <RadzenRequiredValidator Component="TeacherId" Text="TeacherId is required" />
-                  </Helper>
+                    <RadzenDropDown TextProperty="Name" ValueProperty="Id" AllowClear=true
+                          style="display: block; width: 100%" @bind-Value="@(groupe.TeacherId)" Name="TeacherId" Data="@Teachers"
+                           />
+              </ChildContent>
             </RadzenFormField>
-            <RadzenFormField Text="Course" Variant="Variant.Filled">
+            <RadzenFormField Text="Cours" Variant="Variant.Filled">
                   <ChildContent>
-                    <RadzenDropDown Data="@(coursesForCourseId)" TextProperty="Image" ValueProperty="Id" AllowClear=true
-                          style="display: block; width: 100%" @bind-Value="@(groupe.CourseId)" Name="CourseId"
+                    <RadzenDropDown Data="@(coursesForCourseId)" TextProperty="Name" ValueProperty="Id" AllowClear=true
+                          style="display: block; width: 100%" @bind-Value="@(groupe.CourseId)" Name="CourseId" Change="@CourseIdChange"
                            />
               </ChildContent>
             </RadzenFormField>
@@ -39,7 +39,7 @@
             </RadzenFormField>
             <RadzenFormField Text="Session" Variant="Variant.Filled">
                   <ChildContent>
-                    <RadzenDropDown Data="@(sessionsForCurrentSessionId)" TextProperty="SessionNameAr" ValueProperty="Id" AllowClear=true
+                    <RadzenDropDown Data="@(sessionsForCurrentSessionId)" TextProperty="SessionName" ValueProperty="Id" AllowClear=true
                           style="display: block; width: 100%" @bind-Value="@(groupe.CurrentSessionId)" Name="CurrentSessionId"
                            />
               </ChildContent>
