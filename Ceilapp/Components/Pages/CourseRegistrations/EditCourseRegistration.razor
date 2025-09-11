@@ -68,7 +68,7 @@
                     <RadzenFormField Text="Wilaya" Variant="Variant.Filled" Style="width: 100%">
                           <ChildContent>
                             <RadzenDropDown Data="@(statesForBirthStateId)" TextProperty="Name" ValueProperty="Id" AllowClear=true
-                                  style="display: block; width: 100%" @bind-Value="@(courseRegistration.BirthStateId)" Name="BirthStateId" Change="@BirthStateIdChange" AllowFiltering="true" FilterCaseSensitivity="Radzen.FilterCaseSensitivity.CaseInsensitive"
+                                  style="display: block; width: 100%" @bind-Value="@(courseRegistration.BirthStateId)" Name="BirthStateId" Change="@BirthStateIdChange" AllowFiltering="true" FilterCaseSensitivity="Radzen.FilterCaseSensitivity.CaseInsensitive" FilterAutoCompleteType="Radzen.Blazor.AutoCompleteType.On"
                                    />
                       </ChildContent>
                     </RadzenFormField>
@@ -77,7 +77,7 @@
                     <RadzenFormField Text="Commune" Variant="Variant.Filled" Style="width: 100%">
                           <ChildContent>
                             <RadzenDropDown Data="@(municipalitiesForBirthMunicipalityId)" TextProperty="Name" ValueProperty="Id" AllowClear=true
-                                  style="display: block; width: 100%" @bind-Value="@(courseRegistration.BirthMunicipalityId)" Name="BirthMunicipalityId" AllowFiltering="true"
+                                  style="display: block; width: 100%" @bind-Value="@(courseRegistration.BirthMunicipalityId)" Name="BirthMunicipalityId" AllowFiltering="true" FilterAutoCompleteType="Radzen.Blazor.AutoCompleteType.On"
                                    />
                       </ChildContent>
                     </RadzenFormField>
