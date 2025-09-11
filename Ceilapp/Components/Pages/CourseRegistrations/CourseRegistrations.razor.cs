@@ -175,12 +175,69 @@ namespace Ceilapp.Components.Pages.CourseRegistrations
             SelectedSession = CurrentSession?.Id;
         }
 
+        protected async Task ExportToExcel()
+        {
+            try
+            {
+               Ceilapp.Models.ceilapp.CourseRegistration  cr = new Ceilapp.Models.ceilapp.CourseRegistration();
+                // Construct the query based on the current filters
+                var query = new Radzen.Query
+                {
+                    //cr.State?.Name
+                    
+                    Select = "InscriptionCode, FirstName, LastName,FirstNameAr, LastNameAr, BirthDate, State.Name, Municipality.Name, Profession.Name,Address,Tel, Course.Name, CourseLevel.Name,PaidFeeValue,IsReregistration,RegistrationValidated ",
+                    Filter = "",
+                    Expand = "State,Municipality,Profession,Course,CourseLevel,Session"
+                };
         
-
+                if (SelectedSession.HasValue)
+                {
+                    query.Filter += $"r => r.SessionId == {SelectedSession.Value}";
+                }
+        
+                if (Validated.HasValue)
+                {
+                    query.Filter += string.IsNullOrEmpty(query.Filter) ? "" : " and ";
+                    query.Filter += $"r => r.RegistrationValidated == {Validated.Value.ToString().ToLower()}";
+                }
+        
+                if (SelectedCourse.HasValue)
+                {
+                    query.Filter += string.IsNullOrEmpty(query.Filter) ? "" : " and ";
+                    query.Filter += $"r => r.CourseId == {SelectedCourse.Value}";
+                }
+        
+                if (SelectedLevel.HasValue)
+                {
+                    query.Filter += string.IsNullOrEmpty(query.Filter) ? "" : " and ";
+                    query.Filter += $"r => r.CourseLevelId == {SelectedLevel.Value}";
+                }
+        
+                // Pass the constructed query to the export method
+                await ceilappService.ExportCourseRegistrationsToExcel(query, "CourseRegistrationsExport");
+            }
+            catch (Exception ex)
+            {
+                NotificationService.Notify(new NotificationMessage
+                {
+                    Severity = NotificationSeverity.Error,
+                    Summary = "Export Error",
+                    Detail = "An error occurred while exporting the data to Excel."
+                });
+                Console.WriteLine($"Error exporting to Excel: {ex.Message}");
+            }
+        }
 
         protected async System.Threading.Tasks.Task ValidesSelectBarChange(bool? args)
         {
             await Filter();
+        }
+
+        protected async System.Threading.Tasks.Task ExportButtonClick(Microsoft.AspNetCore.Components.Web.MouseEventArgs args)
+        {
+
+
+
         }
     }
 }

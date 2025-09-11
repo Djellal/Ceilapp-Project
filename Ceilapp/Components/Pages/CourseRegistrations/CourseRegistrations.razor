@@ -6,12 +6,11 @@
 
 <RadzenRow AlignItems="AlignItems.Center">
     <RadzenColumn Size="12" SizeMD="6">
-        
         <RadzenText Text="Course Registrations" TextStyle="Radzen.Blazor.TextStyle.H5" TagName="Radzen.Blazor.TagName.H5" style="margin: 0" />
     </RadzenColumn>
     <RadzenColumn Size="12" SizeMD="6">
         <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.End" Gap="0.5rem">
-            
+            <RadzenButton Text="Export to Excel" Icon="download" ButtonStyle="ButtonStyle.Primary" Click="ExportToExcel" />
         </RadzenStack>
     </RadzenColumn>
 </RadzenRow>
