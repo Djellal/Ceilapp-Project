@@ -34,14 +34,14 @@ namespace Ceilapp.Models.ceilapp
         [Required]
         public int Order { get; set; }
 
-        public ICollection<Evaluation> Evaluations { get; set; }
-
-        public ICollection<CourseRegistration> CourseRegistrations { get; set; }
-
-        public ICollection<CourseComponent> CourseComponents { get; set; }
+        public ICollection<CourseLevel> CourseLevels { get; set; }
 
         public ICollection<Groupe> Groupes { get; set; }
 
-        public ICollection<CourseLevel> CourseLevels { get; set; }
+        public ICollection<CourseComponent> CourseComponents { get; set; }
+
+        public ICollection<Evaluation> Evaluations { get; set; }
+
+        public ICollection<CourseRegistration> CourseRegistrations { get; set; }
     }
 }

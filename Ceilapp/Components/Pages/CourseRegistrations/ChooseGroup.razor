@@ -1,0 +1,65 @@
+@page "/choose-group/{Id:int}"
+
+@attribute [Authorize]
+
+<PageTitle>Choisir un Groupe</PageTitle>
+
+<RadzenRow>
+    <RadzenColumn Size="12">
+        <RadzenText Text="Choisir un Groupe" TextStyle="TextStyle.H3" TagName="TagName.H1" />
+    </RadzenColumn>
+</RadzenRow>
+
+@if (courseRegistration != null)
+{
+    <RadzenCard Style="margin-bottom: 20px;">
+        <RadzenStack>
+            <RadzenText Text="Détails de l'inscription:" TextStyle="TextStyle.Subtitle1" />
+            <RadzenText Text="@($"Cours: {courseRegistration.Course?.Name}")" />
+            <RadzenText Text="@($"Niveau: {courseRegistration.CourseLevel?.NameAr}")" />
+            <RadzenText Text="@($"Session: {courseRegistration.Session?.SessionNameAr}")" />
+        </RadzenStack>
+    </RadzenCard>
+
+    <RadzenCard>
+        <RadzenStack>
+            <RadzenText Text="Groupes disponibles:" TextStyle="TextStyle.Subtitle1" />
+
+            @if (availableGroups != null && availableGroups.Any())
+            {
+                <RadzenForm>
+                    <RadzenFormField Text="Sélectionner un groupe:" Variant="Variant.Filled">
+                        <ChildContent>
+                            <RadzenDropDown Data="@availableGroups" 
+                                          TextProperty="GroupeName" 
+                                          ValueProperty="Id" 
+                                          @bind-Value="@selectedGroupId"
+                                          Placeholder="Choisir un groupe"
+                                          Style="width: 100%">
+                                <Template Context="groupe">
+                                    @groupe.GroupeName - @groupe.TeacherId - @groupe.NbrPlaces places
+                                </Template>
+                            </RadzenDropDown>
+                        </ChildContent>
+                    </RadzenFormField>
+
+                    <RadzenStack Orientation="Orientation.Horizontal" Gap="1rem" Style="margin-top: 20px;">
+                        <RadzenButton Text="Assigner" Click="@AssignGroup" Variant="Variant.Flat" ButtonStyle="ButtonStyle.Primary" />
+                        <RadzenButton Text="Annuler" Click="@Cancel" Variant="Variant.Outlined" />
+                    </RadzenStack>
+                </RadzenForm>
+            }
+            else
+            {
+                <RadzenAlert Shade="Shade.Lighter" Variant="Variant.Flat" AlertStyle="AlertStyle.Warning">
+                    Aucun groupe disponible pour ce cours et niveau.
+                </RadzenAlert>
+                <RadzenButton Text="Retour" Click="@Cancel" Variant="Variant.Outlined" Style="margin-top: 20px;" />
+            }
+        </RadzenStack>
+    </RadzenCard>
+}
+else
+{
+    <RadzenProgressBar Mode="ProgressBarMode.Indeterminate" />
+}

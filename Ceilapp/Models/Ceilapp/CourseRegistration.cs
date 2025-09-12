@@ -83,6 +83,10 @@ namespace Ceilapp.Models.ceilapp
 
         public bool RegistrationValidated { get; set; }
 
+        public int? GroupId { get; set; }
+
+        public Groupe Groupe { get; set; }
+
         public ICollection<Evaluation> Evaluations { get; set; }
     }
 }

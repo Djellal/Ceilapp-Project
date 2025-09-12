@@ -106,5 +106,10 @@ namespace DataModel
         public bool RegistrationTermsAccepted { get; set; }
         
         public bool RegistrationValidated { get; set; }
+
+
+        [ForeignKey("Group")]
+        public int? GroupId { get; set; }
+        public Groupe? Group { get; set; }
     }
 }

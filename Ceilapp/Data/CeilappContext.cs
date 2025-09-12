@@ -34,6 +34,18 @@ namespace Ceilapp.Data
               .HasForeignKey(i => i.CourseId)
               .HasPrincipalKey(i => i.Id);
 
+            builder.Entity<Ceilapp.Models.ceilapp.CourseLevel>()
+              .HasOne(i => i.Course)
+              .WithMany(i => i.CourseLevels)
+              .HasForeignKey(i => i.CourseId)
+              .HasPrincipalKey(i => i.Id);
+
+            builder.Entity<Ceilapp.Models.ceilapp.CourseLevel>()
+              .HasOne(i => i.CourseLevel1)
+              .WithMany(i => i.CourseLevels1)
+              .HasForeignKey(i => i.NextLevelId)
+              .HasPrincipalKey(i => i.Id);
+
             builder.Entity<Ceilapp.Models.ceilapp.CourseRegistration>()
               .HasOne(i => i.Municipality)
               .WithMany(i => i.CourseRegistrations)
@@ -56,6 +68,12 @@ namespace Ceilapp.Data
               .HasOne(i => i.CourseLevel)
               .WithMany(i => i.CourseRegistrations)
               .HasForeignKey(i => i.CourseLevelId)
+              .HasPrincipalKey(i => i.Id);
+
+            builder.Entity<Ceilapp.Models.ceilapp.CourseRegistration>()
+              .HasOne(i => i.Groupe)
+              .WithMany(i => i.CourseRegistrations)
+              .HasForeignKey(i => i.GroupId)
               .HasPrincipalKey(i => i.Id);
 
             builder.Entity<Ceilapp.Models.ceilapp.CourseRegistration>()
@@ -112,17 +130,9 @@ namespace Ceilapp.Data
               .HasForeignKey(i => i.StateId)
               .HasPrincipalKey(i => i.Id);
 
-            builder.Entity<Ceilapp.Models.ceilapp.CourseLevel>()
-              .HasOne(i => i.Course)
-              .WithMany(i => i.CourseLevels)
-              .HasForeignKey(i => i.CourseId)
-              .HasPrincipalKey(i => i.Id);
-
-            builder.Entity<Ceilapp.Models.ceilapp.CourseLevel>()
-              .HasOne(i => i.CourseLevel1)
-              .WithMany(i => i.CourseLevels1)
-              .HasForeignKey(i => i.NextLevelId)
-              .HasPrincipalKey(i => i.Id);
+            builder.Entity<Ceilapp.Models.ceilapp.Groupe>()
+              .Property(p => p.Description)
+              .HasDefaultValueSql(@"''::text");
 
             builder.Entity<Ceilapp.Models.ceilapp.CourseRegistration>()
               .Property(p => p.PaidFeeValue)
@@ -137,6 +147,8 @@ namespace Ceilapp.Data
         public DbSet<Ceilapp.Models.ceilapp.AppSetting> AppSettings { get; set; }
 
         public DbSet<Ceilapp.Models.ceilapp.CourseComponent> CourseComponents { get; set; }
+
+        public DbSet<Ceilapp.Models.ceilapp.CourseLevel> CourseLevels { get; set; }
 
         public DbSet<Ceilapp.Models.ceilapp.CourseRegistration> CourseRegistrations { get; set; }
 
@@ -155,8 +167,6 @@ namespace Ceilapp.Data
         public DbSet<Ceilapp.Models.ceilapp.Session> Sessions { get; set; }
 
         public DbSet<Ceilapp.Models.ceilapp.State> States { get; set; }
-
-        public DbSet<Ceilapp.Models.ceilapp.CourseLevel> CourseLevels { get; set; }
 
         protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)
         {

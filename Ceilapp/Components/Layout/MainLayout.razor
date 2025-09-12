@@ -53,6 +53,7 @@
             <RadzenPanelMenuItem Text="Dashboard" Path="student-dashboard" Icon="dashboard" Visible="Security.IsInRole(Constants.STUDENT)" />
             <RadzenPanelMenuItem Text="Statistiques" Path="statistics-persession" Icon="bar_chart_4_bars" Visible="Security.IsInRole(Constants.ADMIN)" />
             <RadzenPanelMenuItem Text="Utilisateurs" Path="application-users" Icon="group" Visible="Security.IsInRole(Constants.ADMIN)"></RadzenPanelMenuItem>
+            <RadzenPanelMenuItem Text="ChooseGroup" Path="choose-group" />
         </RadzenPanelMenu>
         <RadzenCard>
             @if (AppSettings != null)

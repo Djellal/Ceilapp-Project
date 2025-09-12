@@ -47,6 +47,20 @@ namespace Ceilapp.Controllers
             return ToExcel(ApplyQuery(await service.GetCourseComponents(), Request.Query, false), fileName);
         }
 
+        [HttpGet("/export/ceilapp/courselevels/csv")]
+        [HttpGet("/export/ceilapp/courselevels/csv(fileName='{fileName}')")]
+        public async Task<FileStreamResult> ExportCourseLevelsToCSV(string fileName = null)
+        {
+            return ToCSV(ApplyQuery(await service.GetCourseLevels(), Request.Query, false), fileName);
+        }
+
+        [HttpGet("/export/ceilapp/courselevels/excel")]
+        [HttpGet("/export/ceilapp/courselevels/excel(fileName='{fileName}')")]
+        public async Task<FileStreamResult> ExportCourseLevelsToExcel(string fileName = null)
+        {
+            return ToExcel(ApplyQuery(await service.GetCourseLevels(), Request.Query, false), fileName);
+        }
+
         [HttpGet("/export/ceilapp/courseregistrations/csv")]
         [HttpGet("/export/ceilapp/courseregistrations/csv(fileName='{fileName}')")]
         public async Task<FileStreamResult> ExportCourseRegistrationsToCSV(string fileName = null)
@@ -171,20 +185,6 @@ namespace Ceilapp.Controllers
         public async Task<FileStreamResult> ExportStatesToExcel(string fileName = null)
         {
             return ToExcel(ApplyQuery(await service.GetStates(), Request.Query, false), fileName);
-        }
-
-        [HttpGet("/export/ceilapp/courselevels/csv")]
-        [HttpGet("/export/ceilapp/courselevels/csv(fileName='{fileName}')")]
-        public async Task<FileStreamResult> ExportCourseLevelsToCSV(string fileName = null)
-        {
-            return ToCSV(ApplyQuery(await service.GetCourseLevels(), Request.Query, false), fileName);
-        }
-
-        [HttpGet("/export/ceilapp/courselevels/excel")]
-        [HttpGet("/export/ceilapp/courselevels/excel(fileName='{fileName}')")]
-        public async Task<FileStreamResult> ExportCourseLevelsToExcel(string fileName = null)
-        {
-            return ToExcel(ApplyQuery(await service.GetCourseLevels(), Request.Query, false), fileName);
         }
     }
 }

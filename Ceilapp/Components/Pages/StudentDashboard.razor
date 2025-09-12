@@ -6,7 +6,11 @@
     <RadzenStack Gap="2rem">
         <RadzenCard class="shadow-lg rounded-4 border-0">
             <RadzenCardHeader class="bg-primary bg-opacity-10 border-bottom">
-                <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="1rem" JustifyContent="Radzen.JustifyContent.SpaceBetween">
+                <RadzenStack Orientation="Orientation.Horizontal"
+                             AlignItems="AlignItems.Center"
+                             Gap="1rem"
+                             JustifyContent="Radzen.JustifyContent.SpaceBetween"
+                             Class="dashboard-header">
                     <i class="bi bi-calendar-check fs-3 text-primary"></i>
                     <RadzenText TextStyle="TextStyle.H5" class="mb-0 fw-bold">Inscriptions de la session actuelle</RadzenText>
                     <RadzenButton Text="S'inscrire à un cours" Icon="add_circle" ButtonStyle="Radzen.ButtonStyle.Success" Class="mt-3" Click="@Button0Click" />
@@ -25,9 +29,12 @@
                 {
                     <RadzenDataList TItem="CourseRegistration" Data="@currentRegistrations" WrapItems="true">
                         <Template>
-                            <RadzenCard class="mb-4 shadow-sm hover-shadow transition-all">
-                            
-                                <RadzenStack Gap="1.5rem" Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.Start" AlignItems="Radzen.AlignItems.Center">
+                            <RadzenCard class="mb-4 shadow-sm hover-shadow transition-all radzen-card-responsive">
+                                <RadzenStack Gap="1.5rem"
+                                             Orientation="Orientation.Horizontal"
+                                             JustifyContent="JustifyContent.Start"
+                                             AlignItems="Radzen.AlignItems.Center"
+                                             Class="dashboard-info-stack">
                                 <RadzenImage Path="@context.Course?.Image" Style="width: 64px; height: 64px"></RadzenImage>
                                     <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.Start" Gap="1rem" Class="align-items-center">
                                         <div class="bg-primary bg-opacity-10 p-3 rounded-circle">

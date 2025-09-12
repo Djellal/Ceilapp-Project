@@ -34,5 +34,9 @@ namespace Ceilapp.Models.ceilapp
 
         [Required]
         public int NbrPlaces { get; set; }
+
+        public string Description { get; set; }
+
+        public ICollection<CourseRegistration> CourseRegistrations { get; set; }
     }
 }

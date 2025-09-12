@@ -84,3 +84,37 @@ a:focus {
 .loading-progress-text:after {
     content: var(--blazor-load-percentage-text, "Loading");
 }
+
+/* ------------------------------------------------------------------
+   Responsive : StudentDashboard
+   ------------------------------------------------------------------*/
+@media (max-width: 576px) {
+
+    /* En-tête : icône, titre, boutons s’empilent verticalement */
+    .dashboard-header {
+        flex-direction: column !important;
+        gap: .75rem !important;
+        text-align: center;
+    }
+
+    /* Pile info à l’intérieur des cartes */
+    .dashboard-info-stack {
+        flex-direction: column !important;
+        gap: .75rem !important;
+        align-items: flex-start !important;
+    }
+
+    /* Cartes : réduire le padding pour gagner de l’espace */
+    .radzen-card-responsive {
+        padding: 1rem !important;
+    }
+
+    /* Étendre les “touch targets” pour les liens/boutons */
+    .dashboard-info-stack a,
+    .dashboard-info-stack .btn,
+    .dashboard-info-stack .badge {
+        font-size: .9rem;
+    }
+}
+
+/* ------------------------------------------------------------------ */
