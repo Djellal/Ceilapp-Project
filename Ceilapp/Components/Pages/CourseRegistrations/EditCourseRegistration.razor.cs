@@ -103,7 +103,7 @@ namespace Ceilapp.Components.Pages.CourseRegistrations
 
             professionsForProfessionId = await ceilappService.GetProfessions();
 
-            coursesForCourseId = await ceilappService.GetCourses();
+            coursesForCourseId = await ceilappService.GetCourses(new Radzen.Query { Expand = "CourseType" });
 
             courseLevelsForCourseLevelId = await ceilappService.GetCourseLevels();
 
@@ -152,7 +152,7 @@ namespace Ceilapp.Components.Pages.CourseRegistrations
                 }
 
                 
-               await  SetFees(courseRegistration.ProfessionId);
+               await  SetFees();
 
 
             }
@@ -217,19 +217,29 @@ namespace Ceilapp.Components.Pages.CourseRegistrations
 
         protected async System.Threading.Tasks.Task ProfessionIdChange(System.Object args)
         {
-           await  SetFees(args);
+           await  SetFees();
         }
 
-        protected async Task SetFees(object args)
+        protected async Task SetFees()
         {
-            var selectedprofession = professionsForProfessionId.FirstOrDefault(x => x.Id == (int)args);
+            var selectedprofession = professionsForProfessionId.FirstOrDefault(x => x.Id == courseRegistration?.ProfessionId);
+            
+            // Check if current course is an "Atelier" type
+            var currentCourse = coursesForCourseId.FirstOrDefault(c => c.Id == courseRegistration?.CourseId);
+            if (currentCourse?.CourseType?.Name == "Atelier")
+            {
+                FeeValue = "Indéfini";
+                return;
+            }
+
             if (selectedprofession != null)
             {
-                if(selectedprofession.FeeValue>=0)
-                FeeValue = selectedprofession.FeeValue.ToString("C");
+                if(selectedprofession.FeeValue >= 0)
+                    FeeValue = selectedprofession.FeeValue.ToString("C");
                 else
                     FeeValue = "Indéfini";
-            }else
+            }
+            else
             {
                 FeeValue = 0.ToString("C");
             }
@@ -242,7 +252,8 @@ namespace Ceilapp.Components.Pages.CourseRegistrations
                // courseLevelsForCourseLevelId = await ceilappService.GetCourseLevels(new Radzen.Query { Filter = "i => i.CourseId == @0", FilterParameters = new object[] { args } });
                 //if (isnew)
                 //{
-                    courseRegistration.CourseLevelId = GetFirstLevelId(Id);//courseLevelsForCourseLevelId?.FirstOrDefault()?.Id ?? 0;
+                    courseRegistration.CourseLevelId = GetFirstLevelId(Id);
+                    await SetFees();//courseLevelsForCourseLevelId?.FirstOrDefault()?.Id ?? 0;
                // }
                // else
                 //     courseRegistration.CourseLevelId = await GetNextLevel(coursID);

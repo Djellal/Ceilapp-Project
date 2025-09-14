@@ -27,11 +27,13 @@ namespace Ceilapp
             {
                 var registration = ceilappService.dbContext.CourseRegistrations
                         .Include(cr => cr.Session)
-                        .Include(cr => cr.Course)
+                        
                         .Include(cr => cr.CourseLevel)
                         .Include(cr => cr.Profession)
                         .Include(cr => cr.Municipality)
                         .Include(cr => cr.State)
+                        .Include(cr => cr.Course)
+                        .ThenInclude(cr=>cr.CourseType)
                         .FirstOrDefault(cr => cr.Id == registrationId);
                 if (registration == null)
                 {
@@ -100,6 +102,8 @@ namespace Ceilapp
                                     AddTableRow(table, "Nom complet", $"{registration.LastName} {registration.FirstName}");
                                     AddTableRow(table, "Date de naissance", 
                                         $"{registration.BirthDate:dd/MM/yyyy} à {registration.Municipality?.Name} - {registration.State?.Name}");
+                                    AddTableRow(table, "N° Tél", registration.Tel);
+                                    
                                 });
                                 
                                 // Course Information in a highlighted box
@@ -118,6 +122,12 @@ namespace Ceilapp
                                         if(registration.IsReregistration) AddTableRow(table, "Niveau", registration.CourseLevel?.Name);
 
                                         var feeValue = "";
+
+                                        if(registration.Course?.CourseType.Name == "Atelier")
+                                        {
+                                            feeValue = "Indéfini";
+                                        }
+                                        else
                                         if(registration.Profession != null)
                                         {
                                             if(registration.Profession.FeeValue>=0)
