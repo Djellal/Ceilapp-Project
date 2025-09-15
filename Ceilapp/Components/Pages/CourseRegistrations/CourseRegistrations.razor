@@ -48,6 +48,7 @@
                 <RadzenDataGridColumn TItem="Ceilapp.Models.ceilapp.CourseRegistration" Width="70px">
                     <Template>
                         <RadzenIcon Icon="priority" IconStyle="Radzen.IconStyle.Primary" Style="width: 32px; height: 32px" Visible="@context.RegistrationValidated"></RadzenIcon>
+<RadzenIcon Icon="hourglass" IconStyle="Radzen.IconStyle.Secondary" Style="width: 32px; height: 32px; text-align: left" Visible="@(!context.RegistrationValidated)"></RadzenIcon>
                     </Template>
                 </RadzenDataGridColumn>
                 <RadzenDataGridColumn TItem="Ceilapp.Models.ceilapp.CourseRegistration" Property="InscriptionCode" Title="Inscription Code" Width="150px">
