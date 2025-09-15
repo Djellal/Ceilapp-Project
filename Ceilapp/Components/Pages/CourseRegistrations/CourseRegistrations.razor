@@ -45,6 +45,11 @@
         <RadzenDataGrid @ref="grid0" ColumnWidth="200px"   AllowFiltering="true" FilterMode="FilterMode.Advanced" AllowPaging="true" AllowSorting="true" ShowPagingSummary="true" PageSizeOptions=@(new int[]{5, 10, 20, 30})
             Data="@(courseRegistrations)" TItem="Ceilapp.Models.ceilapp.CourseRegistration" RowSelect="@EditRow">
             <Columns>
+                <RadzenDataGridColumn TItem="Ceilapp.Models.ceilapp.CourseRegistration" Width="70px">
+                    <Template>
+                        <RadzenIcon Icon="priority" IconStyle="Radzen.IconStyle.Primary" Style="width: 32px; height: 32px" Visible="@context.RegistrationValidated"></RadzenIcon>
+                    </Template>
+                </RadzenDataGridColumn>
                 <RadzenDataGridColumn TItem="Ceilapp.Models.ceilapp.CourseRegistration" Property="InscriptionCode" Title="Inscription Code" Width="150px">
                 </RadzenDataGridColumn>
                 <RadzenDataGridColumn TItem="Ceilapp.Models.ceilapp.CourseRegistration" Property="FirstName" Title="First Name">
@@ -58,8 +63,6 @@
                 <RadzenDataGridColumn TItem="Ceilapp.Models.ceilapp.CourseRegistration" Property="CourseLevel.NameAr" Title="Course Level">
                 </RadzenDataGridColumn>
                 <RadzenDataGridColumn TItem="Ceilapp.Models.ceilapp.CourseRegistration" Property="PaidFeeValue" Title="Paid Fee Value">
-                </RadzenDataGridColumn>
-                <RadzenDataGridColumn TItem="Ceilapp.Models.ceilapp.CourseRegistration" Property="RegistrationValidated" Title="Registration Validated">
                 </RadzenDataGridColumn>
                 <RadzenDataGridColumn TItem="Ceilapp.Models.ceilapp.CourseRegistration" Filterable="false" Sortable="false" Width="70px" TextAlign="TextAlign.Center">
                     <Template Context="courseRegistration">
