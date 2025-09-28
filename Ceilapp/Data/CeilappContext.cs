@@ -95,7 +95,7 @@ namespace Ceilapp.Data
               .HasPrincipalKey(i => i.Id);
 
             builder.Entity<Ceilapp.Models.ceilapp.Evaluation>()
-              .HasOne(i => i.Course)
+              .HasOne(i => i.CourseComponent)
               .WithMany(i => i.Evaluations)
               .HasForeignKey(i => i.CourseComponentId)
               .HasPrincipalKey(i => i.Id);

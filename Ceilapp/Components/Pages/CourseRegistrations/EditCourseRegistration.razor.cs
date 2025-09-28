@@ -1,5 +1,6 @@
 using Ceilapp.Components.Pages.Sessions;
 using Ceilapp.Models.ceilapp;
+using DocumentFormat.OpenXml.Bibliography;
 using DocumentFormat.OpenXml.InkML;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
@@ -105,8 +106,9 @@ namespace Ceilapp.Components.Pages.CourseRegistrations
 
             coursesForCourseId = await ceilappService.GetCourses(new Radzen.Query { Expand = "CourseType" });
 
-            courseLevelsForCourseLevelId = await ceilappService.GetCourseLevels();
-
+            //courseLevelsForCourseLevelId = await ceilappService.GetCourseLevels();
+            courseLevelsForCourseLevelId = await ceilappService.GetCourseLevels(new Radzen.Query { Filter = "i => i.CourseId == @0", FilterParameters = new object[] { Id }, OrderBy = "LevelOrder asc" });
+           
             sessionsForSessionId = await ceilappService.GetSessions();
 
             AppSetting = await ceilappService.GetAppSettingById(1);
@@ -156,6 +158,7 @@ namespace Ceilapp.Components.Pages.CourseRegistrations
 
 
             }
+            groupes = await ceilappService.GetGroupes();
         }
 
         protected override Task OnAfterRenderAsync(bool firstRender)
@@ -249,11 +252,13 @@ namespace Ceilapp.Components.Pages.CourseRegistrations
         {
             try
             {
-               // courseLevelsForCourseLevelId = await ceilappService.GetCourseLevels(new Radzen.Query { Filter = "i => i.CourseId == @0", FilterParameters = new object[] { args } });
-                //if (isnew)
+                // 
+                //
                 //{
-                    courseRegistration.CourseLevelId = GetFirstLevelId(Id);
-                    await SetFees();//courseLevelsForCourseLevelId?.FirstOrDefault()?.Id ?? 0;
+                var courid = isnew ? (int)args : Id;
+                courseLevelsForCourseLevelId = await ceilappService.GetCourseLevels(new Radzen.Query { Filter = "i => i.CourseId == @0", FilterParameters = new object[] { courid }, OrderBy = "LevelOrder asc" });
+                courseRegistration.CourseLevelId = GetFirstLevelId(courid);
+                await SetFees();//courseLevelsForCourseLevelId?.FirstOrDefault()?.Id ?? 0;
                // }
                // else
                 //     courseRegistration.CourseLevelId = await GetNextLevel(coursID);
@@ -350,7 +355,7 @@ namespace Ceilapp.Components.Pages.CourseRegistrations
         {
             // Get all active course levels for the specified course
             var courseLevels = ceilappService.dbContext.CourseLevels
-                .Where(cl => cl.CourseId == coursID && cl.IsActive)
+                .Where(cl => cl.CourseId == coursID )
                 .OrderBy(cl => cl.LevelOrder)
                 .ToList();
 
@@ -384,6 +389,8 @@ namespace Ceilapp.Components.Pages.CourseRegistrations
 
         
         public string RequiredNotFilledInfo { get; set; }
+
+        protected System.Linq.IQueryable<Ceilapp.Models.ceilapp.Groupe> groupes;
 private bool RequiredFieldsAreNotFilled()
 {
     // Check if any required fields are null, empty, or have default values
@@ -412,13 +419,19 @@ private bool RequiredFieldsAreNotFilled()
         RequiredNotFilledInfo += "Profession, ";
     if (courseRegistration?.CourseId == 0)
         RequiredNotFilledInfo += "Cours, ";
-    if (courseRegistration?.CourseLevelId == 0)
+    if(!isnew)
+     if (courseRegistration?.CourseLevelId == 0)
         RequiredNotFilledInfo += "Niveau, ";    
 
 
     return !string.IsNullOrEmpty(RequiredNotFilledInfo);
 }
 
+
+        protected async System.Threading.Tasks.Task CourseLevelIdChange(System.Object args)
+        {
+            groupes = await ceilappService.GetGroupes(new Radzen.Query { Filter = "i => i.CourseLevelId == @0", FilterParameters = new object[] { courseRegistration.CourseLevelId }, OrderBy = "GroupeName asc" });
+        }
     }
 
 

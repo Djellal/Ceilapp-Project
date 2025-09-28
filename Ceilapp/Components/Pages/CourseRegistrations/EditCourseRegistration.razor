@@ -9,7 +9,58 @@
         <RadzenTemplateForm TItem="Ceilapp.Models.ceilapp.CourseRegistration" Data="@(courseRegistration)" Visible="@(courseRegistration != null)" Submit="@FormSubmit">
           <RadzenStack>
             <RadzenAlert Title="@courseRegistration.InscriptionCode" AllowClose="false" AlertStyle="Radzen.AlertStyle.Primary" Icon="barcode"></RadzenAlert>
-           
+           <RadzenFieldset Text="Zone administrative" 
+                          Visible="Security.IsInRole(Constants.ADMIN)" 
+                          AllowCollapse="true" 
+                          Icon="shield_person" 
+                          Style="border: 2px solid #6366F1; border-radius: 8px; background-color: #F9FAFB; padding: 1.5rem; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                
+                <RadzenRow class="align-items-center mb-4" Style="margin: 5px">
+                    <RadzenColumn SizeMD="4">
+                        <div class="d-flex align-items-center justify-content-end">
+                            <RadzenLabel Text="Inscription validée" 
+                                       Component="RegistrationValidated"
+                                       Style="margin-right: 1rem; font-weight: 500;" />
+                            <RadzenCheckBox @bind-Value="@(courseRegistration.RegistrationValidated)" 
+                                          Name="RegistrationValidated"
+                                          Style="width: 20px; height: 20px;" />
+                        </div>
+                    </RadzenColumn>
+                </RadzenRow>
+
+                <RadzenRow class="align-items-center mb-4" Style="margin: 5px">
+                    <RadzenColumn SizeMD="4">
+                        <RadzenFormField Text="Montant payé" 
+                                       Variant="Variant.Filled" 
+                                       Style="width: 100%">
+                            <ChildContent>
+                                <RadzenNumeric Style="width: 100%" 
+                                             @bind-Value="@(courseRegistration.PaidFeeValue)" 
+                                             Name="PaidFeeValue"
+                                             Class="rounded-lg" />
+                            </ChildContent>
+                        </RadzenFormField>
+                    </RadzenColumn>
+                </RadzenRow>
+
+                <RadzenFormField Text="Remarques" 
+                               Variant="Variant.Filled" 
+                               Style="width: 100%; margin: 5px">
+                    <ChildContent>
+                        <RadzenTextBox Style="width: 100%; min-height: 50px; margin: 5px" 
+                                     @bind-Value="@(courseRegistration.Notes)" 
+                                     Name="Notes"
+                                     Class="rounded-lg" />
+                    </ChildContent>
+                </RadzenFormField>
+                <RadzenFormField Text="Groupe" Variant="Variant.Filled" Style="width: 100%">
+                      <ChildContent>
+                        <RadzenDropDown Data="@(groupes)"  ValueProperty="Id" AllowClear=true
+                                  style="display: block; width: 100%" @bind-Value="@(courseRegistration.GroupId)" Name="BirthStateId" TextProperty="GroupeName" />  
+                  </ChildContent>
+                </RadzenFormField>
+
+            </RadzenFieldset>
             <RadzenFieldset Text="Informations personnelles" Icon="" AllowCollapse="false">
                 <RadzenRow Style="margin-top: 1em">
                     <RadzenColumn Size="12" SizeXS="6">
@@ -128,7 +179,7 @@
                   <RadzenFormField Text="Niveau" Variant="Variant.Filled" Style="width: 100%" Visible="@CanEditLevel">
                   <ChildContent>
                     <RadzenDropDown Data="@(courseLevelsForCourseLevelId)" TextProperty="Name" ValueProperty="Id" AllowClear=false
-                          style="display: block; width: 100%" @bind-Value="@(courseRegistration.CourseLevelId)" Name="CourseLevelId" Placeholder="Niveau de formation" ReadOnly="false"
+                          style="display: block; width: 100%" @bind-Value="@(courseRegistration.CourseLevelId)" Name="CourseLevelId" Placeholder="Niveau de formation" ReadOnly="false" Change="@CourseLevelIdChange"
                            />
               </ChildContent>
             </RadzenFormField>
@@ -162,52 +213,7 @@
                     </RadzenColumn>
                 </RadzenRow>
             </RadzenFieldset>
-            <RadzenFieldset Text="Zone administrative" 
-                          Visible="Security.IsInRole(Constants.ADMIN)" 
-                          AllowCollapse="true" 
-                          Icon="shield_person" 
-                          Style="border: 2px solid #6366F1; border-radius: 8px; background-color: #F9FAFB; padding: 1.5rem; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
-                
-                <RadzenRow class="align-items-center mb-4" Style="margin: 5px">
-                    <RadzenColumn SizeMD="4">
-                        <div class="d-flex align-items-center justify-content-end">
-                            <RadzenLabel Text="Inscription validée" 
-                                       Component="RegistrationValidated"
-                                       Style="margin-right: 1rem; font-weight: 500;" />
-                            <RadzenCheckBox @bind-Value="@(courseRegistration.RegistrationValidated)" 
-                                          Name="RegistrationValidated"
-                                          Style="width: 20px; height: 20px;" />
-                        </div>
-                    </RadzenColumn>
-                </RadzenRow>
-
-                <RadzenRow class="align-items-center mb-4" Style="margin: 5px">
-                    <RadzenColumn SizeMD="4">
-                        <RadzenFormField Text="Montant payé" 
-                                       Variant="Variant.Filled" 
-                                       Style="width: 100%">
-                            <ChildContent>
-                                <RadzenNumeric Style="width: 100%" 
-                                             @bind-Value="@(courseRegistration.PaidFeeValue)" 
-                                             Name="PaidFeeValue"
-                                             Class="rounded-lg" />
-                            </ChildContent>
-                        </RadzenFormField>
-                    </RadzenColumn>
-                </RadzenRow>
-
-                <RadzenFormField Text="Remarques" 
-                               Variant="Variant.Filled" 
-                               Style="width: 100%; margin: 5px">
-                    <ChildContent>
-                        <RadzenTextBox Style="width: 100%; min-height: 100px; margin: 5px" 
-                                     @bind-Value="@(courseRegistration.Notes)" 
-                                     Name="Notes"
-                                     Class="rounded-lg" />
-                    </ChildContent>
-                </RadzenFormField>
-
-            </RadzenFieldset>
+            
             
           </RadzenStack>
           <RadzenStack style="margin-top:1rem;" Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="Radzen.JustifyContent.SpaceAround" Gap="0.5rem">

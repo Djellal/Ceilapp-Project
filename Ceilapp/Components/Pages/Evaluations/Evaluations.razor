@@ -1,7 +1,6 @@
 @page "/evaluations"
 
 @attribute [Authorize]
-
 <PageTitle>Evaluations</PageTitle>
 <RadzenStack>
     <RadzenRow AlignItems="AlignItems.Center">
@@ -17,16 +16,55 @@
     <RadzenRow>
       <RadzenColumn SizeMD=12>
         <RadzenDataGrid @ref="grid0" ColumnWidth="200px"   AllowFiltering="true" FilterMode="FilterMode.Advanced" AllowPaging="true" AllowSorting="true" ShowPagingSummary="true" PageSizeOptions=@(new int[]{5, 10, 20, 30})
-            Data="@(evaluations)" TItem="Ceilapp.Models.ceilapp.Evaluation" RowSelect="@EditRow">
+            Data="@(evaluations)" RowUpdate="@GridRowUpdate" RowCreate="@GridRowCreate" TItem="Ceilapp.Models.ceilapp.Evaluation">
             <Columns>
                 <RadzenDataGridColumn TItem="Ceilapp.Models.ceilapp.Evaluation" Property="CourseRegistration.Notes" Title="Course Registration">
+                  <EditTemplate Context="evaluation">
+                    <RadzenFormField Text="Course Registration" Variant="Variant.Filled">
+                     <ChildContent>
+                    <RadzenDropDown Data="@(courseRegistrationsForCourseRegistrationId)" TextProperty="Notes" ValueProperty="Id" AllowClear=true
+                         style="display: block; width: 100%" @bind-Value="@(evaluation.CourseRegistrationId)" Name="CourseRegistrationId"
+                           />
+                    </ChildContent>
+                   </RadzenFormField>
+                  </EditTemplate>
                 </RadzenDataGridColumn>
-                <RadzenDataGridColumn TItem="Ceilapp.Models.ceilapp.Evaluation" Property="Course.Image" Title="Course">
+                <RadzenDataGridColumn TItem="Ceilapp.Models.ceilapp.Evaluation" Property="CourseComponent.Name" Title="Course Component">
+                  <EditTemplate Context="evaluation">
+                    <RadzenFormField Text="Course Component" Variant="Variant.Filled">
+                     <ChildContent>
+                    <RadzenDropDown Data="@(courseComponentsForCourseComponentId)" TextProperty="Name" ValueProperty="Id" AllowClear=true
+                         style="display: block; width: 100%" @bind-Value="@(evaluation.CourseComponentId)" Name="CourseComponentId"
+                           />
+                    </ChildContent>
+                   </RadzenFormField>
+                  </EditTemplate>
                 </RadzenDataGridColumn>
                 <RadzenDataGridColumn TItem="Ceilapp.Models.ceilapp.Evaluation" Property="Eval" Title="Eval">
+                  <EditTemplate Context="evaluation">
+                    <RadzenFormField Text="Eval" Variant="Variant.Filled">
+                     <ChildContent>
+                      <RadzenNumeric style="display: block; width: 100%" @bind-Value="@(evaluation.Eval)" Name="Eval" />
+                     </ChildContent>
+                     <Helper>
+                      <RadzenRequiredValidator Component="Eval" Text="Eval is required"  />
+                     </Helper>
+                   </RadzenFormField>
+                  </EditTemplate>
                 </RadzenDataGridColumn>
-                <RadzenDataGridColumn TItem="Ceilapp.Models.ceilapp.Evaluation" Filterable="false" Sortable="false" Width="70px" TextAlign="TextAlign.Center">
+                <RadzenDataGridColumn TItem="Ceilapp.Models.ceilapp.Evaluation" Filterable="false" Sortable="false" Width="156px" TextAlign="TextAlign.Center">
+                    <EditTemplate Context="evaluation">
+                        <RadzenButton Icon="check" ButtonStyle="ButtonStyle.Success" Variant="Variant.Flat" Size="ButtonSize.Medium"
+                            style="margin-top: 0.25rem; margin-right: 0.25rem; margin-bottom: 0.25rem"
+                            Click=@(args => SaveButtonClick(args, evaluation)) @onclick:stopPropagation="true" />
+                        <RadzenButton Icon="close" ButtonStyle="ButtonStyle.Light" Variant="Variant.Flat" Size="ButtonSize.Medium"
+                            Click=@(args => CancelButtonClick(args, evaluation)) @onclick:stopPropagation="true" />
+                    </EditTemplate>
                     <Template Context="evaluation">
+
+                        <RadzenButton Icon="edit" ButtonStyle="ButtonStyle.Light" Variant="Variant.Flat" Size="ButtonSize.Medium"
+                            style="margin-top: 0.25rem; margin-right: 0.25rem; margin-bottom: 0.25rem"
+                            Click=@(args => EditButtonClick(args, evaluation)) @onclick:stopPropagation="true" />
 
                         <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="delete" Size="ButtonSize.Medium"
                             Shade="Shade.Lighter" Variant="Variant.Flat"

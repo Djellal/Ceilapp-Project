@@ -20,7 +20,7 @@ namespace Ceilapp.Models.ceilapp
         [Required]
         public int CourseComponentId { get; set; }
 
-        public Course Course { get; set; }
+        public CourseComponent CourseComponent { get; set; }
 
         [Required]
         public double Eval { get; set; }

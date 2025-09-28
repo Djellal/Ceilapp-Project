@@ -49,8 +49,7 @@ namespace Ceilapp.Models.ceilapp
         [Required]
         public string Tel { get; set; }
 
-        [Required]
-        public int ProfessionId { get; set; }
+        public int? ProfessionId { get; set; }
 
         public Profession Profession { get; set; }
 
@@ -59,13 +58,11 @@ namespace Ceilapp.Models.ceilapp
 
         public Course Course { get; set; }
 
-        [Required]
-        public int CourseLevelId { get; set; }
+        public int? CourseLevelId { get; set; }
 
         public CourseLevel CourseLevel { get; set; }
 
-        [Required]
-        public int SessionId { get; set; }
+        public int? SessionId { get; set; }
 
         public Session Session { get; set; }
 

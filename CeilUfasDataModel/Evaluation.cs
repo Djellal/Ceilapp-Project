@@ -26,7 +26,7 @@ namespace DataModel
         [Required]
         [ForeignKey("CourseComponent")]
         public int CourseComponentId { get; set; }
-        public Course? CourseComponent { get; set; }
+        public CourseComponent? CourseComponent { get; set; }
 
 
         public double Eval { get; set; } = 0;

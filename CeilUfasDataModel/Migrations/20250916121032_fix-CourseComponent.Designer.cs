@@ -3,6 +3,7 @@ using System;
 using DataModel;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DataModel.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250916121032_fix-CourseComponent")]
+    partial class fixCourseComponent
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -241,7 +244,7 @@ namespace DataModel.Migrations
                     b.Property<int>("CourseId")
                         .HasColumnType("integer");
 
-                    b.Property<int?>("CourseLevelId")
+                    b.Property<int>("CourseLevelId")
                         .HasColumnType("integer");
 
                     b.Property<string>("FirstName")
@@ -282,7 +285,7 @@ namespace DataModel.Migrations
                     b.Property<decimal>("PaidFeeValue")
                         .HasColumnType("decimal(18, 2)");
 
-                    b.Property<int?>("ProfessionId")
+                    b.Property<int>("ProfessionId")
                         .HasColumnType("integer");
 
                     b.Property<DateTime>("RegistrationDate")
@@ -294,7 +297,7 @@ namespace DataModel.Migrations
                     b.Property<bool>("RegistrationValidated")
                         .HasColumnType("boolean");
 
-                    b.Property<int?>("SessionId")
+                    b.Property<int>("SessionId")
                         .HasColumnType("integer");
 
                     b.Property<string>("Tel")
@@ -602,7 +605,9 @@ namespace DataModel.Migrations
 
                     b.HasOne("DataModel.CourseLevel", "CourseLevel")
                         .WithMany()
-                        .HasForeignKey("CourseLevelId");
+                        .HasForeignKey("CourseLevelId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("DataModel.Groupe", "Group")
                         .WithMany()
@@ -610,11 +615,15 @@ namespace DataModel.Migrations
 
                     b.HasOne("DataModel.Profession", "Profession")
                         .WithMany()
-                        .HasForeignKey("ProfessionId");
+                        .HasForeignKey("ProfessionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("DataModel.Session", "Session")
                         .WithMany()
-                        .HasForeignKey("SessionId");
+                        .HasForeignKey("SessionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("BirthMunicipality");
 

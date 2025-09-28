@@ -34,7 +34,6 @@
                     <RadzenTextBox style="display: block; width: 100%" @bind-Value="@(course.NameAr)" Name="NameAr" />
                   </ChildContent>    
                   <Helper>
-                    <RadzenRequiredValidator Component="NameAr" Text="NameAr is required" />
                   </Helper>
             </RadzenFormField>
             <RadzenRow style="margin-bottom: 1rem">
@@ -50,12 +49,11 @@
                       <RadzenFileInput TValue="string" @bind-Value="@course.Image"></RadzenFileInput>
                   </ChildContent>    
                   <Helper>
-                    <RadzenRequiredValidator Component="Image" Text="Image is required" />
                   </Helper>
             </RadzenFormField>
             <RadzenFormField Text="Course Type" Variant="Variant.Filled">
                   <ChildContent>
-                    <RadzenDropDown Data="@(courseTypesForCourseTypeId)" TextProperty="Description" ValueProperty="Id" AllowClear=true
+                    <RadzenDropDown Data="@(courseTypesForCourseTypeId)" TextProperty="Name" ValueProperty="Id" AllowClear=true
                           style="display: block; width: 100%" @bind-Value="@(course.CourseTypeId)" Name="CourseTypeId"
                            />
               </ChildContent>

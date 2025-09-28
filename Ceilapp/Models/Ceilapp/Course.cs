@@ -40,8 +40,6 @@ namespace Ceilapp.Models.ceilapp
 
         public ICollection<CourseComponent> CourseComponents { get; set; }
 
-        public ICollection<Evaluation> Evaluations { get; set; }
-
         public ICollection<CourseRegistration> CourseRegistrations { get; set; }
     }
 }

@@ -367,6 +367,7 @@ namespace Ceilapp
         {
             var itemToDelete = Context.CourseComponents
                               .Where(i => i.Id == id)
+                              .Include(i => i.Evaluations)
                               .FirstOrDefault();
 
             if (itemToDelete == null)
@@ -877,7 +878,6 @@ namespace Ceilapp
                               .Include(i => i.CourseLevels)
                               .Include(i => i.Groupes)
                               .Include(i => i.CourseComponents)
-                              .Include(i => i.Evaluations)
                               .Include(i => i.CourseRegistrations)
                               .FirstOrDefault();
 
@@ -1084,7 +1084,7 @@ namespace Ceilapp
         {
             var items = Context.Evaluations.AsQueryable();
 
-            items = items.Include(i => i.Course);
+            items = items.Include(i => i.CourseComponent);
             items = items.Include(i => i.CourseRegistration);
 
             if (query != null)
@@ -1116,7 +1116,7 @@ namespace Ceilapp
                               .AsNoTracking()
                               .Where(i => i.Id == id);
 
-            items = items.Include(i => i.Course);
+            items = items.Include(i => i.CourseComponent);
             items = items.Include(i => i.CourseRegistration);
  
             OnGetEvaluationById(ref items);
