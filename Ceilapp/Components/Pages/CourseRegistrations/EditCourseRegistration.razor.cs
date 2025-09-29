@@ -106,8 +106,6 @@ namespace Ceilapp.Components.Pages.CourseRegistrations
 
             coursesForCourseId = await ceilappService.GetCourses(new Radzen.Query { Expand = "CourseType" });
 
-            //courseLevelsForCourseLevelId = await ceilappService.GetCourseLevels();
-            courseLevelsForCourseLevelId = await ceilappService.GetCourseLevels(new Radzen.Query { Filter = "i => i.CourseId == @0", FilterParameters = new object[] { Id }, OrderBy = "LevelOrder asc" });
            
             sessionsForSessionId = await ceilappService.GetSessions();
 
@@ -131,7 +129,9 @@ namespace Ceilapp.Components.Pages.CourseRegistrations
             {
                  if(await RegistrationAllowed())
                 {
-               
+                    
+                   courseLevelsForCourseLevelId = await ceilappService.GetCourseLevels(new Radzen.Query { Filter = "i => i.CourseId == @0", FilterParameters = new object[] { Id }, OrderBy = "LevelOrder asc" });
+                    
                     await InitNewRegistration();
                 }
                else
@@ -144,8 +144,10 @@ namespace Ceilapp.Components.Pages.CourseRegistrations
             else
             {
 
-                courseRegistration = await ceilappService.GetCourseRegistrationById(Id);
-               
+               var  cr = await ceilappService.GetCourseRegistrationById(Id);
+
+                courseLevelsForCourseLevelId = courseLevelsForCourseLevelId = await ceilappService.GetCourseLevels(new Radzen.Query { Filter = "i => i.CourseId == @0", FilterParameters = new object[] { cr.CourseId }, OrderBy = "LevelOrder asc" });
+                courseRegistration = cr;
                 if (courseRegistration == null)
                 {
                     NotificationService.Notify(new NotificationMessage { Severity = NotificationSeverity.Error, Summary = "Error", Detail = "Inscription introuvable.", Duration = 5000 });

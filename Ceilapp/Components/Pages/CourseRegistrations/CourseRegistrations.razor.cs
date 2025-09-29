@@ -49,6 +49,7 @@ namespace Ceilapp.Components.Pages.CourseRegistrations
         protected int? SelectedCourse = null;
         protected int? SelectedLevel = null;
         protected bool? Validated = null;
+        protected bool? Reinscrition = null;
 
 
         protected System.Linq.IQueryable<Ceilapp.Models.ceilapp.CourseLevel> courseLevels;
@@ -130,6 +131,11 @@ namespace Ceilapp.Components.Pages.CourseRegistrations
                     TempcourseRegistrations = TempcourseRegistrations.Where(cr => cr.RegistrationValidated == Validated.Value);
                 }
 
+                if(Reinscrition.HasValue)
+                {
+                    TempcourseRegistrations = TempcourseRegistrations.Where(cr => cr.IsReregistration == Reinscrition.Value);
+                }
+
                 if (SelectedCourse.HasValue)
                 {
                     TempcourseRegistrations = courseRegistrations.Where(cr => cr.CourseId == SelectedCourse.Value);
@@ -198,7 +204,13 @@ namespace Ceilapp.Components.Pages.CourseRegistrations
                 if (Validated.HasValue)
                 {
                     query.Filter += string.IsNullOrEmpty(query.Filter) ? "" : " and ";
-                    query.Filter += $"r => r.RegistrationValidated == {Validated.Value.ToString().ToLower()}";
+                    query.Filter += $"r => r.RegistrationValidated == {Validated.Value}";
+                }
+
+                if (Reinscrition.HasValue)
+                {
+                    query.Filter += string.IsNullOrEmpty(query.Filter) ? "" : " and ";
+                    query.Filter += $"r => r.IsReregistration == {Reinscrition.Value}";
                 }
         
                 if (SelectedCourse.HasValue)
@@ -233,11 +245,15 @@ namespace Ceilapp.Components.Pages.CourseRegistrations
             await Filter();
         }
 
-        protected async System.Threading.Tasks.Task ExportButtonClick(Microsoft.AspNetCore.Components.Web.MouseEventArgs args)
+      
+        protected async System.Threading.Tasks.Task ReinscSelectBarChange(bool? args)
+        { await Filter();
+        }
+
+        protected async System.Threading.Tasks.Task ExportToExcelButtonClick(Microsoft.AspNetCore.Components.Web.MouseEventArgs args)
         {
-
-
-
+            await ExportToExcel();
+           // await ceilappService.ExportCourseRegistrationsToExcel(new Radzen.Query { Filter = "i => i.CreationOptions == @0", FilterParameters = new object[] { 1 } });
         }
     }
 }

@@ -10,7 +10,7 @@
     </RadzenColumn>
     <RadzenColumn Size="12" SizeMD="6">
         <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.End" Gap="0.5rem">
-            <RadzenButton Text="Export to Excel" Icon="download" ButtonStyle="ButtonStyle.Primary" Click="ExportToExcel" />
+            <RadzenButton Text="Export to Excel" Icon="download" ButtonStyle="ButtonStyle.Primary" Click="@ExportToExcelButtonClick" />
         </RadzenStack>
     </RadzenColumn>
 </RadzenRow>
@@ -19,24 +19,36 @@
         
         <RadzenStack Orientation="Radzen.Orientation.Horizontal">
         <RadzenDropDown TValue="int?" @bind-Value="@SelectedSession" ValueProperty="Id" TextProperty="SessionName" Data="@sessions" Placeholder="Filtrer par Session" Change="@DropDown0Change" AllowClear="true" FilterCaseSensitivity="Radzen.FilterCaseSensitivity.CaseInsensitive"/>
-                <RadzenButton Text="Session en cours" Icon="today" Click="@Button0Click"></RadzenButton>
-            <RadzenSelectBar TValue="bool?" @bind-Value="@Validated" Size="Radzen.ButtonSize.Small" Change="@ValidesSelectBarChange">
+                <RadzenButton Text="Session en cours" Icon="today" Click="@Button0Click" Size="Radzen.ButtonSize.Small"></RadzenButton>
+        </RadzenStack>
+        <RadzenStack Orientation="Radzen.Orientation.Horizontal">
+     <RadzenSelectBar TValue="bool?" @bind-Value="@Reinscrition" Size="Radzen.ButtonSize.Small" Change="@ReinscSelectBarChange">
                     <Items>
                         <RadzenSelectBarItem Text="TOUS" Value="null" Icon="list"></RadzenSelectBarItem>
-                        <RadzenSelectBarItem Text="VALIDES" Value="true" Icon="check"></RadzenSelectBarItem>
-                        <RadzenSelectBarItem Text="NON VALIDES" Value="false" Icon="check_indeterminate_small"></RadzenSelectBarItem>
+                        <RadzenSelectBarItem Text="Réinscriptions" Value="true" Icon="check"></RadzenSelectBarItem>
+                        <RadzenSelectBarItem Text="nouvelles inscriptions" Value="false" Icon="check_indeterminate_small"></RadzenSelectBarItem>
                     </Items>
                 </RadzenSelectBar>
-        </RadzenStack>
+     <RadzenSelectBar TValue="bool?" @bind-Value="@Validated" Size="Radzen.ButtonSize.Small" Change="@ValidesSelectBarChange">
+         <Items>
+             <RadzenSelectBarItem Text="TOUS" Value="null" Icon="list"></RadzenSelectBarItem>
+             <RadzenSelectBarItem Text="VALIDES" Value="true" Icon="check"></RadzenSelectBarItem>
+             <RadzenSelectBarItem Text="NON VALIDES" Value="false" Icon="check_indeterminate_small"></RadzenSelectBarItem>
+         </Items>
+     </RadzenSelectBar>
+     </RadzenStack>
         <RadzenRow>
             <RadzenColumn Size="12" SizeXS="6">
                 <RadzenDropDown TValue="int?" @bind-Value="@SelectedCourse" ValueProperty="Id" TextProperty="Name" Data="@courses" Style="width: 100%" Placeholder="Filtrer par Course" Change="@DropDown1Change" AllowClear="true" AllowSelectAll="false" AllowFiltering="true" FilterCaseSensitivity="Radzen.FilterCaseSensitivity.CaseInsensitive" />
             </RadzenColumn>
+           
             <RadzenColumn Size="12" SizeXS="6">
                 <RadzenDropDown TValue="int?" @bind-Value="@SelectedLevel" ValueProperty="Id" TextProperty="Name" Data="@courseLevels" Style="width: 100%" Placeholder="Filtrer par Level" Change="@DropDown2Change" AllowClear="true" AllowSelectAll="false" FilterCaseSensitivity="Radzen.FilterCaseSensitivity.CaseInsensitive" />
+                
             </RadzenColumn>
         </RadzenRow>
     </RadzenStack>
+     
 </RadzenPanel>
 <RadzenStack>
 
