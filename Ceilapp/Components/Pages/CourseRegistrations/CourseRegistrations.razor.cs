@@ -187,12 +187,13 @@ namespace Ceilapp.Components.Pages.CourseRegistrations
             {
                Ceilapp.Models.ceilapp.CourseRegistration  cr = new Ceilapp.Models.ceilapp.CourseRegistration();
                 // Construct the query based on the current filters
+                
                 var query = new Radzen.Query
                 {
                     //cr.State?.Name
                     Filter="",
                         Expand = "State,Municipality,Profession,Course,CourseLevel,Session,Groupe",
-                        Select = "InscriptionCode, FirstName, LastName,FirstNameAr, LastNameAr, BirthDate, State.Name, Municipality.Name, Profession.Name,Address,Tel, Course.Name, CourseLevel.Name,PaidFeeValue,IsReregistration,RegistrationValidated" //string.Join(",", grid0.ColumnsCollection.Where(c => c.GetVisible() && !string.IsNullOrEmpty(c.Property)).Select(c => c.Property.Contains(".") ? c.Property + " as " + c.Property.Replace(".", "") : c.Property))
+                        Select = "InscriptionCode, FirstName, LastName,FirstNameAr, LastNameAr, BirthDate, State.Name, Municipality.Name, Profession.Name,Address,Tel, Course.Name, CourseLevel.Name,PaidFeeValue" //string.Join(",", grid0.ColumnsCollection.Where(c => c.GetVisible() && !string.IsNullOrEmpty(c.Property)).Select(c => c.Property.Contains(".") ? c.Property + " as " + c.Property.Replace(".", "") : c.Property))
 
                 };
         
