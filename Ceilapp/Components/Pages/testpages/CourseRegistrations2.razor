@@ -1,0 +1,286 @@
+@page "/course-registrations2"
+
+@attribute [Authorize]
+
+<PageTitle>CourseRegistrations</PageTitle>
+<RadzenStack>
+    <RadzenRow AlignItems="AlignItems.Center">
+        <RadzenColumn Size="12" SizeMD="6">
+            <RadzenText Text="CourseRegistrations" TextStyle="TextStyle.H3" TagName="TagName.H1" style="margin: 0" />
+        </RadzenColumn>
+        <RadzenColumn Size="12" SizeMD="6">
+            <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.End" Gap="0.5rem">
+                <RadzenSplitButton Icon="get_app" Text="Export" Click="@ExportClick" Variant="Variant.Flat" Shade="Shade.Lighter">
+                    <RadzenSplitButtonItem Text="Excel" Value="xlsx" />
+                    <RadzenSplitButtonItem Text="CSV" Value="csv" />
+                </RadzenSplitButton>
+                <RadzenButton Icon="add_circle_outline" Text="Add" Click="@AddButtonClick" Variant="Variant.Flat" />
+            </RadzenStack>
+        </RadzenColumn>
+    </RadzenRow>
+    <RadzenRow>
+      <RadzenColumn SizeMD=12>
+        <RadzenDataGrid @ref="grid0" ColumnWidth="200px"   AllowFiltering="true" FilterMode="FilterMode.Advanced" AllowPaging="true" AllowSorting="true" ShowPagingSummary="true" PageSizeOptions=@(new int[]{5, 10, 20, 30})
+            Data="@(courseRegistrations)" RowUpdate="@GridRowUpdate" RowCreate="@GridRowCreate" TItem="Ceilapp.Models.ceilapp.CourseRegistration">
+            <Columns>
+                <RadzenDataGridColumn TItem="Ceilapp.Models.ceilapp.CourseRegistration" Property="Id" Title="Id">
+                </RadzenDataGridColumn>
+                <RadzenDataGridColumn TItem="Ceilapp.Models.ceilapp.CourseRegistration" Property="UserId" Title="User Id">
+                  <EditTemplate Context="courseRegistration">
+                    <RadzenFormField Text="User Id" Variant="Variant.Filled">
+                     <ChildContent>
+                      <RadzenTextBox style="display: block; width: 100%" @bind-Value="@(courseRegistration.UserId)" Name="UserId" />
+                     </ChildContent>
+                     <Helper>
+                      <RadzenRequiredValidator Component="UserId" Text="UserId is required"  />
+                     </Helper>
+                   </RadzenFormField>
+                  </EditTemplate>
+                </RadzenDataGridColumn>
+                <RadzenDataGridColumn TItem="Ceilapp.Models.ceilapp.CourseRegistration" Property="InscriptionCode" Title="Inscription Code">
+                  <EditTemplate Context="courseRegistration">
+                    <RadzenFormField Text="Inscription Code" Variant="Variant.Filled">
+                     <ChildContent>
+                      <RadzenTextBox style="display: block; width: 100%" @bind-Value="@(courseRegistration.InscriptionCode)" Name="InscriptionCode" />
+                     </ChildContent>
+                     <Helper>
+                      <RadzenRequiredValidator Component="InscriptionCode" Text="InscriptionCode is required"  />
+                     </Helper>
+                   </RadzenFormField>
+                  </EditTemplate>
+                </RadzenDataGridColumn>
+                <RadzenDataGridColumn TItem="Ceilapp.Models.ceilapp.CourseRegistration" Property="FirstName" Title="First Name">
+                  <EditTemplate Context="courseRegistration">
+                    <RadzenFormField Text="First Name" Variant="Variant.Filled">
+                     <ChildContent>
+                      <RadzenTextBox style="display: block; width: 100%" @bind-Value="@(courseRegistration.FirstName)" Name="FirstName" />
+                     </ChildContent>
+                     <Helper>
+                      <RadzenRequiredValidator Component="FirstName" Text="FirstName is required"  />
+                     </Helper>
+                   </RadzenFormField>
+                  </EditTemplate>
+                </RadzenDataGridColumn>
+                <RadzenDataGridColumn TItem="Ceilapp.Models.ceilapp.CourseRegistration" Property="LastName" Title="Last Name">
+                  <EditTemplate Context="courseRegistration">
+                    <RadzenFormField Text="Last Name" Variant="Variant.Filled">
+                     <ChildContent>
+                      <RadzenTextBox style="display: block; width: 100%" @bind-Value="@(courseRegistration.LastName)" Name="LastName" />
+                     </ChildContent>
+                     <Helper>
+                      <RadzenRequiredValidator Component="LastName" Text="LastName is required"  />
+                     </Helper>
+                   </RadzenFormField>
+                  </EditTemplate>
+                </RadzenDataGridColumn>
+                <RadzenDataGridColumn TItem="Ceilapp.Models.ceilapp.CourseRegistration" Property="FirstNameAr" Title="First Name Ar">
+                  <EditTemplate Context="courseRegistration">
+                    <RadzenFormField Text="First Name Ar" Variant="Variant.Filled">
+                     <ChildContent>
+                      <RadzenTextBox style="display: block; width: 100%" @bind-Value="@(courseRegistration.FirstNameAr)" Name="FirstNameAr" />
+                     </ChildContent>
+                     <Helper>
+                      <RadzenRequiredValidator Component="FirstNameAr" Text="FirstNameAr is required"  />
+                     </Helper>
+                   </RadzenFormField>
+                  </EditTemplate>
+                </RadzenDataGridColumn>
+                <RadzenDataGridColumn TItem="Ceilapp.Models.ceilapp.CourseRegistration" Property="LastNameAr" Title="Last Name Ar">
+                  <EditTemplate Context="courseRegistration">
+                    <RadzenFormField Text="Last Name Ar" Variant="Variant.Filled">
+                     <ChildContent>
+                      <RadzenTextBox style="display: block; width: 100%" @bind-Value="@(courseRegistration.LastNameAr)" Name="LastNameAr" />
+                     </ChildContent>
+                     <Helper>
+                      <RadzenRequiredValidator Component="LastNameAr" Text="LastNameAr is required"  />
+                     </Helper>
+                   </RadzenFormField>
+                  </EditTemplate>
+                </RadzenDataGridColumn>
+                <RadzenDataGridColumn TItem="Ceilapp.Models.ceilapp.CourseRegistration" Property="BirthDate" Title="Birth Date">
+                  <EditTemplate Context="courseRegistration">
+                    <RadzenFormField Text="Birth Date" Variant="Variant.Filled">
+                     <ChildContent>
+                      <RadzenDatePicker DateFormat="dd/MM/yyyy" style="display: block; width: 100%" @bind-Value="@(courseRegistration.BirthDate)" Name="BirthDate" />
+                     </ChildContent>
+                     <Helper>
+                      <RadzenRequiredValidator Component="BirthDate" Text="BirthDate is required"  />
+                     </Helper>
+                   </RadzenFormField>
+                  </EditTemplate>
+                </RadzenDataGridColumn>
+                <RadzenDataGridColumn TItem="Ceilapp.Models.ceilapp.CourseRegistration" Property="State.NameAr" Title="State">
+                  <EditTemplate Context="courseRegistration">
+                    <RadzenFormField Text="State" Variant="Variant.Filled">
+                     <ChildContent>
+                    <RadzenDropDown Data="@(statesForBirthStateId)" TextProperty="NameAr" ValueProperty="Id" AllowClear=true
+                         style="display: block; width: 100%" @bind-Value="@(courseRegistration.BirthStateId)" Name="BirthStateId"
+                           />
+                    </ChildContent>
+                   </RadzenFormField>
+                  </EditTemplate>
+                </RadzenDataGridColumn>
+                <RadzenDataGridColumn TItem="Ceilapp.Models.ceilapp.CourseRegistration" Property="Municipality.StateId" Title="Municipality">
+                  <EditTemplate Context="courseRegistration">
+                    <RadzenFormField Text="Municipality" Variant="Variant.Filled">
+                     <ChildContent>
+                    <RadzenDropDown Data="@(municipalitiesForBirthMunicipalityId)" TextProperty="StateId" ValueProperty="Id" AllowClear=true
+                         style="display: block; width: 100%" @bind-Value="@(courseRegistration.BirthMunicipalityId)" Name="BirthMunicipalityId"
+                           />
+                    </ChildContent>
+                   </RadzenFormField>
+                  </EditTemplate>
+                </RadzenDataGridColumn>
+                <RadzenDataGridColumn TItem="Ceilapp.Models.ceilapp.CourseRegistration" Property="Address" Title="Address">
+                  <EditTemplate Context="courseRegistration">
+                    <RadzenFormField Text="Address" Variant="Variant.Filled">
+                     <ChildContent>
+                      <RadzenTextBox style="display: block; width: 100%" @bind-Value="@(courseRegistration.Address)" Name="Address" />
+                     </ChildContent>
+                     <Helper>
+                      <RadzenRequiredValidator Component="Address" Text="Address is required"  />
+                     </Helper>
+                   </RadzenFormField>
+                  </EditTemplate>
+                </RadzenDataGridColumn>
+                <RadzenDataGridColumn TItem="Ceilapp.Models.ceilapp.CourseRegistration" Property="Tel" Title="Tel">
+                  <EditTemplate Context="courseRegistration">
+                    <RadzenFormField Text="Tel" Variant="Variant.Filled">
+                     <ChildContent>
+                      <RadzenTextBox style="display: block; width: 100%" @bind-Value="@(courseRegistration.Tel)" Name="Tel" />
+                     </ChildContent>
+                     <Helper>
+                      <RadzenRequiredValidator Component="Tel" Text="Tel is required"  />
+                     </Helper>
+                   </RadzenFormField>
+                  </EditTemplate>
+                </RadzenDataGridColumn>
+                <RadzenDataGridColumn TItem="Ceilapp.Models.ceilapp.CourseRegistration" Property="Profession.NameAr" Title="Profession">
+                  <EditTemplate Context="courseRegistration">
+                    <RadzenFormField Text="Profession" Variant="Variant.Filled">
+                     <ChildContent>
+                    <RadzenDropDown Data="@(professionsForProfessionId)" TextProperty="NameAr" ValueProperty="Id" AllowClear=true
+                         style="display: block; width: 100%" @bind-Value="@(courseRegistration.ProfessionId)" Name="ProfessionId"
+                           />
+                    </ChildContent>
+                   </RadzenFormField>
+                  </EditTemplate>
+                </RadzenDataGridColumn>
+                <RadzenDataGridColumn TItem="Ceilapp.Models.ceilapp.CourseRegistration" Property="Course.Image" Title="Course">
+                  <EditTemplate Context="courseRegistration">
+                    <RadzenFormField Text="Course" Variant="Variant.Filled">
+                     <ChildContent>
+                    <RadzenDropDown Data="@(coursesForCourseId)" TextProperty="Image" ValueProperty="Id" AllowClear=true
+                         style="display: block; width: 100%" @bind-Value="@(courseRegistration.CourseId)" Name="CourseId"
+                           />
+                    </ChildContent>
+                   </RadzenFormField>
+                  </EditTemplate>
+                </RadzenDataGridColumn>
+                <RadzenDataGridColumn TItem="Ceilapp.Models.ceilapp.CourseRegistration" Property="CourseLevel.NameAr" Title="Course Level">
+                  <EditTemplate Context="courseRegistration">
+                    <RadzenFormField Text="Course Level" Variant="Variant.Filled">
+                     <ChildContent>
+                    <RadzenDropDown Data="@(courseLevelsForCourseLevelId)" TextProperty="NameAr" ValueProperty="Id" AllowClear=true
+                         style="display: block; width: 100%" @bind-Value="@(courseRegistration.CourseLevelId)" Name="CourseLevelId"
+                           />
+                    </ChildContent>
+                   </RadzenFormField>
+                  </EditTemplate>
+                </RadzenDataGridColumn>
+                <RadzenDataGridColumn TItem="Ceilapp.Models.ceilapp.CourseRegistration" Property="Session.SessionNameAr" Title="Session">
+                  <EditTemplate Context="courseRegistration">
+                    <RadzenFormField Text="Session" Variant="Variant.Filled">
+                     <ChildContent>
+                    <RadzenDropDown Data="@(sessionsForSessionId)" TextProperty="SessionNameAr" ValueProperty="Id" AllowClear=true
+                         style="display: block; width: 100%" @bind-Value="@(courseRegistration.SessionId)" Name="SessionId"
+                           />
+                    </ChildContent>
+                   </RadzenFormField>
+                  </EditTemplate>
+                </RadzenDataGridColumn>
+                <RadzenDataGridColumn TItem="Ceilapp.Models.ceilapp.CourseRegistration" Property="RegistrationDate" Title="Registration Date">
+                  <EditTemplate Context="courseRegistration">
+                    <RadzenFormField Text="Registration Date" Variant="Variant.Filled">
+                     <ChildContent>
+                      <RadzenDatePicker DateFormat="dd/MM/yyyy" style="display: block; width: 100%" @bind-Value="@(courseRegistration.RegistrationDate)" Name="RegistrationDate" />
+                     </ChildContent>
+                     <Helper>
+                      <RadzenRequiredValidator Component="RegistrationDate" Text="RegistrationDate is required"  />
+                     </Helper>
+                   </RadzenFormField>
+                  </EditTemplate>
+                </RadzenDataGridColumn>
+                <RadzenDataGridColumn TItem="Ceilapp.Models.ceilapp.CourseRegistration" Property="Notes" Title="Notes">
+                  <EditTemplate Context="courseRegistration">
+                    <RadzenFormField Text="Notes" Variant="Variant.Filled">
+                     <ChildContent>
+                      <RadzenTextBox style="display: block; width: 100%" @bind-Value="@(courseRegistration.Notes)" Name="Notes" />
+                    </ChildContent>
+                   </RadzenFormField>
+                  </EditTemplate>
+                </RadzenDataGridColumn>
+                <RadzenDataGridColumn TItem="Ceilapp.Models.ceilapp.CourseRegistration" Property="PaidFeeValue" Title="Paid Fee Value">
+                  <EditTemplate Context="courseRegistration">
+                    <RadzenFormField Text="Paid Fee Value" Variant="Variant.Filled">
+                     <ChildContent>
+                      <RadzenNumeric style="display: block; width: 100%" @bind-Value="@(courseRegistration.PaidFeeValue)" Name="PaidFeeValue" />
+                     </ChildContent>
+                     <Helper>
+                      <RadzenRequiredValidator Component="PaidFeeValue" Text="PaidFeeValue is required"  />
+                     </Helper>
+                   </RadzenFormField>
+                  </EditTemplate>
+                </RadzenDataGridColumn>
+                <RadzenDataGridColumn TItem="Ceilapp.Models.ceilapp.CourseRegistration" Property="IsReregistration" Title="Is Reregistration">
+                  <EditTemplate Context="courseRegistration">
+                      <RadzenCheckBox @bind-Value="@(courseRegistration.IsReregistration)" Name="IsReregistration" />
+                  </EditTemplate>
+                </RadzenDataGridColumn>
+                <RadzenDataGridColumn TItem="Ceilapp.Models.ceilapp.CourseRegistration" Property="RegistrationTermsAccepted" Title="Registration Terms Accepted">
+                  <EditTemplate Context="courseRegistration">
+                      <RadzenCheckBox @bind-Value="@(courseRegistration.RegistrationTermsAccepted)" Name="RegistrationTermsAccepted" />
+                  </EditTemplate>
+                </RadzenDataGridColumn>
+                <RadzenDataGridColumn TItem="Ceilapp.Models.ceilapp.CourseRegistration" Property="RegistrationValidated" Title="Registration Validated">
+                  <EditTemplate Context="courseRegistration">
+                      <RadzenCheckBox @bind-Value="@(courseRegistration.RegistrationValidated)" Name="RegistrationValidated" />
+                  </EditTemplate>
+                </RadzenDataGridColumn>
+                <RadzenDataGridColumn TItem="Ceilapp.Models.ceilapp.CourseRegistration" Property="Groupe.Description" Title="Groupe">
+                  <EditTemplate Context="courseRegistration">
+                    <RadzenFormField Text="Groupe" Variant="Variant.Filled">
+                     <ChildContent>
+                    <RadzenDropDown Data="@(groupesForGroupId)" TextProperty="Description" ValueProperty="Id" AllowClear=true
+                         style="display: block; width: 100%" @bind-Value="@(courseRegistration.GroupId)" Name="GroupId"
+                           />
+                    </ChildContent>
+                   </RadzenFormField>
+                  </EditTemplate>
+                </RadzenDataGridColumn>
+                <RadzenDataGridColumn TItem="Ceilapp.Models.ceilapp.CourseRegistration" Filterable="false" Sortable="false" Width="156px" TextAlign="TextAlign.Center">
+                    <EditTemplate Context="courseRegistration">
+                        <RadzenButton Icon="check" ButtonStyle="ButtonStyle.Success" Variant="Variant.Flat" Size="ButtonSize.Medium"
+                            style="margin-top: 0.25rem; margin-right: 0.25rem; margin-bottom: 0.25rem"
+                            Click=@(args => SaveButtonClick(args, courseRegistration)) @onclick:stopPropagation="true" />
+                        <RadzenButton Icon="close" ButtonStyle="ButtonStyle.Light" Variant="Variant.Flat" Size="ButtonSize.Medium"
+                            Click=@(args => CancelButtonClick(args, courseRegistration)) @onclick:stopPropagation="true" />
+                    </EditTemplate>
+                    <Template Context="courseRegistration">
+
+                        <RadzenButton Icon="edit" ButtonStyle="ButtonStyle.Light" Variant="Variant.Flat" Size="ButtonSize.Medium"
+                            style="margin-top: 0.25rem; margin-right: 0.25rem; margin-bottom: 0.25rem"
+                            Click=@(args => EditButtonClick(args, courseRegistration)) @onclick:stopPropagation="true" />
+
+                        <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="delete" Size="ButtonSize.Medium"
+                            Shade="Shade.Lighter" Variant="Variant.Flat"
+                            Click=@(args => GridDeleteButtonClick(args, courseRegistration)) @onclick:stopPropagation="true" />
+                    </Template>
+                </RadzenDataGridColumn>
+            </Columns>
+
+        </RadzenDataGrid>
+
+    </RadzenColumn>
+  </RadzenRow>
+</RadzenStack>
