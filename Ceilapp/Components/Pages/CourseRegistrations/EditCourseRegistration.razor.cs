@@ -1,3 +1,4 @@
+using Ceilapp.Components.Pages.Groupes;
 using Ceilapp.Components.Pages.Sessions;
 using Ceilapp.Models.ceilapp;
 using DocumentFormat.OpenXml.Bibliography;
@@ -73,6 +74,10 @@ namespace Ceilapp.Components.Pages.CourseRegistrations
         [Parameter]
         public bool isreinsc { get; set; } = true;
 
+        public string RequiredNotFilledInfo { get; set; }
+
+        protected System.Linq.IQueryable<Ceilapp.Models.ceilapp.Groupe> groupes;
+
         public bool CanEditLevel {
             get
             {
@@ -124,13 +129,13 @@ namespace Ceilapp.Components.Pages.CourseRegistrations
                 NavigationManager.NavigateTo("/student-dashboard");
                 return;
             }
-
+            
             if (isnew)
             {
                  if(await RegistrationAllowed())
                 {
                     
-                   courseLevelsForCourseLevelId = await ceilappService.GetCourseLevels(new Radzen.Query { Filter = "i => i.CourseId == @0", FilterParameters = new object[] { Id }, OrderBy = "LevelOrder asc" });
+                    courseLevelsForCourseLevelId = await ceilappService.GetCourseLevels(new Radzen.Query { Filter = "i => i.CourseId == @0", FilterParameters = new object[] { Id }, OrderBy = "LevelOrder asc" });
                     
                     await InitNewRegistration();
                 }
@@ -145,6 +150,8 @@ namespace Ceilapp.Components.Pages.CourseRegistrations
             {
 
                var  cr = await ceilappService.GetCourseRegistrationById(Id);
+                groupes = await ceilappService.GetGroupes(new Query { Filter = "i => i.CourseLevelId == @0", FilterParameters = new object[] { cr.CourseLevelId }, OrderBy = "GroupeName asc" });
+
 
                 courseLevelsForCourseLevelId = courseLevelsForCourseLevelId = await ceilappService.GetCourseLevels(new Radzen.Query { Filter = "i => i.CourseId == @0", FilterParameters = new object[] { cr.CourseId }, OrderBy = "LevelOrder asc" });
                 courseRegistration = cr;
@@ -160,7 +167,7 @@ namespace Ceilapp.Components.Pages.CourseRegistrations
 
 
             }
-            groupes = await ceilappService.GetGroupes();
+            
         }
 
         protected override Task OnAfterRenderAsync(bool firstRender)
@@ -390,9 +397,7 @@ namespace Ceilapp.Components.Pages.CourseRegistrations
         }
 
         
-        public string RequiredNotFilledInfo { get; set; }
-
-        protected System.Linq.IQueryable<Ceilapp.Models.ceilapp.Groupe> groupes;
+      
 private bool RequiredFieldsAreNotFilled()
 {
     // Check if any required fields are null, empty, or have default values

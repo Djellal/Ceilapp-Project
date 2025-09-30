@@ -53,10 +53,10 @@
                                      Class="rounded-lg" />
                     </ChildContent>
                 </RadzenFormField>
-                <RadzenFormField Text="Groupe" Variant="Variant.Filled" Style="width: 100%">
+                <RadzenFormField Text="Groupe" Variant="Variant.Filled" Style="width: 100%; margin: 5px">
                       <ChildContent>
                         <RadzenDropDown Data="@(groupes)"  ValueProperty="Id" AllowClear=true
-                                  style="display: block; width: 100%" @bind-Value="@(courseRegistration.GroupId)" Name="BirthStateId" TextProperty="GroupeName" />  
+                                  style="display: block; width: 100%; margin: 5px" @bind-Value="@(courseRegistration.GroupId)" Name="BirthStateId" TextProperty="GroupeName" />  
                   </ChildContent>
                 </RadzenFormField>
 
