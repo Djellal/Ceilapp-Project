@@ -115,23 +115,27 @@
                   </Helper>
             </RadzenFormField></RadzenColumn></RadzenRow>
              <RadzenRow Style="margin-top: 1em">
-                <RadzenColumn Size="12" SizeXS="6">
+                <RadzenColumn Size="12" SizeXS="6" Style="display: flex">
                     <RadzenFormField Text="Wilaya de naissance" Variant="Variant.Filled" Style="width: 100%">
                           <ChildContent>
                             <RadzenDropDown Data="@(statesForBirthStateId)" TextProperty="Name" ValueProperty="Id" AllowClear=true
                                   style="display: block; width: 100%" @bind-Value="@(courseRegistration.BirthStateId)" Name="BirthStateId" Change="@BirthStateIdChange" AllowFiltering="true" FilterCaseSensitivity="Radzen.FilterCaseSensitivity.CaseInsensitive" FilterAutoCompleteType="Radzen.Blazor.AutoCompleteType.On"
                                    />
+                                   
                       </ChildContent>
                     </RadzenFormField>
+                    <RadzenButton Icon="add" Style="width: 36px" Click="@AddStateButtonClick"></RadzenButton>
                 </RadzenColumn>
-                <RadzenColumn Size="12" SizeXS="6">
+                <RadzenColumn Size="12" SizeXS="6" Style="display: flex">
                     <RadzenFormField Text="Commune de naissance" Variant="Variant.Filled" Style="width: 100%">
                           <ChildContent>
                             <RadzenDropDown Data="@(municipalitiesForBirthMunicipalityId)" TextProperty="Name" ValueProperty="Id" AllowClear=true
                                   style="display: block; width: 100%" @bind-Value="@(courseRegistration.BirthMunicipalityId)" Name="BirthMunicipalityId" AllowFiltering="true" FilterAutoCompleteType="Radzen.Blazor.AutoCompleteType.On"
                                    />
+                            
                       </ChildContent>
                     </RadzenFormField>
+                    <RadzenButton Icon="add" Style="width: 36px" Click="@AddMunicipalityButtonClick"></RadzenButton>
                 </RadzenColumn>
             </RadzenRow>
             <RadzenFormField Text="Adresse" Variant="Variant.Filled" Style="width: 100%; margin-top: 1em">

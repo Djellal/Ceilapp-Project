@@ -376,6 +376,7 @@ namespace Ceilapp.Data.Seeders
             {
                 var states = new List<State>
                 {
+                    
                     new State { Id = "01", Name = "Adrar", NameAr = "أدرار" },
                     new State { Id = "02", Name = "Chlef", NameAr = "الشلف" },
                     new State { Id = "03", Name = "Laghouat", NameAr = "الأغواط" },
@@ -433,7 +434,9 @@ namespace Ceilapp.Data.Seeders
                     new State { Id = "55", Name = "Touggourt", NameAr = "تقرت" },
                     new State { Id = "56", Name = "Djanet", NameAr = "جانت" },
                     new State { Id = "57", Name = "El M'Ghair", NameAr = "المغير" },
-                    new State { Id = "58", Name = "El Meniaa", NameAr = "المنيعة" }
+                    new State { Id = "58", Name = "El Meniaa", NameAr = "المنيعة" },
+
+                    new State { Id = "0", Name = "Autre", NameAr = "أخرى" }
                 };
 
                 context.States.AddRange(states);

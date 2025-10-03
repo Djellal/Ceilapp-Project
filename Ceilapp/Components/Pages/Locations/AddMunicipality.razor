@@ -1,4 +1,5 @@
-@page "/add-municipality"
+@page "/add-municipality"
+
 @attribute [Authorize]
 
 <PageTitle>Add Municipality</PageTitle>
@@ -14,14 +15,6 @@
                     <RadzenRequiredValidator Component="Name" Text="Name is required" />
                   </Helper>
             </RadzenFormField>
-            <RadzenFormField Text="Name Ar" Variant="Variant.Filled">
-                  <ChildContent>
-                    <RadzenTextBox style="display: block; width: 100%" @bind-Value="@(municipality.NameAr)" Name="NameAr" />
-                  </ChildContent>    
-                  <Helper>
-                    <RadzenRequiredValidator Component="NameAr" Text="NameAr is required" />
-                  </Helper>
-            </RadzenFormField>
             <RadzenFormField Text="State" Variant="Variant.Filled">
                   <ChildContent>
                     <RadzenDropDown Data="@(statesForStateId)" TextProperty="NameAr" ValueProperty="Id" AllowClear=true
@@ -31,8 +24,8 @@
             </RadzenFormField>
           </RadzenStack>
           <RadzenStack style="margin-top:1rem;" Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.End" Gap="0.5rem">
-                    <RadzenButton ButtonStyle="ButtonStyle.Primary" ButtonType="ButtonType.Submit" Icon="save" Text="Save" Variant="Variant.Flat" />
-                    <RadzenButton ButtonStyle="ButtonStyle.Light" Text="Cancel" Variant="Variant.Flat" Click="@CancelButtonClick"  />
+                    <RadzenButton ButtonStyle="ButtonStyle.Primary" ButtonType="ButtonType.Submit" Icon="save" Text="Sauvegarder" Variant="Variant.Flat" />
+                    <RadzenButton ButtonStyle="ButtonStyle.Light" Text="Anuuler" Variant="Variant.Flat" Click="@CancelButtonClick" Icon="cancel_presentation"  />
           </RadzenStack>
         </RadzenTemplateForm>
     </RadzenColumn>

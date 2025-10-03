@@ -1,4 +1,5 @@
 using Ceilapp.Components.Pages.Groupes;
+using Ceilapp.Components.Pages.Locations;
 using Ceilapp.Components.Pages.Sessions;
 using Ceilapp.Models.ceilapp;
 using DocumentFormat.OpenXml.Bibliography;
@@ -172,7 +173,7 @@ namespace Ceilapp.Components.Pages.CourseRegistrations
 
         protected override Task OnAfterRenderAsync(bool firstRender)
         {
-            if (Security.IsInRole(Constants.STUDENT))
+            if (Security.IsInRole(Constants.STUDENT) && courseRegistration!=null)
             {
                 if (courseRegistration.UserId != Security.User.Id)
                 {
@@ -297,7 +298,8 @@ namespace Ceilapp.Components.Pages.CourseRegistrations
         protected async System.Threading.Tasks.Task BirthStateIdChange(System.Object args)
         {
            try
-           { 
+           {
+             
             municipalitiesForBirthMunicipalityId = await ceilappService.GetMunicipalities(new Radzen.Query { Filter = "i => i.StateId == @0", FilterParameters = new object[] { @args } });
             
            }
@@ -438,6 +440,36 @@ private bool RequiredFieldsAreNotFilled()
         protected async System.Threading.Tasks.Task CourseLevelIdChange(System.Object args)
         {
             groupes = await ceilappService.GetGroupes(new Radzen.Query { Filter = "i => i.CourseLevelId == @0", FilterParameters = new object[] { courseRegistration.CourseLevelId }, OrderBy = "GroupeName asc" });
+        }
+
+        protected async System.Threading.Tasks.Task AddStateButtonClick(Microsoft.AspNetCore.Components.Web.MouseEventArgs args)
+        {
+             State st =  await DialogService.OpenAsync<AddState2>("Ajouter Etat", null);
+            if(st != null)
+            {
+                statesForBirthStateId = await ceilappService.GetStates();
+                courseRegistration.BirthStateId = st.Id;
+
+            }
+            else
+            {
+                courseRegistration.BirthStateId = null;                
+            };
+        }
+
+        protected async System.Threading.Tasks.Task AddMunicipalityButtonClick(Microsoft.AspNetCore.Components.Web.MouseEventArgs args)
+        {
+            Municipality mun = await DialogService.OpenAsync<AddMunicipality>("Ajouter", new Dictionary<string, object> { { "StateId", courseRegistration.BirthStateId } });
+            if (mun != null)
+            {
+                municipalitiesForBirthMunicipalityId = await ceilappService.GetMunicipalities(new Radzen.Query { Filter = "i => i.StateId == @0", FilterParameters = new object[] { courseRegistration.BirthStateId } });
+                courseRegistration.BirthMunicipalityId = mun.Id;
+            }
+            else
+            {
+                courseRegistration.BirthMunicipalityId = 0;
+                return;
+            }
         }
     }
 

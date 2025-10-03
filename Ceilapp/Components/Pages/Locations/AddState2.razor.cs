@@ -7,10 +7,11 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using Radzen;
 using Radzen.Blazor;
+using Microsoft.EntityFrameworkCore;
 
 namespace Ceilapp.Components.Pages.Locations
 {
-    public partial class AddMunicipality
+    public partial class AddState2
     {
         [Inject]
         protected IJSRuntime JSRuntime { get; set; }
@@ -34,22 +35,37 @@ namespace Ceilapp.Components.Pages.Locations
 
         protected override async Task OnInitializedAsync()
         {
+            state = new Ceilapp.Models.ceilapp.State();
+            state.Id = await GenerateNewStateId();
+            state.NameAr = "";
+        }
 
-            statesForStateId = await ceilappService.GetStates();
-            municipality.NameAr = "";
+        private async Task<string> GenerateNewStateId()
+        {
+            var states = await ceilappService.GetStates();
+            int nbr = states.Count()+100;
+
+            while (states.Any(s => s.Id == nbr.ToString()))
+            {
+                nbr++;
+            }
+
+            return nbr.ToString();
 
         }
-        protected bool errorVisible;
-        protected Ceilapp.Models.ceilapp.Municipality municipality;
 
-        protected IEnumerable<Ceilapp.Models.ceilapp.State> statesForStateId;
+        protected bool errorVisible;
+        protected Ceilapp.Models.ceilapp.State state;
+
+        [Inject]
+        protected SecurityService Security { get; set; }
 
         protected async Task FormSubmit()
         {
             try
             {
-                await ceilappService.CreateMunicipality(municipality);
-                DialogService.Close(municipality);
+                await ceilappService.CreateState(state);
+                DialogService.Close(state);
             }
             catch (Exception ex)
             {
@@ -60,30 +76,6 @@ namespace Ceilapp.Components.Pages.Locations
         protected async Task CancelButtonClick(MouseEventArgs args)
         {
             DialogService.Close(null);
-        }
-
-
-
-
-
-        bool hasStateIdValue;
-
-        [Parameter]
-        public string StateId { get; set; }
-
-        [Inject]
-        protected SecurityService Security { get; set; }
-        public override async Task SetParametersAsync(ParameterView parameters)
-        {
-            municipality = new Ceilapp.Models.ceilapp.Municipality();
-
-            hasStateIdValue = parameters.TryGetValue<string>("StateId", out var hasStateIdResult);
-
-            if (hasStateIdValue)
-            {
-                municipality.StateId = hasStateIdResult;
-            }
-            await base.SetParametersAsync(parameters);
         }
     }
 }
