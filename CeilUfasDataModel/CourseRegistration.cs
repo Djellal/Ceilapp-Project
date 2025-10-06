@@ -93,7 +93,9 @@ namespace DataModel
         [MaxLength(250)]
         public string? Notes { get; set; }
 
-
+        [Column(TypeName = "decimal(18, 2)")]
+        [Display(Name = "fee value")]
+        public decimal FeeValue { get; set; }
 
         [Column(TypeName = "decimal(18, 2)")]
         [Display(Name = "Paid fee value")]
