@@ -21,6 +21,8 @@ namespace Ceilapp.Models.ceilapp
         [Required]
         public decimal FeeValue { get; set; }
 
+        public ICollection<CourseFee> CourseFees { get; set; }
+
         public ICollection<CourseRegistration> CourseRegistrations { get; set; }
     }
 }

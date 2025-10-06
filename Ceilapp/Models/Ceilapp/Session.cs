@@ -27,10 +27,10 @@ namespace Ceilapp.Models.ceilapp
         [Required]
         public DateTime EndDate { get; set; }
 
+        public ICollection<AppSetting> AppSettings { get; set; }
+
         public ICollection<Groupe> Groupes { get; set; }
 
         public ICollection<CourseRegistration> CourseRegistrations { get; set; }
-
-        public ICollection<AppSetting> AppSettings { get; set; }
     }
 }

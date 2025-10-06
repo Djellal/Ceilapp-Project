@@ -84,6 +84,9 @@ namespace Ceilapp.Models.ceilapp
 
         public Groupe Groupe { get; set; }
 
+        [Required]
+        public decimal FeeValue { get; set; }
+
         public ICollection<Evaluation> Evaluations { get; set; }
     }
 }

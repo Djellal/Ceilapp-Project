@@ -186,5 +186,19 @@ namespace Ceilapp.Controllers
         {
             return ToExcel(ApplyQuery(await service.GetStates(), Request.Query, false), fileName);
         }
+
+        [HttpGet("/export/ceilapp/coursefees/csv")]
+        [HttpGet("/export/ceilapp/coursefees/csv(fileName='{fileName}')")]
+        public async Task<FileStreamResult> ExportCourseFeesToCSV(string fileName = null)
+        {
+            return ToCSV(ApplyQuery(await service.GetCourseFees(), Request.Query, false), fileName);
+        }
+
+        [HttpGet("/export/ceilapp/coursefees/excel")]
+        [HttpGet("/export/ceilapp/coursefees/excel(fileName='{fileName}')")]
+        public async Task<FileStreamResult> ExportCourseFeesToExcel(string fileName = null)
+        {
+            return ToExcel(ApplyQuery(await service.GetCourseFees(), Request.Query, false), fileName);
+        }
     }
 }
