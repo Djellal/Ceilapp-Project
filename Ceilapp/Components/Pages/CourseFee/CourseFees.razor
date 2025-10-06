@@ -18,28 +18,32 @@
             </RadzenStack>
         </RadzenColumn>
     </RadzenRow>
+    <RadzenRow AlignItems="AlignItems.Center"><RadzenColumn  Size="12" SizeMD="12">
+    <RadzenDropDown TValue="int?" @bind-Value="@SelectedCourse" ValueProperty="Id" TextProperty="Name" Data="@coursesForCourseId" Style="width: 100%" Placeholder="Filtrer par Course" Change="@CoursDropDownChange" AllowClear="true" AllowSelectAll="false" AllowFiltering="true" FilterCaseSensitivity="Radzen.FilterCaseSensitivity.CaseInsensitive" />
+           
+    </RadzenColumn></RadzenRow>
     <RadzenRow>
       <RadzenColumn SizeMD=12>
         <RadzenDataGrid @ref="grid0" ColumnWidth="200px"   AllowFiltering="true" FilterMode="FilterMode.Advanced" AllowPaging="true" AllowSorting="true" ShowPagingSummary="true" PageSizeOptions=@(new int[]{5, 10, 20, 30})
             Data="@(courseFees)" RowUpdate="@GridRowUpdate" RowCreate="@GridRowCreate" TItem="Ceilapp.Models.ceilapp.CourseFee">
             <Columns>
+                <RadzenDataGridColumn TItem="Ceilapp.Models.ceilapp.CourseFee" Property="Course.Name" Title="Course">
+                                  <EditTemplate Context="courseFee">
+                                    <RadzenFormField Text="Course" Variant="Variant.Filled">
+                                     <ChildContent>
+                                    <RadzenDropDown Data="@(coursesForCourseId)" TextProperty="Name" ValueProperty="Id" AllowClear=true
+                                         style="display: block; width: 100%" @bind-Value="@(courseFee.CourseId)" Name="CourseId"
+                                           />
+                                    </ChildContent>
+                                   </RadzenFormField>
+                                  </EditTemplate>
+                                </RadzenDataGridColumn>
                 <RadzenDataGridColumn TItem="Ceilapp.Models.ceilapp.CourseFee" Property="Profession.Name" Title="Profession">
                   <EditTemplate Context="courseFee">
                     <RadzenFormField Text="Profession" Variant="Variant.Filled">
                      <ChildContent>
-                    <RadzenDropDown Data="@(professionsForProfessionId)" TextProperty="NameAr" ValueProperty="Id" AllowClear=true
+                    <RadzenDropDown Data="@(professionsForProfessionId)" TextProperty="Name" ValueProperty="Id" AllowClear=true
                          style="display: block; width: 100%" @bind-Value="@(courseFee.ProfessionId)" Name="ProfessionId"
-                           />
-                    </ChildContent>
-                   </RadzenFormField>
-                  </EditTemplate>
-                </RadzenDataGridColumn>
-                <RadzenDataGridColumn TItem="Ceilapp.Models.ceilapp.CourseFee" Property="Course.Name" Title="Course">
-                  <EditTemplate Context="courseFee">
-                    <RadzenFormField Text="Course" Variant="Variant.Filled">
-                     <ChildContent>
-                    <RadzenDropDown Data="@(coursesForCourseId)" TextProperty="Image" ValueProperty="Id" AllowClear=true
-                         style="display: block; width: 100%" @bind-Value="@(courseFee.CourseId)" Name="CourseId"
                            />
                     </ChildContent>
                    </RadzenFormField>

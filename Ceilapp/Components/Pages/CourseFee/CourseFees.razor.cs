@@ -41,6 +41,8 @@ namespace Ceilapp.Components.Pages.CourseFee
 
             protected IEnumerable<Ceilapp.Models.ceilapp.Course> coursesForCourseId;
 
+            protected int? SelectedCourse=null;
+
             [Inject]
             protected SecurityService Security { get; set; }
         protected override async Task OnInitializedAsync()
@@ -128,6 +130,16 @@ namespace Ceilapp.Components.Pages.CourseFee
         {
             try
             {
+                if(ceilappService.dbContext.CourseFees.Any(cf=>cf.CourseId==args.CourseId && args.ProfessionId == cf.ProfessionId)){
+                     NotificationService.Notify(new NotificationMessage
+                        {
+                            Severity = NotificationSeverity.Error,
+                            Summary = $"Erreur",
+                            Detail = $"Le prix de ce cours avec cette profession existe dèjà"
+                        });
+                        grid0.CancelEditRow(args);
+                 return;
+                }
                 await ceilappService.CreateCourseFee(args);
             }
             catch (Exception ex)
@@ -156,6 +168,18 @@ namespace Ceilapp.Components.Pages.CourseFee
         {
             grid0.CancelEditRow(data);
             await ceilappService.CancelCourseFeeChanges(data);
+        }
+
+        protected async System.Threading.Tasks.Task CoursDropDownChange(System.Object args)
+        {
+            if (@args == null)
+            {
+                courseFees = await ceilappService.GetCourseFees(new Query { Expand = "Profession,Course" });
+            }
+            else{
+                courseFees = await ceilappService.GetCourseFees(new Radzen.Query { Filter = "i => i.CourseId == @0", FilterParameters = new object[] { @SelectedCourse }, Expand = "Profession,Course" });
+            }
+            
         }
     }
 }
