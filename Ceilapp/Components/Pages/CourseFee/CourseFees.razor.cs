@@ -56,7 +56,10 @@ namespace Ceilapp.Components.Pages.CourseFee
 
         protected async Task AddButtonClick(MouseEventArgs args)
         {
-            await grid0.InsertRow(new Ceilapp.Models.ceilapp.CourseFee());
+
+           if(SelectedCourse.HasValue) await grid0.InsertRow(new Ceilapp.Models.ceilapp.CourseFee { CourseId=(int)SelectedCourse.Value});
+            else await grid0.InsertRow(new Ceilapp.Models.ceilapp.CourseFee {});
+
         }
 
         protected async Task GridDeleteButtonClick(MouseEventArgs args, Ceilapp.Models.ceilapp.CourseFee courseFee)

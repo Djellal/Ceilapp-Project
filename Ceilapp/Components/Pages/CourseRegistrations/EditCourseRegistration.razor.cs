@@ -239,23 +239,28 @@ namespace Ceilapp.Components.Pages.CourseRegistrations
             
             // Check if current course is an "Atelier" type
             var currentCourse = coursesForCourseId.FirstOrDefault(c => c.Id == courseRegistration?.CourseId);
-            if (currentCourse?.CourseType?.Name == "Atelier")
+
+            var cf = ceilappService.dbContext.CourseFees
+                        .Where(cf => cf.CourseId == courseRegistration.CourseId && cf.ProfessionId == courseRegistration.ProfessionId)                        
+                        .FirstOrDefault();
+
+           if(cf == null)
             {
                 FeeValue = "Indéfini";
-                return;
+                courseRegistration.FeeValue = -1;
             }
-
-            if (selectedprofession != null)
+           else
             {
-                if(selectedprofession.FeeValue >= 0)
-                    FeeValue = selectedprofession.FeeValue.ToString("C");
-                else
+                if (cf.FeeValue < 0) 
+                {
                     FeeValue = "Indéfini";
+                    courseRegistration.FeeValue = -1;
+                }
+                else { 
+                    courseRegistration.FeeValue = cf.FeeValue;
+                FeeValue = cf.FeeValue.ToString("C");}
             }
-            else
-            {
-                FeeValue = 0.ToString("C");
-            }
+            
         }
 
         protected async System.Threading.Tasks.Task CourseIdChange(System.Object args)
