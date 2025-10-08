@@ -9,6 +9,7 @@
   <ItemGroup>
     <PackageReference Include="PuppeteerSharp" Version="20.2.2" />
     <PackageReference Include="QuestPDF" Version="2025.7.0" />
+    <PackageReference Include="ScottPlot" Version="5.0.37" />
     <PackageReference Include="Radzen.Blazor" Version="*" />
     <PackageReference Include="DocumentFormat.OpenXml" Version="2.20.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.*-*" />

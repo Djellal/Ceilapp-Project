@@ -2,6 +2,8 @@
 using QuestPDF.Helpers;
 using QuestPDF.Infrastructure;
 using PuppeteerSharp;
+using ScottPlot;
+using ScottPlot.Plottables;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -9,6 +11,7 @@ using System.Linq;
 using Ceilapp.Models.ceilapp;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Colors = QuestPDF.Helpers.Colors;
 
 namespace Ceilapp
 {
@@ -437,10 +440,50 @@ namespace Ceilapp
                                     table.Cell().BorderBottom(1).BorderColor(Colors.Grey.Lighten3).Padding(5).AlignRight().Text($"{percentage:F1}%");
                                 }
                             });
+                            
+                            // Add ScottPlot chart
+                            column.Item().Element(ChartCourseTypeStats);
                         }
                         else
                         {
                             column.Item().Padding(10).Element(EmptyDataMessage);
+                        }
+                    });
+                }
+
+                void ChartCourseTypeStats(IContainer container)
+                {
+                    container.PaddingTop(10).Column(column =>
+                    {
+                        column.Item().PaddingBottom(5).Text("Visualisation:").FontSize(10).SemiBold();
+                        
+                        var maxCount = registrationsByCourseType.Any() ? registrationsByCourseType.Max(x => x.Count) : 1;
+                        
+                        foreach (var item in registrationsByCourseType.Take(10)) // Limit to top 10 to avoid clutter
+                        {
+                            var chartWidth = (float)(item.Count * 100.0 / maxCount); // Calculate chart width as percentage of max value
+                            
+                            column.Item().PaddingBottom(5).Row(row =>
+                            {
+                                row.RelativeItem(3).Column(col =>
+                                {
+                                    col.Item().AlignMiddle().Text($"{item.CourseTypeName}").FontSize(9);
+                                });
+                                
+                                row.RelativeItem(7).Column(col =>
+                                {
+                                    col.Item().PaddingVertical(2)
+                                        .Height(10)
+                                        .Width(chartWidth * 3) // Reduced scale to fit better
+                                        .Background(Colors.Blue.Lighten3);
+                                    
+                                    // Add the value as text inside the bar
+                                    col.Item().AlignCenter().AlignMiddle()
+                                        .Text($"{item.Count}")
+                                        .FontSize(8)
+                                        .FontColor(Colors.Grey.Darken2);
+                                });
+                            });
                         }
                     });
                 }
@@ -476,10 +519,50 @@ namespace Ceilapp
                                     table.Cell().BorderBottom(1).BorderColor(Colors.Grey.Lighten3).Padding(5).AlignRight().Text($"{percentage:F1}%");
                                 }
                             });
+                            
+                            // Add ScottPlot chart
+                            column.Item().Element(ChartCourseStats);
                         }
                         else
                         {
                             column.Item().Padding(10).Element(EmptyDataMessage);
+                        }
+                    });
+                }
+
+                void ChartCourseStats(IContainer container)
+                {
+                    container.PaddingTop(10).Column(column =>
+                    {
+                        column.Item().PaddingBottom(5).Text("Visualisation:").FontSize(10).SemiBold();
+                        
+                        var maxCount = registrationsByCourse.Any() ? registrationsByCourse.Max(x => x.Count) : 1;
+                        
+                        foreach (var item in registrationsByCourse.Take(10)) // Limit to top 10 to avoid clutter
+                        {
+                            var chartWidth = (float)(item.Count * 100.0 / maxCount); // Calculate chart width as percentage of max value
+                            
+                            column.Item().PaddingBottom(5).Row(row =>
+                            {
+                                row.RelativeItem(3).Column(col =>
+                                {
+                                    col.Item().AlignMiddle().Text($"{item.CourseName}").FontSize(9);
+                                });
+                                
+                                row.RelativeItem(7).Column(col =>
+                                {
+                                    col.Item().PaddingVertical(2)
+                                        .Height(10)
+                                        .Width(chartWidth * 3) // Reduced scale to fit better
+                                        .Background(Colors.Green.Lighten3);
+                                    
+                                    // Add the value as text inside the bar
+                                    col.Item().AlignCenter().AlignMiddle()
+                                        .Text($"{item.Count}")
+                                        .FontSize(8)
+                                        .FontColor(Colors.Grey.Darken2);
+                                });
+                            });
                         }
                     });
                 }
@@ -515,10 +598,50 @@ namespace Ceilapp
                                     table.Cell().BorderBottom(1).BorderColor(Colors.Grey.Lighten3).Padding(5).AlignRight().Text($"{percentage:F1}%");
                                 }
                             });
+                            
+                            // Add simple bar chart visualization
+                            column.Item().Element(ChartProfessionStats);
                         }
                         else
                         {
                             column.Item().Padding(10).Element(EmptyDataMessage);
+                        }
+                    });
+                }
+
+                void ChartProfessionStats(IContainer container)
+                {
+                    container.PaddingTop(10).Column(column =>
+                    {
+                        column.Item().PaddingBottom(5).Text("Visualisation:").FontSize(10).SemiBold();
+                        
+                        var maxCount = registrationsByProfession.Any() ? registrationsByProfession.Max(x => x.Count) : 1;
+                        
+                        foreach (var item in registrationsByProfession.Take(10)) // Limit to top 10 to avoid clutter
+                        {
+                            var chartWidth = (float)(item.Count * 100.0 / maxCount); // Calculate chart width as percentage of max value
+                            
+                            column.Item().PaddingBottom(5).Row(row =>
+                            {
+                                row.RelativeItem(3).Column(col =>
+                                {
+                                    col.Item().AlignMiddle().Text($"{item.ProfessionName}").FontSize(9);
+                                });
+                                
+                                row.RelativeItem(7).Column(col =>
+                                {
+                                    col.Item().PaddingVertical(2)
+                                        .Height(10)
+                                        .Width(chartWidth * 3) // Reduced scale to fit better
+                                        .Background(Colors.Orange.Lighten3);
+                                    
+                                    // Add the value as text inside the bar
+                                    col.Item().AlignCenter().AlignMiddle()
+                                        .Text($"{item.Count}")
+                                        .FontSize(8)
+                                        .FontColor(Colors.Grey.Darken2);
+                                });
+                            });
                         }
                     });
                 }
@@ -554,10 +677,50 @@ namespace Ceilapp
                                     table.Cell().BorderBottom(1).BorderColor(Colors.Grey.Lighten3).Padding(5).AlignRight().Text($"{percentage:F1}%");
                                 }
                             });
+                            
+                            // Add simple bar chart visualization
+                            column.Item().Element(ChartStateStats);
                         }
                         else
                         {
                             column.Item().Padding(10).Element(EmptyDataMessage);
+                        }
+                    });
+                }
+
+                void ChartStateStats(IContainer container)
+                {
+                    container.PaddingTop(10).Column(column =>
+                    {
+                        column.Item().PaddingBottom(5).Text("Visualisation:").FontSize(10).SemiBold();
+                        
+                        var maxCount = registrationsByState.Any() ? registrationsByState.Max(x => x.Count) : 1;
+                        
+                        foreach (var item in registrationsByState.Take(10)) // Limit to top 10 to avoid clutter
+                        {
+                            var chartWidth = (float)(item.Count * 100.0 / maxCount); // Calculate chart width as percentage of max value
+                            
+                            column.Item().PaddingBottom(5).Row(row =>
+                            {
+                                row.RelativeItem(3).Column(col =>
+                                {
+                                    col.Item().AlignMiddle().Text($"{item.StateName}").FontSize(9);
+                                });
+                                
+                                row.RelativeItem(7).Column(col =>
+                                {
+                                    col.Item().PaddingVertical(2)
+                                        .Height(10)
+                                        .Width(chartWidth * 3) // Reduced scale to fit better
+                                        .Background(Colors.Purple.Lighten3);
+                                    
+                                    // Add the value as text inside the bar
+                                    col.Item().AlignCenter().AlignMiddle()
+                                        .Text($"{item.Count}")
+                                        .FontSize(8)
+                                        .FontColor(Colors.Grey.Darken2);
+                                });
+                            });
                         }
                     });
                 }
@@ -594,6 +757,53 @@ namespace Ceilapp
                             table.Cell().BorderBottom(1).BorderColor(Colors.Grey.Lighten3).Padding(5).AlignCenter().Text(reRegistrations.ToString());
                             table.Cell().BorderBottom(1).BorderColor(Colors.Grey.Lighten3).Padding(5).AlignRight().Text($"{rePercentage:F1}%");
                         });
+                        
+                        // Add simple bar chart visualization
+                        column.Item().Element(ChartRegistrationTypeStats);
+                    });
+                }
+
+                void ChartRegistrationTypeStats(IContainer container)
+                {
+                    container.PaddingTop(10).Column(column =>
+                    {
+                        column.Item().PaddingBottom(5).Text("Visualisation:").FontSize(10).SemiBold();
+                        
+                        var registrationTypes = new[]
+                        {
+                            new { Name = "Nouvelle Inscription", Count = newRegistrations },
+                            new { Name = "Réinscription", Count = reRegistrations }
+                        };
+                        
+                        var maxCount = Math.Max(newRegistrations, reRegistrations);
+                        if (maxCount == 0) maxCount = 1; // Avoid division by zero
+                        
+                        foreach (var item in registrationTypes)
+                        {
+                            var chartWidth = (float)(item.Count * 100.0 / maxCount); // Calculate chart width as percentage of max value
+                            
+                            column.Item().PaddingBottom(5).Row(row =>
+                            {
+                                row.RelativeItem(3).Column(col =>
+                                {
+                                    col.Item().AlignMiddle().Text($"{item.Name}").FontSize(9);
+                                });
+                                
+                                row.RelativeItem(7).Column(col =>
+                                {
+                                    col.Item().PaddingVertical(2)
+                                        .Height(10)
+                                        .Width(chartWidth * 3) // Reduced scale to fit better
+                                        .Background(Colors.Teal.Lighten3);
+                                    
+                                    // Add the value as text inside the bar
+                                    col.Item().AlignCenter().AlignMiddle()
+                                        .Text($"{item.Count}")
+                                        .FontSize(8)
+                                        .FontColor(Colors.Grey.Darken2);
+                                });
+                            });
+                        }
                     });
                 }
 
