@@ -14,8 +14,6 @@
                         <i class="bi bi-bar-chart-fill fs-3 text-primary"></i>
                         <RadzenText TextStyle="TextStyle.H4" class="mb-0 fw-bold text-primary">Statistiques par Session</RadzenText>
                     </RadzenStack>
-                    <RadzenButton Text="Exporter Excel" Icon="download" ButtonStyle="Radzen.ButtonStyle.Success" 
-                                  Class="btn-export" Click="@ExportToExcel" />
                 </RadzenStack>
             </RadzenCardHeader>
             <div class="p-4">
@@ -25,6 +23,8 @@
                                     Placeholder="Choisir une session" Change="@OnSessionChange"
                                     Style="width: 100%" />
                 </RadzenFormField>
+                <RadzenButton Text="Générer le rapport des statisques" Icon="download" ButtonStyle="Radzen.ButtonStyle.Success" 
+                                                  Class="btn-export" Click="@ExportToPDFReport" Style="height: 100%" />
             </div>
         </RadzenCard>
 

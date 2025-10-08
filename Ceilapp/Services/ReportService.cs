@@ -231,5 +231,337 @@ namespace Ceilapp
             await File.WriteAllBytesAsync(outputPath, imageBytes);
             return outputPath;
         }
+
+        public async Task<byte[]> GenererStatisticsReportAsync(int sessionId)
+        {
+            try
+            {
+                // Get the session with its registrations
+                var session = await ceilappService.dbContext.Sessions
+                    .Include(s => s.CourseRegistrations)
+                    .ThenInclude(cr => cr.Course)
+                    .ThenInclude(c => c.CourseType)
+                    .Include(s => s.CourseRegistrations)
+                    .ThenInclude(cr => cr.Profession)
+                    .Include(s => s.CourseRegistrations)
+                    .ThenInclude(cr => cr.State)
+                    .Include(s => s.CourseRegistrations)
+                    .ThenInclude(cr => cr.Municipality)
+                    .FirstOrDefaultAsync(s => s.Id == sessionId);
+                
+                if (session == null)
+                {
+                    return null;
+                }
+
+                // Get all registrations for this session
+                var registrations = session.CourseRegistrations.ToList();
+
+                // Calculate statistics
+                var totalRegistrations = registrations.Count;
+                var totalFeesCollected = registrations.Sum(r => r.PaidFeeValue);
+                var totalExpectedFees = registrations.Sum(r => r.FeeValue);
+                var unpaidFees = totalExpectedFees - totalFeesCollected;
+                
+                // Group registrations by course type
+                var registrationsByCourseType = registrations
+                    .GroupBy(r => r.Course?.CourseType?.Name ?? "Unknown")
+                    .Select(g => new { CourseTypeName = g.Key, Count = g.Count() })
+                    .ToList();
+                
+                // Group registrations by profession
+                var registrationsByProfession = registrations
+                    .Where(r => r.Profession != null)
+                    .GroupBy(r => r.Profession.Name)
+                    .Select(g => new { ProfessionName = g.Key, Count = g.Count() })
+                    .OrderByDescending(g => g.Count)
+                    .Take(5) // Top 5 professions
+                    .ToList();
+                
+                // Group registrations by origin state
+                var registrationsByState = registrations
+                    .Where(r => r.State != null)
+                    .GroupBy(r => r.State.Name)
+                    .Select(g => new { StateName = g.Key, Count = g.Count() })
+                    .OrderByDescending(g => g.Count)
+                    .Take(5) // Top 5 states
+                    .ToList();
+
+                // Count new registrations vs re-registrations
+                var newRegistrations = registrations.Count(r => !r.IsReregistration);
+                var reRegistrations = registrations.Count(r => r.IsReregistration);
+
+                QuestPDF.Settings.License = LicenseType.Community;
+
+                return Document.Create(document =>
+                {
+                    document.Page(page =>
+                    {
+                        page.Size(PageSizes.A4);
+                        page.Margin(1, Unit.Centimetre);
+                        page.PageColor(Colors.White);
+                        
+                        page.Header()
+                            .Text($"Statistiques de la session: {session.SessionName}")
+                            .SemiBold()
+                            .FontSize(16)
+                            .FontColor(Colors.Blue.Darken2)
+                            .AlignCenter();
+
+                        page.Content()
+                            .PaddingVertical(1, Unit.Centimetre)
+                            .Column(x =>
+                            {
+                                x.Spacing(20);
+
+                                // Session information
+                                x.Item().Element(ContainerSessionInfo);
+                                
+                                // Statistics summary
+                                x.Item().Element(ContainerStatsSummary);
+                                
+                                // Registrations by course type
+                                x.Item().Element(ContainerCourseTypeStats);
+                                
+                                // Registrations by profession (top 5)
+                                x.Item().Element(ContainerProfessionStats);
+                                
+                                // Registrations by state (top 5)
+                                x.Item().Element(ContainerStateStats);
+                                
+                                // Registration type breakdown
+                                x.Item().Element(ContainerRegistrationTypeStats);
+                                
+                                // Footer with generation date
+                                x.Item().AlignCenter().Text($"Rapport généré le: {DateTime.Now:dd/MM/yyyy HH:mm}").FontSize(10);
+                            });
+                    });
+                }).GeneratePdf();
+
+                // Local methods for creating different sections of the report
+                void ContainerSessionInfo(IContainer container)
+                {
+                    container.Background(Colors.Grey.Lighten3)
+                        .Padding(10)
+                        .Table(table =>
+                        {
+                            table.ColumnsDefinition(columns =>
+                            {
+                                columns.ConstantColumn(100);
+                                columns.RelativeColumn(3);
+                            });
+
+                            AddTableRow(table, "Code Session", session.SessionCode);
+                            AddTableRow(table, "Nom Session", session.SessionName);
+                            AddTableRow(table, "Date Début", session.StartDate.ToString("dd/MM/yyyy"));
+                            AddTableRow(table, "Date Fin", session.EndDate.ToString("dd/MM/yyyy"));
+                        });
+                }
+
+                void ContainerStatsSummary(IContainer container)
+                {
+                    container.Table(table =>
+                    {
+                        table.ColumnsDefinition(columns =>
+                        {
+                            columns.RelativeColumn();
+                            columns.RelativeColumn();
+                            columns.RelativeColumn();
+                        });
+
+                        // Row 1: Total registrations and fees collected
+                        table.Cell().Border(1).BorderColor(Colors.Grey.Lighten2).Background(Colors.Blue.Lighten5).Padding(5)
+                            .AlignCenter().Column(col =>
+                            {
+                                col.Item().Text("Inscriptions Totales").SemiBold();
+                                col.Item().Text(totalRegistrations.ToString()).FontSize(14).SemiBold();
+                            });
+
+                        table.Cell().Border(1).BorderColor(Colors.Grey.Lighten2).Background(Colors.Green.Lighten5).Padding(5)
+                            .AlignCenter().Column(col =>
+                            {
+                                col.Item().Text("Frais Collectés (DA)").SemiBold();
+                                col.Item().Text(totalFeesCollected.ToString("N2", CultureInfo.InvariantCulture)).FontSize(14).SemiBold();
+                            });
+
+                        table.Cell().Border(1).BorderColor(Colors.Grey.Lighten2).Background(Colors.Red.Lighten5).Padding(5)
+                            .AlignCenter().Column(col =>
+                            {
+                                col.Item().Text("Frais Impayés (DA)").SemiBold();
+                                col.Item().Text(unpaidFees.ToString("N2", CultureInfo.InvariantCulture)).FontSize(14).SemiBold();
+                            });
+                    });
+                }
+
+                void ContainerCourseTypeStats(IContainer container)
+                {
+                    container.PaddingVertical(5).Column(column =>
+                    {
+                        column.Item().PaddingBottom(5).Text("Répartition par Type de Cours").FontSize(12).SemiBold();
+                        
+                        if (registrationsByCourseType.Any())
+                        {
+                            column.Item().Table(table =>
+                            {
+                                table.ColumnsDefinition(columns =>
+                                {
+                                    columns.RelativeColumn(2);
+                                    columns.RelativeColumn(1);
+                                    columns.RelativeColumn(1);
+                                });
+
+                                // Header
+                                table.Cell().Background(Colors.Grey.Lighten2).Padding(5).Text("Type de Cours").SemiBold();
+                                table.Cell().Background(Colors.Grey.Lighten2).Padding(5).AlignCenter().Text("Nombre").SemiBold();
+                                table.Cell().Background(Colors.Grey.Lighten2).Padding(5).AlignRight().Text("Pourcentage").SemiBold();
+
+                                foreach (var item in registrationsByCourseType)
+                                {
+                                    var percentage = totalRegistrations > 0 ? (double)item.Count / totalRegistrations * 100 : 0;
+                                    
+                                    table.Cell().BorderBottom(1).BorderColor(Colors.Grey.Lighten3).Padding(5).Text(item.CourseTypeName);
+                                    table.Cell().BorderBottom(1).BorderColor(Colors.Grey.Lighten3).Padding(5).AlignCenter().Text(item.Count.ToString());
+                                    table.Cell().BorderBottom(1).BorderColor(Colors.Grey.Lighten3).Padding(5).AlignRight().Text($"{percentage:F1}%");
+                                }
+                            });
+                        }
+                        else
+                        {
+                            column.Item().Padding(10).Element(EmptyDataMessage);
+                        }
+                    });
+                }
+
+                void ContainerProfessionStats(IContainer container)
+                {
+                    container.PaddingVertical(5).Column(column =>
+                    {
+                        column.Item().PaddingBottom(5).Text("Top 5 des Professions par Inscriptions").FontSize(12).SemiBold();
+                        
+                        if (registrationsByProfession.Any())
+                        {
+                            column.Item().Table(table =>
+                            {
+                                table.ColumnsDefinition(columns =>
+                                {
+                                    columns.RelativeColumn(2);
+                                    columns.RelativeColumn(1);
+                                    columns.RelativeColumn(1);
+                                });
+
+                                // Header
+                                table.Cell().Background(Colors.Grey.Lighten2).Padding(5).Text("Profession").SemiBold();
+                                table.Cell().Background(Colors.Grey.Lighten2).Padding(5).AlignCenter().Text("Nombre").SemiBold();
+                                table.Cell().Background(Colors.Grey.Lighten2).Padding(5).AlignRight().Text("Pourcentage").SemiBold();
+
+                                foreach (var item in registrationsByProfession)
+                                {
+                                    var percentage = totalRegistrations > 0 ? (double)item.Count / totalRegistrations * 100 : 0;
+                                    
+                                    table.Cell().BorderBottom(1).BorderColor(Colors.Grey.Lighten3).Padding(5).Text(item.ProfessionName);
+                                    table.Cell().BorderBottom(1).BorderColor(Colors.Grey.Lighten3).Padding(5).AlignCenter().Text(item.Count.ToString());
+                                    table.Cell().BorderBottom(1).BorderColor(Colors.Grey.Lighten3).Padding(5).AlignRight().Text($"{percentage:F1}%");
+                                }
+                            });
+                        }
+                        else
+                        {
+                            column.Item().Padding(10).Element(EmptyDataMessage);
+                        }
+                    });
+                }
+
+                void ContainerStateStats(IContainer container)
+                {
+                    container.PaddingVertical(5).Column(column =>
+                    {
+                        column.Item().PaddingBottom(5).Text("Top 5 des États par Origine").FontSize(12).SemiBold();
+                        
+                        if (registrationsByState.Any())
+                        {
+                            column.Item().Table(table =>
+                            {
+                                table.ColumnsDefinition(columns =>
+                                {
+                                    columns.RelativeColumn(2);
+                                    columns.RelativeColumn(1);
+                                    columns.RelativeColumn(1);
+                                });
+
+                                // Header
+                                table.Cell().Background(Colors.Grey.Lighten2).Padding(5).Text("État").SemiBold();
+                                table.Cell().Background(Colors.Grey.Lighten2).Padding(5).AlignCenter().Text("Nombre").SemiBold();
+                                table.Cell().Background(Colors.Grey.Lighten2).Padding(5).AlignRight().Text("Pourcentage").SemiBold();
+
+                                foreach (var item in registrationsByState)
+                                {
+                                    var percentage = totalRegistrations > 0 ? (double)item.Count / totalRegistrations * 100 : 0;
+                                    
+                                    table.Cell().BorderBottom(1).BorderColor(Colors.Grey.Lighten3).Padding(5).Text(item.StateName);
+                                    table.Cell().BorderBottom(1).BorderColor(Colors.Grey.Lighten3).Padding(5).AlignCenter().Text(item.Count.ToString());
+                                    table.Cell().BorderBottom(1).BorderColor(Colors.Grey.Lighten3).Padding(5).AlignRight().Text($"{percentage:F1}%");
+                                }
+                            });
+                        }
+                        else
+                        {
+                            column.Item().Padding(10).Element(EmptyDataMessage);
+                        }
+                    });
+                }
+
+                void ContainerRegistrationTypeStats(IContainer container)
+                {
+                    container.PaddingVertical(5).Column(column =>
+                    {
+                        column.Item().PaddingBottom(5).Text("Répartition des Types d'Inscriptions").FontSize(12).SemiBold();
+                        
+                        column.Item().Table(table =>
+                        {
+                            table.ColumnsDefinition(columns =>
+                            {
+                                columns.RelativeColumn(2);
+                                columns.RelativeColumn(1);
+                                columns.RelativeColumn(1);
+                            });
+
+                            // Header
+                            table.Cell().Background(Colors.Grey.Lighten2).Padding(5).Text("Type d'Inscription").SemiBold();
+                            table.Cell().Background(Colors.Grey.Lighten2).Padding(5).AlignCenter().Text("Nombre").SemiBold();
+                            table.Cell().Background(Colors.Grey.Lighten2).Padding(5).AlignRight().Text("Pourcentage").SemiBold();
+
+                            // New registrations
+                            var newPercentage = totalRegistrations > 0 ? (double)newRegistrations / totalRegistrations * 100 : 0;
+                            table.Cell().BorderBottom(1).BorderColor(Colors.Grey.Lighten3).Padding(5).Text("Nouvelle Inscription");
+                            table.Cell().BorderBottom(1).BorderColor(Colors.Grey.Lighten3).Padding(5).AlignCenter().Text(newRegistrations.ToString());
+                            table.Cell().BorderBottom(1).BorderColor(Colors.Grey.Lighten3).Padding(5).AlignRight().Text($"{newPercentage:F1}%");
+
+                            // Re-registrations
+                            var rePercentage = totalRegistrations > 0 ? (double)reRegistrations / totalRegistrations * 100 : 0;
+                            table.Cell().BorderBottom(1).BorderColor(Colors.Grey.Lighten3).Padding(5).Text("Réinscription");
+                            table.Cell().BorderBottom(1).BorderColor(Colors.Grey.Lighten3).Padding(5).AlignCenter().Text(reRegistrations.ToString());
+                            table.Cell().BorderBottom(1).BorderColor(Colors.Grey.Lighten3).Padding(5).AlignRight().Text($"{rePercentage:F1}%");
+                        });
+                    });
+                }
+
+                void EmptyDataMessage(IContainer container)
+                {
+                    container.Background(Colors.Grey.Lighten4)
+                        .Padding(10)
+                        .AlignCenter()
+                        .Text("Aucune donnée disponible")
+                        .Italic()
+                        .FontColor(Colors.Grey.Darken2);
+                }
+            }
+            catch (Exception ex)
+            {
+#if DEBUG
+                throw ex;
+#endif
+                return null;
+            }
+        }
     }
 }

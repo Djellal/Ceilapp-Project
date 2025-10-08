@@ -254,165 +254,109 @@ namespace Ceilapp.Components.Pages.Statistics
             return totalExpected;
         }
 
-        protected async Task ExportToExcel()
-        {
-            if (!selectedSessionId.HasValue) 
+
+        protected async Task ExportToPDFReport() 
+        { 
+                        try
             {
-                NotificationService.Notify(new NotificationMessage 
-                { 
-                    Severity = NotificationSeverity.Warning, 
-                    Summary = "Export", 
-                    Detail = "Veuillez sélectionner une session avant d'exporter", 
-                    Duration = 3000 
-                });
-                return;
-            }
 
-            try
-            {
-                // Generate PDF report
-                var sessionName = currentSession?.SessionName ?? "Session Inconnue";
-                
-                var document = Document.Create(container =>
-                {
-                    container.Page(page =>
-                    {
-                        page.Size(PageSizes.A4);
-                        page.Margin(2, Unit.Centimetre);
-                        page.DefaultTextStyle(x => x.FontSize(12));
+                var uri = $"Document/StatisticsPersession?sessionid={selectedSessionId}";
+                NavigationManager.NavigateTo(uri, true);
 
-                        page.Header().Text($"Rapport Statistiques - Session: {sessionName}")
-                            .SemiBold()
-                            .FontSize(16)
-                            .FontColor(Colors.Blue.Medium);
-
-                        page.Content().Element(ComposeContent);
-
-                        page.Footer().AlignCenter().Text(text =>
-                        {
-                            text.Span("Page ");
-                            text.CurrentPageNumber();
-                            text.Span(" / ");
-                            text.TotalPages();
-                        });
-                    });
-                });
-
-                // Generate the PDF as a byte array
-                var pdfBytes = document.GeneratePdf();
-
-                // Create a temporary file and save the PDF
-                var fileName = $"Statistiques_Session_{sessionName.Replace(" ", "_")}_{DateTime.Now:yyyyMMdd_HHmmss}.pdf";
-
-                // Use JSRuntime to download the file
-                await JSRuntime.InvokeVoidAsync("downloadFile", fileName, "application/pdf", pdfBytes);
-                
-                NotificationService.Notify(new NotificationMessage 
-                { 
-                    Severity = NotificationSeverity.Success, 
-                    Summary = "Export", 
-                    Detail = "Rapport généré avec succès", 
-                    Duration = 3000 
-                });
             }
             catch (Exception ex)
             {
+
                 NotificationService.Notify(new NotificationMessage
                 {
                     Severity = NotificationSeverity.Error,
-                    Summary = "Export Error",
-                    Detail = $"Erreur lors de la génération du rapport: {ex.Message}",
-                    Duration = 5000
+                    Summary = "Error",
+                    Detail = $"Erreur lors de la génération du PDF: {ex.Message}"
                 });
-
+#if DEBUG
+                throw ex;
+#endif
             }
         }
-
-        private void ComposeContent(IContainer container)
+        // StatisticsPersession.CreateSessionStatsSection(IContainer container)
+        private void CreateSessionStatsSection(IContainer container)
         {
-            container.Column(column =>
+            container.PaddingVertical(10).Column(column =>
             {
-                // Session Statistics
-                column.Item().Element(CreateSessionStatsSection);
-                
-                // Course Statistics
-                column.Item().Element(CreateCourseStatsSection);
-                
-                // Profession Statistics
-                column.Item().Element(CreateProfessionStatsSection);
-                
-                // Course Level Statistics
-                column.Item().Element(CreateCourseLevelStatsSection);
-            });
-        }
-
-        private IContainer CreateSessionStatsSection(IContainer container)
-        {
-            container.PaddingVertical(10).Background(Colors.Grey.Lighten3).Element(section =>
-            {
-                section.Row(row =>
+                // Section title
+                column.Item().Row(row =>
                 {
                     row.RelativeItem().Column(col =>
                     {
-                        col.Item().Text("Statistiques de Session").SemiBold().FontSize(14);
+                        col.Item().Text("Statistiques de la Session").SemiBold().FontSize(14);
                         col.Item().PaddingVertical(5).LineHorizontal(Colors.Black);
                     });
                 });
 
-                section.Table(table =>
+                if (sessionStats != null)
                 {
-                    table.ColumnsDefinition(columns =>
+                    column.Item().Table(table =>
                     {
-                        columns.RelativeColumn(2f);
-                        columns.RelativeColumn(2f);
-                        columns.RelativeColumn(2f);
-                        columns.RelativeColumn(2f);
+                        table.ColumnsDefinition(columns =>
+                        {
+                            columns.RelativeColumn(3f);  // Libellé
+                            columns.RelativeColumn(1f);  // Valeur
+                        });
+
+                        // Total
+                        table.Cell().Element(HeaderCellStyle).Text("Total Inscriptions");
+                        table.Cell().Element(CellStyle).Text(sessionStats.TotalRegistrations.ToString());
+
+                        // Validées
+                        table.Cell().Element(HeaderCellStyle).Text("Inscriptions Validées");
+                        table.Cell().Element(CellStyle).Text(sessionStats.ValidatedRegistrations.ToString());
+
+                        // En attente
+                        table.Cell().Element(HeaderCellStyle).Text("Inscriptions en Attente");
+                        table.Cell().Element(CellStyle).Text(sessionStats.PendingRegistrations.ToString());
+
+                        // Réinscriptions
+                        table.Cell().Element(HeaderCellStyle).Text("Réinscriptions");
+                        table.Cell().Element(CellStyle).Text(sessionStats.ReregistrationCount.ToString());
+
+                        // Nouvelles inscriptions
+                        table.Cell().Element(HeaderCellStyle).Text("Nouvelles Inscriptions");
+                        table.Cell().Element(CellStyle).Text(sessionStats.NewRegistrationCount.ToString());
+
+                        // Frais payés
+                        table.Cell().Element(HeaderCellStyle).Text("Frais Totaux Payés");
+                        table.Cell().Element(CellStyle).Text(sessionStats.PaidFees.ToString("C"));
+
+                        // Frais attendus
+                        table.Cell().Element(HeaderCellStyle).Text("Frais Attendus");
+                        table.Cell().Element(CellStyle).Text(sessionStats.ExpectedFees.ToString("C"));
+
+                        // Non payés
+                        table.Cell().Element(HeaderCellStyle).Text("Inscriptions Non Payées");
+                        table.Cell().Element(CellStyle).Text(sessionStats.UnpaidCount.ToString());
+
+                        // Taux de validation
+                        table.Cell().Element(HeaderCellStyle).Text("Taux de Validation (%)");
+                        table.Cell().Element(CellStyle).Text(sessionStats.ValidationRate.ToString("F2"));
+
+                        // Taux de paiement
+                        table.Cell().Element(HeaderCellStyle).Text("Taux de Paiement (%)");
+                        table.Cell().Element(CellStyle).Text(sessionStats.PaymentRate.ToString("F2"));
                     });
-
-                    table.Header(header =>
-                    {
-                        header.Cell().Element(HeaderCellStyle).Text("Métrique").SemiBold();
-                        header.Cell().Element(HeaderCellStyle).Text("Valeur").SemiBold();
-                        header.Cell().Element(HeaderCellStyle).Text("Métrique").SemiBold();
-                        header.Cell().Element(HeaderCellStyle).Text("Valeur").SemiBold();
-                    });
-
-                    // Add rows with session statistics
-                    table.Cell().Element(CellStyle).Text("Total Inscriptions");
-                    table.Cell().Element(CellStyle).Text(sessionStats.TotalRegistrations.ToString());
-                    table.Cell().Element(CellStyle).Text("Inscriptions Validées");
-                    table.Cell().Element(CellStyle).Text(sessionStats.ValidatedRegistrations.ToString());
-
-                    table.Cell().Element(CellStyle).Text("Inscriptions En Attente");
-                    table.Cell().Element(CellStyle).Text(sessionStats.PendingRegistrations.ToString());
-                    table.Cell().Element(CellStyle).Text("Réinscriptions");
-                    table.Cell().Element(CellStyle).Text(sessionStats.ReregistrationCount.ToString());
-
-                    table.Cell().Element(CellStyle).Text("Nouvelles Inscriptions");
-                    table.Cell().Element(CellStyle).Text(sessionStats.NewRegistrationCount.ToString());
-                    table.Cell().Element(CellStyle).Text("Frais Totaux Payés");
-                    table.Cell().Element(CellStyle).Text(sessionStats.PaidFees.ToString("C"));
-
-                    table.Cell().Element(CellStyle).Text("Frais Attendus");
-                    table.Cell().Element(CellStyle).Text(sessionStats.ExpectedFees.ToString("C"));
-                    table.Cell().Element(CellStyle).Text("Inscriptions Non Payées");
-                    table.Cell().Element(CellStyle).Text(sessionStats.UnpaidCount.ToString());
-
-                    table.Cell().Element(CellStyle).Text("Taux de Validation (%)");
-                    table.Cell().Element(CellStyle).Text(sessionStats.ValidationRate.ToString("F2"));
-                    table.Cell().Element(CellStyle).Text("Taux de Paiement (%)");
-                    table.Cell().Element(CellStyle).Text(sessionStats.PaymentRate.ToString("F2"));
-                });
+                }
+                else
+                {
+                    column.Item().Element(EmptyDataStyle).Text("Aucune donnée disponible");
+                }
             });
-
-            return container;
         }
 
-        private IContainer CreateCourseStatsSection(IContainer container)
+        // StatisticsPersession.CreateCourseStatsSection(IContainer container)
+        private void CreateCourseStatsSection(IContainer container)
         {
-            container.PaddingVertical(10).Element(section =>
+            container.PaddingVertical(10).Column(column =>
             {
-                section.Row(row =>
+                column.Item().Row(row =>
                 {
                     row.RelativeItem().Column(col =>
                     {
@@ -420,10 +364,10 @@ namespace Ceilapp.Components.Pages.Statistics
                         col.Item().PaddingVertical(5).LineHorizontal(Colors.Black);
                     });
                 });
-
+        
                 if (courseStats.Any())
                 {
-                    section.Table(table =>
+                    column.Item().Table(table =>
                     {
                         table.ColumnsDefinition(columns =>
                         {
@@ -434,7 +378,7 @@ namespace Ceilapp.Components.Pages.Statistics
                             columns.RelativeColumn(1.5f);
                             columns.RelativeColumn(1.5f);
                         });
-
+        
                         table.Header(header =>
                         {
                             header.Cell().Element(HeaderCellStyle).Text("Cours").SemiBold();
@@ -444,7 +388,7 @@ namespace Ceilapp.Components.Pages.Statistics
                             header.Cell().Element(HeaderCellStyle).Text("Frais Payés").SemiBold();
                             header.Cell().Element(HeaderCellStyle).Text("Frais Attendus").SemiBold();
                         });
-
+        
                         foreach (var stat in courseStats)
                         {
                             table.Cell().Element(CellStyle).Text(stat.CourseName);
@@ -458,18 +402,17 @@ namespace Ceilapp.Components.Pages.Statistics
                 }
                 else
                 {
-                    section.Element(EmptyDataStyle).Text("Aucune donnée disponible");
+                    column.Item().Element(EmptyDataStyle).Text("Aucune donnée disponible");
                 }
             });
-
-            return container;
         }
 
-        private IContainer CreateProfessionStatsSection(IContainer container)
+        // StatisticsPersession.CreateProfessionStatsSection(IContainer container)
+        private void CreateProfessionStatsSection(IContainer container)
         {
-            container.PaddingVertical(10).Element(section =>
+            container.PaddingVertical(10).Column(column =>
             {
-                section.Row(row =>
+                column.Item().Row(row =>
                 {
                     row.RelativeItem().Column(col =>
                     {
@@ -480,7 +423,7 @@ namespace Ceilapp.Components.Pages.Statistics
 
                 if (professionStats.Any())
                 {
-                    section.Table(table =>
+                    column.Item().Table(table =>
                     {
                         table.ColumnsDefinition(columns =>
                         {
@@ -515,18 +458,17 @@ namespace Ceilapp.Components.Pages.Statistics
                 }
                 else
                 {
-                    section.Element(EmptyDataStyle).Text("Aucune donnée disponible");
+                    column.Item().Element(EmptyDataStyle).Text("Aucune donnée disponible");
                 }
             });
-
-            return container;
         }
 
-        private IContainer CreateCourseLevelStatsSection(IContainer container)
+        // StatisticsPersession.CreateCourseLevelStatsSection(IContainer container)
+        private void CreateCourseLevelStatsSection(IContainer container)
         {
-            container.PaddingVertical(10).Element(section =>
+            container.PaddingVertical(10).Column(column =>
             {
-                section.Row(row =>
+                column.Item().Row(row =>
                 {
                     row.RelativeItem().Column(col =>
                     {
@@ -537,7 +479,7 @@ namespace Ceilapp.Components.Pages.Statistics
 
                 if (courseLevelStats.Any())
                 {
-                    section.Table(table =>
+                    column.Item().Table(table =>
                     {
                         table.ColumnsDefinition(columns =>
                         {
@@ -575,11 +517,9 @@ namespace Ceilapp.Components.Pages.Statistics
                 }
                 else
                 {
-                    section.Element(EmptyDataStyle).Text("Aucune donnée disponible");
+                    column.Item().Element(EmptyDataStyle).Text("Aucune donnée disponible");
                 }
             });
-
-            return container;
         }
 
         private static IContainer CellStyle(IContainer container)
