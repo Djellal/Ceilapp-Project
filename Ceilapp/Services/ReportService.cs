@@ -255,22 +255,24 @@ namespace Ceilapp
                 }
 
                 // Get all registrations for this session
-                var registrations = session.CourseRegistrations.ToList();
+                var allRegistrations = session.CourseRegistrations.ToList();
+                var validatedRegistrations = allRegistrations.Where(r => r.RegistrationValidated).ToList();
 
                 // Calculate statistics
-                var totalRegistrations = registrations.Count;
-                var totalFeesCollected = registrations.Sum(r => r.PaidFeeValue);
-                var totalExpectedFees = registrations.Sum(r => r.FeeValue);
+                var totalRegistrations = allRegistrations.Count;
+                var validatedRegistrationsCount = validatedRegistrations.Count;
+                var totalFeesCollected = validatedRegistrations.Sum(r => r.PaidFeeValue);
+                var totalExpectedFees = validatedRegistrations.Sum(r => r.FeeValue);
                 var unpaidFees = totalExpectedFees - totalFeesCollected;
                 
-                // Group registrations by course type
-                var registrationsByCourseType = registrations
+                // Group validated registrations by course type
+                var registrationsByCourseType = validatedRegistrations
                     .GroupBy(r => r.Course?.CourseType?.Name ?? "Unknown")
                     .Select(g => new { CourseTypeName = g.Key, Count = g.Count() })
                     .ToList();
                 
-                // Group registrations by profession
-                var registrationsByProfession = registrations
+                // Group validated registrations by profession
+                var registrationsByProfession = validatedRegistrations
                     .Where(r => r.Profession != null)
                     .GroupBy(r => r.Profession.Name)
                     .Select(g => new { ProfessionName = g.Key, Count = g.Count() })
@@ -278,8 +280,8 @@ namespace Ceilapp
                     .Take(5) // Top 5 professions
                     .ToList();
                 
-                // Group registrations by origin state
-                var registrationsByState = registrations
+                // Group validated registrations by origin state
+                var registrationsByState = validatedRegistrations
                     .Where(r => r.State != null)
                     .GroupBy(r => r.State.Name)
                     .Select(g => new { StateName = g.Key, Count = g.Count() })
@@ -287,9 +289,17 @@ namespace Ceilapp
                     .Take(5) // Top 5 states
                     .ToList();
 
-                // Count new registrations vs re-registrations
-                var newRegistrations = registrations.Count(r => !r.IsReregistration);
-                var reRegistrations = registrations.Count(r => r.IsReregistration);
+                // Count new registrations vs re-registrations (for validated only)
+                var newRegistrations = validatedRegistrations.Count(r => !r.IsReregistration);
+                var reRegistrations = validatedRegistrations.Count(r => r.IsReregistration);
+                
+                // Group validated registrations by course
+                var registrationsByCourse = validatedRegistrations
+                    .Where(r => r.Course != null)
+                    .GroupBy(r => r.Course.Name)
+                    .Select(g => new { CourseName = g.Key, Count = g.Count() })
+                    .OrderByDescending(g => g.Count)
+                    .ToList();
 
                 QuestPDF.Settings.License = LicenseType.Community;
 
@@ -322,6 +332,9 @@ namespace Ceilapp
                                 
                                 // Registrations by course type
                                 x.Item().Element(ContainerCourseTypeStats);
+                                
+                                // Registrations by course
+                                x.Item().Element(ContainerCourseStats);
                                 
                                 // Registrations by profession (top 5)
                                 x.Item().Element(ContainerProfessionStats);
@@ -369,7 +382,7 @@ namespace Ceilapp
                             columns.RelativeColumn();
                         });
 
-                        // Row 1: Total registrations and fees collected
+                        // Row 1: Total registrations and validated registrations
                         table.Cell().Border(1).BorderColor(Colors.Grey.Lighten2).Background(Colors.Blue.Lighten5).Padding(5)
                             .AlignCenter().Column(col =>
                             {
@@ -380,8 +393,8 @@ namespace Ceilapp
                         table.Cell().Border(1).BorderColor(Colors.Grey.Lighten2).Background(Colors.Green.Lighten5).Padding(5)
                             .AlignCenter().Column(col =>
                             {
-                                col.Item().Text("Frais Collectés (DA)").SemiBold();
-                                col.Item().Text(totalFeesCollected.ToString("N2", CultureInfo.InvariantCulture)).FontSize(14).SemiBold();
+                                col.Item().Text("Inscriptions Validées").SemiBold();
+                                col.Item().Text(validatedRegistrationsCount.ToString()).FontSize(14).SemiBold();
                             });
 
                         table.Cell().Border(1).BorderColor(Colors.Grey.Lighten2).Background(Colors.Red.Lighten5).Padding(5)
@@ -397,7 +410,7 @@ namespace Ceilapp
                 {
                     container.PaddingVertical(5).Column(column =>
                     {
-                        column.Item().PaddingBottom(5).Text("Répartition par Type de Cours").FontSize(12).SemiBold();
+                        column.Item().PaddingBottom(5).Text("Répartition par Type de Cours (Inscriptions Validées)").FontSize(12).SemiBold();
                         
                         if (registrationsByCourseType.Any())
                         {
@@ -417,9 +430,48 @@ namespace Ceilapp
 
                                 foreach (var item in registrationsByCourseType)
                                 {
-                                    var percentage = totalRegistrations > 0 ? (double)item.Count / totalRegistrations * 100 : 0;
+                                    var percentage = validatedRegistrationsCount > 0 ? (double)item.Count / validatedRegistrationsCount * 100 : 0;
                                     
                                     table.Cell().BorderBottom(1).BorderColor(Colors.Grey.Lighten3).Padding(5).Text(item.CourseTypeName);
+                                    table.Cell().BorderBottom(1).BorderColor(Colors.Grey.Lighten3).Padding(5).AlignCenter().Text(item.Count.ToString());
+                                    table.Cell().BorderBottom(1).BorderColor(Colors.Grey.Lighten3).Padding(5).AlignRight().Text($"{percentage:F1}%");
+                                }
+                            });
+                        }
+                        else
+                        {
+                            column.Item().Padding(10).Element(EmptyDataMessage);
+                        }
+                    });
+                }
+
+                void ContainerCourseStats(IContainer container)
+                {
+                    container.PaddingVertical(5).Column(column =>
+                    {
+                        column.Item().PaddingBottom(5).Text("Répartition par Cours (Inscriptions Validées)").FontSize(12).SemiBold();
+                        
+                        if (registrationsByCourse.Any())
+                        {
+                            column.Item().Table(table =>
+                            {
+                                table.ColumnsDefinition(columns =>
+                                {
+                                    columns.RelativeColumn(2);
+                                    columns.RelativeColumn(1);
+                                    columns.RelativeColumn(1);
+                                });
+
+                                // Header
+                                table.Cell().Background(Colors.Grey.Lighten2).Padding(5).Text("Cours").SemiBold();
+                                table.Cell().Background(Colors.Grey.Lighten2).Padding(5).AlignCenter().Text("Nombre").SemiBold();
+                                table.Cell().Background(Colors.Grey.Lighten2).Padding(5).AlignRight().Text("Pourcentage").SemiBold();
+
+                                foreach (var item in registrationsByCourse)
+                                {
+                                    var percentage = validatedRegistrationsCount > 0 ? (double)item.Count / validatedRegistrationsCount * 100 : 0;
+                                    
+                                    table.Cell().BorderBottom(1).BorderColor(Colors.Grey.Lighten3).Padding(5).Text(item.CourseName);
                                     table.Cell().BorderBottom(1).BorderColor(Colors.Grey.Lighten3).Padding(5).AlignCenter().Text(item.Count.ToString());
                                     table.Cell().BorderBottom(1).BorderColor(Colors.Grey.Lighten3).Padding(5).AlignRight().Text($"{percentage:F1}%");
                                 }
@@ -436,7 +488,7 @@ namespace Ceilapp
                 {
                     container.PaddingVertical(5).Column(column =>
                     {
-                        column.Item().PaddingBottom(5).Text("Top 5 des Professions par Inscriptions").FontSize(12).SemiBold();
+                        column.Item().PaddingBottom(5).Text("Top 5 des Professions par Inscriptions (Validées)").FontSize(12).SemiBold();
                         
                         if (registrationsByProfession.Any())
                         {
@@ -456,7 +508,7 @@ namespace Ceilapp
 
                                 foreach (var item in registrationsByProfession)
                                 {
-                                    var percentage = totalRegistrations > 0 ? (double)item.Count / totalRegistrations * 100 : 0;
+                                    var percentage = validatedRegistrationsCount > 0 ? (double)item.Count / validatedRegistrationsCount * 100 : 0;
                                     
                                     table.Cell().BorderBottom(1).BorderColor(Colors.Grey.Lighten3).Padding(5).Text(item.ProfessionName);
                                     table.Cell().BorderBottom(1).BorderColor(Colors.Grey.Lighten3).Padding(5).AlignCenter().Text(item.Count.ToString());
@@ -475,7 +527,7 @@ namespace Ceilapp
                 {
                     container.PaddingVertical(5).Column(column =>
                     {
-                        column.Item().PaddingBottom(5).Text("Top 5 des États par Origine").FontSize(12).SemiBold();
+                        column.Item().PaddingBottom(5).Text("Top 5 des États par Origine (Inscriptions Validées)").FontSize(12).SemiBold();
                         
                         if (registrationsByState.Any())
                         {
@@ -495,7 +547,7 @@ namespace Ceilapp
 
                                 foreach (var item in registrationsByState)
                                 {
-                                    var percentage = totalRegistrations > 0 ? (double)item.Count / totalRegistrations * 100 : 0;
+                                    var percentage = validatedRegistrationsCount > 0 ? (double)item.Count / validatedRegistrationsCount * 100 : 0;
                                     
                                     table.Cell().BorderBottom(1).BorderColor(Colors.Grey.Lighten3).Padding(5).Text(item.StateName);
                                     table.Cell().BorderBottom(1).BorderColor(Colors.Grey.Lighten3).Padding(5).AlignCenter().Text(item.Count.ToString());
@@ -514,7 +566,7 @@ namespace Ceilapp
                 {
                     container.PaddingVertical(5).Column(column =>
                     {
-                        column.Item().PaddingBottom(5).Text("Répartition des Types d'Inscriptions").FontSize(12).SemiBold();
+                        column.Item().PaddingBottom(5).Text("Répartition des Types d'Inscriptions (Validées)").FontSize(12).SemiBold();
                         
                         column.Item().Table(table =>
                         {
@@ -531,13 +583,13 @@ namespace Ceilapp
                             table.Cell().Background(Colors.Grey.Lighten2).Padding(5).AlignRight().Text("Pourcentage").SemiBold();
 
                             // New registrations
-                            var newPercentage = totalRegistrations > 0 ? (double)newRegistrations / totalRegistrations * 100 : 0;
+                            var newPercentage = validatedRegistrationsCount > 0 ? (double)newRegistrations / validatedRegistrationsCount * 100 : 0;
                             table.Cell().BorderBottom(1).BorderColor(Colors.Grey.Lighten3).Padding(5).Text("Nouvelle Inscription");
                             table.Cell().BorderBottom(1).BorderColor(Colors.Grey.Lighten3).Padding(5).AlignCenter().Text(newRegistrations.ToString());
                             table.Cell().BorderBottom(1).BorderColor(Colors.Grey.Lighten3).Padding(5).AlignRight().Text($"{newPercentage:F1}%");
 
                             // Re-registrations
-                            var rePercentage = totalRegistrations > 0 ? (double)reRegistrations / totalRegistrations * 100 : 0;
+                            var rePercentage = validatedRegistrationsCount > 0 ? (double)reRegistrations / validatedRegistrationsCount * 100 : 0;
                             table.Cell().BorderBottom(1).BorderColor(Colors.Grey.Lighten3).Padding(5).Text("Réinscription");
                             table.Cell().BorderBottom(1).BorderColor(Colors.Grey.Lighten3).Padding(5).AlignCenter().Text(reRegistrations.ToString());
                             table.Cell().BorderBottom(1).BorderColor(Colors.Grey.Lighten3).Padding(5).AlignRight().Text($"{rePercentage:F1}%");
