@@ -54,6 +54,7 @@ namespace Ceilapp.Controllers
             catch (Exception ex)
             {
                 // Log the exception details here if needed
+                
                 return StatusCode(500, "An error occurred while processing your request");
             }
         }
