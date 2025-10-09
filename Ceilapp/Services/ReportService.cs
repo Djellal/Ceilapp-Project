@@ -235,6 +235,8 @@ namespace Ceilapp
             return outputPath;
         }
 
+
+
         public async Task<byte[]> GenererStatisticsReportAsync(int sessionId)
         {
             try
@@ -403,8 +405,8 @@ namespace Ceilapp
                         table.Cell().Border(1).BorderColor(Colors.Grey.Lighten2).Background(Colors.Red.Lighten5).Padding(5)
                             .AlignCenter().Column(col =>
                             {
-                                col.Item().Text("Frais Impayés (DA)").SemiBold();
-                                col.Item().Text(unpaidFees.ToString("N2", CultureInfo.InvariantCulture)).FontSize(14).SemiBold();
+                                col.Item().Text("Frais collectées (DA)").SemiBold();
+                                col.Item().Text(totalFeesCollected.ToString("N2", CultureInfo.InvariantCulture)).FontSize(14).SemiBold();
                             });
                     });
                 }
@@ -455,33 +457,61 @@ namespace Ceilapp
                 {
                     container.PaddingTop(10).Column(column =>
                     {
-                        column.Item().PaddingBottom(5).Text("Visualisation:").FontSize(10).SemiBold();
-                        
-                        var maxCount = registrationsByCourseType.Any() ? registrationsByCourseType.Max(x => x.Count) : 1;
-                        
-                        foreach (var item in registrationsByCourseType.Take(10)) // Limit to top 10 to avoid clutter
+                        if (registrationsByCourseType.Any())
                         {
-                            var chartWidth = (float)(item.Count * 100.0 / maxCount); // Calculate chart width as percentage of max value
+                            var labels = registrationsByCourseType.Select(x => x.CourseTypeName).ToArray();
+                            var values = registrationsByCourseType.Select(x => (double)x.Count).ToArray();
+                            var colors = new[] { "#1f77b4", "#ff7f0e", "#2ca02c", "#d62728", "#9467bd", "#8c564b", "#e377c2", "#7f7f7f", "#bcbd22", "#17becf" };
                             
-                            column.Item().PaddingBottom(5).Row(row =>
+                            column.Item().Element(visual =>
                             {
-                                row.RelativeItem(3).Column(col =>
+                                visual.Column(col =>
                                 {
-                                    col.Item().AlignMiddle().Text($"{item.CourseTypeName}").FontSize(9);
-                                });
-                                
-                                row.RelativeItem(7).Column(col =>
-                                {
-                                    col.Item().PaddingVertical(2)
-                                        .Height(10)
-                                        .Width(chartWidth * 3) // Reduced scale to fit better
-                                        .Background(Colors.Blue.Lighten3);
+                                    col.Item().PaddingBottom(5).Text("Répartition par Type de Cours").FontSize(12).SemiBold();
                                     
-                                    // Add the value as text inside the bar
-                                    col.Item().AlignCenter().AlignMiddle()
-                                        .Text($"{item.Count}")
-                                        .FontSize(8)
-                                        .FontColor(Colors.Grey.Darken2);
+                                    // Calculate total for percentage calculation
+                                    double total = values.Sum();
+                                    if (total == 0) return;
+                                    
+                                    // Create a legend-style visualization
+                                    for (int i = 0; i < labels.Length; i++)
+                                    {
+                                        double percentage = (values[i] / total) * 100;
+                                        
+                                        col.Item().Row(row =>
+                                        {
+                                            // Color swatch
+                                            row.ConstantItem(15)
+                                                .Height(15)
+                                                .Background(colors[i % colors.Length])
+                                                .Border(1)
+                                                .BorderColor(Colors.Grey.Medium);
+                                            
+                                            // Label and percentage
+                                            row.RelativeItem(3)
+                                                .AlignMiddle()
+                                                .Text($"{labels[i]}: {values[i]} ({percentage:F1}%)");
+                                        });
+                                    }
+                                    
+                                    // Create a simple visualization that looks like segments
+                                    col.Item().PaddingTop(10).Height(20)
+                                        .Background(Colors.Grey.Lighten4)
+                                        .AlignCenter()
+                                        .Row(row =>
+                                        {
+                                            for (int i = 0; i < values.Length; i++)
+                                            {
+                                                double proportion = values[i] / total;
+                                                int widthRatio = (int)(proportion * 100); // Convert to percentage-based width
+                                                
+                                                if (widthRatio > 0) // Only show if the value is greater than 0
+                                                {
+                                                    row.RelativeItem(widthRatio)
+                                                        .Background(colors[i % colors.Length]);
+                                                }
+                                            }
+                                        });
                                 });
                             });
                         }
@@ -534,33 +564,61 @@ namespace Ceilapp
                 {
                     container.PaddingTop(10).Column(column =>
                     {
-                        column.Item().PaddingBottom(5).Text("Visualisation:").FontSize(10).SemiBold();
-                        
-                        var maxCount = registrationsByCourse.Any() ? registrationsByCourse.Max(x => x.Count) : 1;
-                        
-                        foreach (var item in registrationsByCourse.Take(10)) // Limit to top 10 to avoid clutter
+                        if (registrationsByCourse.Any())
                         {
-                            var chartWidth = (float)(item.Count * 100.0 / maxCount); // Calculate chart width as percentage of max value
+                            var labels = registrationsByCourse.Select(x => x.CourseName).ToArray();
+                            var values = registrationsByCourse.Select(x => (double)x.Count).ToArray();
+                            var colors = new[] { "#1f77b4", "#ff7f0e", "#2ca02c", "#d62728", "#9467bd", "#8c564b", "#e377c2", "#7f7f7f", "#bcbd22", "#17becf" };
                             
-                            column.Item().PaddingBottom(5).Row(row =>
+                            column.Item().Element(visual =>
                             {
-                                row.RelativeItem(3).Column(col =>
+                                visual.Column(col =>
                                 {
-                                    col.Item().AlignMiddle().Text($"{item.CourseName}").FontSize(9);
-                                });
-                                
-                                row.RelativeItem(7).Column(col =>
-                                {
-                                    col.Item().PaddingVertical(2)
-                                        .Height(10)
-                                        .Width(chartWidth * 3) // Reduced scale to fit better
-                                        .Background(Colors.Green.Lighten3);
+                                    col.Item().PaddingBottom(5).Text("Répartition par Cours").FontSize(12).SemiBold();
                                     
-                                    // Add the value as text inside the bar
-                                    col.Item().AlignCenter().AlignMiddle()
-                                        .Text($"{item.Count}")
-                                        .FontSize(8)
-                                        .FontColor(Colors.Grey.Darken2);
+                                    // Calculate total for percentage calculation
+                                    double total = values.Sum();
+                                    if (total == 0) return;
+                                    
+                                    // Create a legend-style visualization
+                                    for (int i = 0; i < labels.Length; i++)
+                                    {
+                                        double percentage = (values[i] / total) * 100;
+                                        
+                                        col.Item().Row(row =>
+                                        {
+                                            // Color swatch
+                                            row.ConstantItem(15)
+                                                .Height(15)
+                                                .Background(colors[i % colors.Length])
+                                                .Border(1)
+                                                .BorderColor(Colors.Grey.Medium);
+                                            
+                                            // Label and percentage
+                                            row.RelativeItem(3)
+                                                .AlignMiddle()
+                                                .Text($"{labels[i]}: {values[i]} ({percentage:F1}%)");
+                                        });
+                                    }
+                                    
+                                    // Create a simple visualization that looks like segments
+                                    col.Item().PaddingTop(10).Height(20)
+                                        .Background(Colors.Grey.Lighten4)
+                                        .AlignCenter()
+                                        .Row(row =>
+                                        {
+                                            for (int i = 0; i < values.Length; i++)
+                                            {
+                                                double proportion = values[i] / total;
+                                                int widthRatio = (int)(proportion * 100); // Convert to percentage-based width
+                                                
+                                                if (widthRatio > 0) // Only show if the value is greater than 0
+                                                {
+                                                    row.RelativeItem(widthRatio)
+                                                        .Background(colors[i % colors.Length]);
+                                                }
+                                            }
+                                        });
                                 });
                             });
                         }
@@ -613,33 +671,61 @@ namespace Ceilapp
                 {
                     container.PaddingTop(10).Column(column =>
                     {
-                        column.Item().PaddingBottom(5).Text("Visualisation:").FontSize(10).SemiBold();
-                        
-                        var maxCount = registrationsByProfession.Any() ? registrationsByProfession.Max(x => x.Count) : 1;
-                        
-                        foreach (var item in registrationsByProfession.Take(10)) // Limit to top 10 to avoid clutter
+                        if (registrationsByProfession.Any())
                         {
-                            var chartWidth = (float)(item.Count * 100.0 / maxCount); // Calculate chart width as percentage of max value
+                            var labels = registrationsByProfession.Select(x => x.ProfessionName).ToArray();
+                            var values = registrationsByProfession.Select(x => (double)x.Count).ToArray();
+                            var colors = new[] { "#1f77b4", "#ff7f0e", "#2ca02c", "#d62728", "#9467bd" };
                             
-                            column.Item().PaddingBottom(5).Row(row =>
+                            column.Item().Element(visual =>
                             {
-                                row.RelativeItem(3).Column(col =>
+                                visual.Column(col =>
                                 {
-                                    col.Item().AlignMiddle().Text($"{item.ProfessionName}").FontSize(9);
-                                });
-                                
-                                row.RelativeItem(7).Column(col =>
-                                {
-                                    col.Item().PaddingVertical(2)
-                                        .Height(10)
-                                        .Width(chartWidth * 3) // Reduced scale to fit better
-                                        .Background(Colors.Orange.Lighten3);
+                                    col.Item().PaddingBottom(5).Text("Répartition par Profession").FontSize(12).SemiBold();
                                     
-                                    // Add the value as text inside the bar
-                                    col.Item().AlignCenter().AlignMiddle()
-                                        .Text($"{item.Count}")
-                                        .FontSize(8)
-                                        .FontColor(Colors.Grey.Darken2);
+                                    // Calculate total for percentage calculation
+                                    double total = values.Sum();
+                                    if (total == 0) return;
+                                    
+                                    // Create a legend-style visualization
+                                    for (int i = 0; i < labels.Length; i++)
+                                    {
+                                        double percentage = (values[i] / total) * 100;
+                                        
+                                        col.Item().Row(row =>
+                                        {
+                                            // Color swatch
+                                            row.ConstantItem(15)
+                                                .Height(15)
+                                                .Background(colors[i % colors.Length])
+                                                .Border(1)
+                                                .BorderColor(Colors.Grey.Medium);
+                                            
+                                            // Label and percentage
+                                            row.RelativeItem(3)
+                                                .AlignMiddle()
+                                                .Text($"{labels[i]}: {values[i]} ({percentage:F1}%)");
+                                        });
+                                    }
+                                    
+                                    // Create a simple visualization that looks like segments
+                                    col.Item().PaddingTop(10).Height(20)
+                                        .Background(Colors.Grey.Lighten4)
+                                        .AlignCenter()
+                                        .Row(row =>
+                                        {
+                                            for (int i = 0; i < values.Length; i++)
+                                            {
+                                                double proportion = values[i] / total;
+                                                int widthRatio = (int)(proportion * 100); // Convert to percentage-based width
+                                                
+                                                if (widthRatio > 0) // Only show if the value is greater than 0
+                                                {
+                                                    row.RelativeItem(widthRatio)
+                                                        .Background(colors[i % colors.Length]);
+                                                }
+                                            }
+                                        });
                                 });
                             });
                         }
@@ -692,33 +778,61 @@ namespace Ceilapp
                 {
                     container.PaddingTop(10).Column(column =>
                     {
-                        column.Item().PaddingBottom(5).Text("Visualisation:").FontSize(10).SemiBold();
-                        
-                        var maxCount = registrationsByState.Any() ? registrationsByState.Max(x => x.Count) : 1;
-                        
-                        foreach (var item in registrationsByState.Take(10)) // Limit to top 10 to avoid clutter
+                        if (registrationsByState.Any())
                         {
-                            var chartWidth = (float)(item.Count * 100.0 / maxCount); // Calculate chart width as percentage of max value
+                            var labels = registrationsByState.Select(x => x.StateName).ToArray();
+                            var values = registrationsByState.Select(x => (double)x.Count).ToArray();
+                            var colors = new[] { "#1f77b4", "#ff7f0e", "#2ca02c", "#d62728", "#9467bd" };
                             
-                            column.Item().PaddingBottom(5).Row(row =>
+                            column.Item().Element(visual =>
                             {
-                                row.RelativeItem(3).Column(col =>
+                                visual.Column(col =>
                                 {
-                                    col.Item().AlignMiddle().Text($"{item.StateName}").FontSize(9);
-                                });
-                                
-                                row.RelativeItem(7).Column(col =>
-                                {
-                                    col.Item().PaddingVertical(2)
-                                        .Height(10)
-                                        .Width(chartWidth * 3) // Reduced scale to fit better
-                                        .Background(Colors.Purple.Lighten3);
+                                    col.Item().PaddingBottom(5).Text("Répartition par État").FontSize(12).SemiBold();
                                     
-                                    // Add the value as text inside the bar
-                                    col.Item().AlignCenter().AlignMiddle()
-                                        .Text($"{item.Count}")
-                                        .FontSize(8)
-                                        .FontColor(Colors.Grey.Darken2);
+                                    // Calculate total for percentage calculation
+                                    double total = values.Sum();
+                                    if (total == 0) return;
+                                    
+                                    // Create a legend-style visualization
+                                    for (int i = 0; i < labels.Length; i++)
+                                    {
+                                        double percentage = (values[i] / total) * 100;
+                                        
+                                        col.Item().Row(row =>
+                                        {
+                                            // Color swatch
+                                            row.ConstantItem(15)
+                                                .Height(15)
+                                                .Background(colors[i % colors.Length])
+                                                .Border(1)
+                                                .BorderColor(Colors.Grey.Medium);
+                                            
+                                            // Label and percentage
+                                            row.RelativeItem(3)
+                                                .AlignMiddle()
+                                                .Text($"{labels[i]}: {values[i]} ({percentage:F1}%)");
+                                        });
+                                    }
+                                    
+                                    // Create a simple visualization that looks like segments
+                                    col.Item().PaddingTop(10).Height(20)
+                                        .Background(Colors.Grey.Lighten4)
+                                        .AlignCenter()
+                                        .Row(row =>
+                                        {
+                                            for (int i = 0; i < values.Length; i++)
+                                            {
+                                                double proportion = values[i] / total;
+                                                int widthRatio = (int)(proportion * 100); // Convert to percentage-based width
+                                                
+                                                if (widthRatio > 0) // Only show if the value is greater than 0
+                                                {
+                                                    row.RelativeItem(widthRatio)
+                                                        .Background(colors[i % colors.Length]);
+                                                }
+                                            }
+                                        });
                                 });
                             });
                         }
@@ -767,40 +881,68 @@ namespace Ceilapp
                 {
                     container.PaddingTop(10).Column(column =>
                     {
-                        column.Item().PaddingBottom(5).Text("Visualisation:").FontSize(10).SemiBold();
-                        
+                        // Generate pie chart data
                         var registrationTypes = new[]
                         {
                             new { Name = "Nouvelle Inscription", Count = newRegistrations },
                             new { Name = "Réinscription", Count = reRegistrations }
-                        };
+                        }.Where(x => x.Count > 0).ToArray(); // Only include non-zero values
                         
-                        var maxCount = Math.Max(newRegistrations, reRegistrations);
-                        if (maxCount == 0) maxCount = 1; // Avoid division by zero
-                        
-                        foreach (var item in registrationTypes)
+                        if (registrationTypes.Length > 0)
                         {
-                            var chartWidth = (float)(item.Count * 100.0 / maxCount); // Calculate chart width as percentage of max value
+                            var labels = registrationTypes.Select(x => x.Name).ToArray();
+                            var values = registrationTypes.Select(x => (double)x.Count).ToArray();
+                            var colors = new[] { "#1f77b4", "#ff7f0e" };
                             
-                            column.Item().PaddingBottom(5).Row(row =>
+                            column.Item().Element(visual =>
                             {
-                                row.RelativeItem(3).Column(col =>
+                                visual.Column(col =>
                                 {
-                                    col.Item().AlignMiddle().Text($"{item.Name}").FontSize(9);
-                                });
-                                
-                                row.RelativeItem(7).Column(col =>
-                                {
-                                    col.Item().PaddingVertical(2)
-                                        .Height(10)
-                                        .Width(chartWidth * 3) // Reduced scale to fit better
-                                        .Background(Colors.Teal.Lighten3);
+                                    col.Item().PaddingBottom(5).Text("Répartition Types d'Inscriptions").FontSize(12).SemiBold();
                                     
-                                    // Add the value as text inside the bar
-                                    col.Item().AlignCenter().AlignMiddle()
-                                        .Text($"{item.Count}")
-                                        .FontSize(8)
-                                        .FontColor(Colors.Grey.Darken2);
+                                    // Calculate total for percentage calculation
+                                    double total = values.Sum();
+                                    if (total == 0) return;
+                                    
+                                    // Create a legend-style visualization
+                                    for (int i = 0; i < labels.Length; i++)
+                                    {
+                                        double percentage = (values[i] / total) * 100;
+                                        
+                                        col.Item().Row(row =>
+                                        {
+                                            // Color swatch
+                                            row.ConstantItem(15)
+                                                .Height(15)
+                                                .Background(colors[i % colors.Length])
+                                                .Border(1)
+                                                .BorderColor(Colors.Grey.Medium);
+                                            
+                                            // Label and percentage
+                                            row.RelativeItem(3)
+                                                .AlignMiddle()
+                                                .Text($"{labels[i]}: {values[i]} ({percentage:F1}%)");
+                                        });
+                                    }
+                                    
+                                    // Create a simple visualization that looks like segments
+                                    col.Item().PaddingTop(10).Height(20)
+                                        .Background(Colors.Grey.Lighten4)
+                                        .AlignCenter()
+                                        .Row(row =>
+                                        {
+                                            for (int i = 0; i < values.Length; i++)
+                                            {
+                                                double proportion = values[i] / total;
+                                                int widthRatio = (int)(proportion * 100); // Convert to percentage-based width
+                                                
+                                                if (widthRatio > 0) // Only show if the value is greater than 0
+                                                {
+                                                    row.RelativeItem(widthRatio)
+                                                        .Background(colors[i % colors.Length]);
+                                                }
+                                            }
+                                        });
                                 });
                             });
                         }
