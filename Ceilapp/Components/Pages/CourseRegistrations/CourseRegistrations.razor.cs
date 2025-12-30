@@ -73,6 +73,8 @@ namespace Ceilapp.Components.Pages.CourseRegistrations
 
             SelectedSession = CurrentSession?.Id;
 
+            await Filter();
+
         }
 
         protected async Task AddButtonClick(MouseEventArgs args)

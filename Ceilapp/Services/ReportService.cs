@@ -457,7 +457,6 @@ namespace Ceilapp
                 {
                     container.PaddingTop(10).Column(column =>
                     {
-<<<<<<< HEAD
                         if (registrationsByCourseType.Any())
                         {
                             var labels = registrationsByCourseType.Select(x => x.CourseTypeName).ToArray();
@@ -513,35 +512,6 @@ namespace Ceilapp
                                                 }
                                             }
                                         });
-=======
-                        column.Item().PaddingBottom(5).Text("Visualisation:").FontSize(10).SemiBold();
-                        
-                        var maxCount = registrationsByCourseType.Any() ? registrationsByCourseType.Max(x => x.Count) : 1;
-                        
-                        foreach (var item in registrationsByCourseType.Take(10)) // Limit to top 10 to avoid clutter
-                        {
-                            var chartWidth = (float)(item.Count * 100.0 / maxCount); // Calculate chart width as percentage of max value
-                            
-                            column.Item().PaddingBottom(5).Row(row =>
-                            {
-                                row.RelativeItem(3).Column(col =>
-                                {
-                                    col.Item().AlignMiddle().Text($"{item.CourseTypeName}").FontSize(9);
-                                });
-                                
-                                row.RelativeItem(7).Column(col =>
-                                {
-                                    col.Item().PaddingVertical(2)
-                                        .Height(10)
-                                        .Width(chartWidth * 3) // Reduced scale to fit better
-                                        .Background(Colors.Blue.Lighten3);
-                                    
-                                    // Add the value as text inside the bar
-                                    col.Item().AlignCenter().AlignMiddle()
-                                        .Text($"{item.Count}")
-                                        .FontSize(8)
-                                        .FontColor(Colors.Grey.Darken2);
->>>>>>> 911ac117cb50b40dedab668cf4bc3f93fc27d030
                                 });
                             });
                         }
@@ -594,7 +564,6 @@ namespace Ceilapp
                 {
                     container.PaddingTop(10).Column(column =>
                     {
-<<<<<<< HEAD
                         if (registrationsByCourse.Any())
                         {
                             var labels = registrationsByCourse.Select(x => x.CourseName).ToArray();
@@ -650,35 +619,6 @@ namespace Ceilapp
                                                 }
                                             }
                                         });
-=======
-                        column.Item().PaddingBottom(5).Text("Visualisation:").FontSize(10).SemiBold();
-                        
-                        var maxCount = registrationsByCourse.Any() ? registrationsByCourse.Max(x => x.Count) : 1;
-                        
-                        foreach (var item in registrationsByCourse.Take(10)) // Limit to top 10 to avoid clutter
-                        {
-                            var chartWidth = (float)(item.Count * 100.0 / maxCount); // Calculate chart width as percentage of max value
-                            
-                            column.Item().PaddingBottom(5).Row(row =>
-                            {
-                                row.RelativeItem(3).Column(col =>
-                                {
-                                    col.Item().AlignMiddle().Text($"{item.CourseName}").FontSize(9);
-                                });
-                                
-                                row.RelativeItem(7).Column(col =>
-                                {
-                                    col.Item().PaddingVertical(2)
-                                        .Height(10)
-                                        .Width(chartWidth * 3) // Reduced scale to fit better
-                                        .Background(Colors.Green.Lighten3);
-                                    
-                                    // Add the value as text inside the bar
-                                    col.Item().AlignCenter().AlignMiddle()
-                                        .Text($"{item.Count}")
-                                        .FontSize(8)
-                                        .FontColor(Colors.Grey.Darken2);
->>>>>>> 911ac117cb50b40dedab668cf4bc3f93fc27d030
                                 });
                             });
                         }
@@ -731,7 +671,6 @@ namespace Ceilapp
                 {
                     container.PaddingTop(10).Column(column =>
                     {
-<<<<<<< HEAD
                         if (registrationsByProfession.Any())
                         {
                             var labels = registrationsByProfession.Select(x => x.ProfessionName).ToArray();
@@ -787,35 +726,6 @@ namespace Ceilapp
                                                 }
                                             }
                                         });
-=======
-                        column.Item().PaddingBottom(5).Text("Visualisation:").FontSize(10).SemiBold();
-                        
-                        var maxCount = registrationsByProfession.Any() ? registrationsByProfession.Max(x => x.Count) : 1;
-                        
-                        foreach (var item in registrationsByProfession.Take(10)) // Limit to top 10 to avoid clutter
-                        {
-                            var chartWidth = (float)(item.Count * 100.0 / maxCount); // Calculate chart width as percentage of max value
-                            
-                            column.Item().PaddingBottom(5).Row(row =>
-                            {
-                                row.RelativeItem(3).Column(col =>
-                                {
-                                    col.Item().AlignMiddle().Text($"{item.ProfessionName}").FontSize(9);
-                                });
-                                
-                                row.RelativeItem(7).Column(col =>
-                                {
-                                    col.Item().PaddingVertical(2)
-                                        .Height(10)
-                                        .Width(chartWidth * 3) // Reduced scale to fit better
-                                        .Background(Colors.Orange.Lighten3);
-                                    
-                                    // Add the value as text inside the bar
-                                    col.Item().AlignCenter().AlignMiddle()
-                                        .Text($"{item.Count}")
-                                        .FontSize(8)
-                                        .FontColor(Colors.Grey.Darken2);
->>>>>>> 911ac117cb50b40dedab668cf4bc3f93fc27d030
                                 });
                             });
                         }
@@ -868,7 +778,6 @@ namespace Ceilapp
                 {
                     container.PaddingTop(10).Column(column =>
                     {
-<<<<<<< HEAD
                         if (registrationsByState.Any())
                         {
                             var labels = registrationsByState.Select(x => x.StateName).ToArray();
@@ -924,35 +833,6 @@ namespace Ceilapp
                                                 }
                                             }
                                         });
-=======
-                        column.Item().PaddingBottom(5).Text("Visualisation:").FontSize(10).SemiBold();
-                        
-                        var maxCount = registrationsByState.Any() ? registrationsByState.Max(x => x.Count) : 1;
-                        
-                        foreach (var item in registrationsByState.Take(10)) // Limit to top 10 to avoid clutter
-                        {
-                            var chartWidth = (float)(item.Count * 100.0 / maxCount); // Calculate chart width as percentage of max value
-                            
-                            column.Item().PaddingBottom(5).Row(row =>
-                            {
-                                row.RelativeItem(3).Column(col =>
-                                {
-                                    col.Item().AlignMiddle().Text($"{item.StateName}").FontSize(9);
-                                });
-                                
-                                row.RelativeItem(7).Column(col =>
-                                {
-                                    col.Item().PaddingVertical(2)
-                                        .Height(10)
-                                        .Width(chartWidth * 3) // Reduced scale to fit better
-                                        .Background(Colors.Purple.Lighten3);
-                                    
-                                    // Add the value as text inside the bar
-                                    col.Item().AlignCenter().AlignMiddle()
-                                        .Text($"{item.Count}")
-                                        .FontSize(8)
-                                        .FontColor(Colors.Grey.Darken2);
->>>>>>> 911ac117cb50b40dedab668cf4bc3f93fc27d030
                                 });
                             });
                         }
@@ -1001,17 +881,11 @@ namespace Ceilapp
                 {
                     container.PaddingTop(10).Column(column =>
                     {
-<<<<<<< HEAD
                         // Generate pie chart data
-=======
-                        column.Item().PaddingBottom(5).Text("Visualisation:").FontSize(10).SemiBold();
-                        
->>>>>>> 911ac117cb50b40dedab668cf4bc3f93fc27d030
                         var registrationTypes = new[]
                         {
                             new { Name = "Nouvelle Inscription", Count = newRegistrations },
                             new { Name = "Réinscription", Count = reRegistrations }
-<<<<<<< HEAD
                         }.Where(x => x.Count > 0).ToArray(); // Only include non-zero values
                         
                         if (registrationTypes.Length > 0)
@@ -1069,36 +943,6 @@ namespace Ceilapp
                                                 }
                                             }
                                         });
-=======
-                        };
-                        
-                        var maxCount = Math.Max(newRegistrations, reRegistrations);
-                        if (maxCount == 0) maxCount = 1; // Avoid division by zero
-                        
-                        foreach (var item in registrationTypes)
-                        {
-                            var chartWidth = (float)(item.Count * 100.0 / maxCount); // Calculate chart width as percentage of max value
-                            
-                            column.Item().PaddingBottom(5).Row(row =>
-                            {
-                                row.RelativeItem(3).Column(col =>
-                                {
-                                    col.Item().AlignMiddle().Text($"{item.Name}").FontSize(9);
-                                });
-                                
-                                row.RelativeItem(7).Column(col =>
-                                {
-                                    col.Item().PaddingVertical(2)
-                                        .Height(10)
-                                        .Width(chartWidth * 3) // Reduced scale to fit better
-                                        .Background(Colors.Teal.Lighten3);
-                                    
-                                    // Add the value as text inside the bar
-                                    col.Item().AlignCenter().AlignMiddle()
-                                        .Text($"{item.Count}")
-                                        .FontSize(8)
-                                        .FontColor(Colors.Grey.Darken2);
->>>>>>> 911ac117cb50b40dedab668cf4bc3f93fc27d030
                                 });
                             });
                         }
