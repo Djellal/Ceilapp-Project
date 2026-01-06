@@ -195,7 +195,7 @@ namespace Ceilapp.Components.Pages.CourseRegistrations
                     //cr.State?.Name
                     Filter="",
                         Expand = "State,Municipality,Profession,Course,CourseLevel,Session,Groupe",
-                        Select = "InscriptionCode, FirstName, LastName,FirstNameAr, LastNameAr, BirthDate, State.Name, Municipality.Name, Profession.Name,Address,Tel, Course.Name, CourseLevel.Name,PaidFeeValue" //string.Join(",", grid0.ColumnsCollection.Where(c => c.GetVisible() && !string.IsNullOrEmpty(c.Property)).Select(c => c.Property.Contains(".") ? c.Property + " as " + c.Property.Replace(".", "") : c.Property))
+                        Select = "InscriptionCode, FirstName, LastName,FirstNameAr, LastNameAr, BirthDate, State.Name,State.NameAr, Municipality.Name, Municipality.NameAr, Profession.Name,Address,Tel, Course.Name, CourseLevel.Name,PaidFeeValue" //string.Join(",", grid0.ColumnsCollection.Where(c => c.GetVisible() && !string.IsNullOrEmpty(c.Property)).Select(c => c.Property.Contains(".") ? c.Property + " as " + c.Property.Replace(".", "") : c.Property))
 
                 };
         
