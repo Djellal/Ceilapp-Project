@@ -15,6 +15,14 @@
                     <RadzenRequiredValidator Component="Name" Text="Nom est requis" />
                   </Helper>
             </RadzenFormField>
+<RadzenFormField Text="Name arabe " Variant="Variant.Filled">
+                  <ChildContent>
+                    <RadzenTextBox style="display: block; width: 100%" @bind-Value="@state.NameAr" Name="NameAr" />
+                  </ChildContent>    
+                  <Helper>
+                    <RadzenRequiredValidator Component="NameAr" Text="Nom en arabe est requis" />
+                  </Helper>
+            </RadzenFormField>
           </RadzenStack>
           <RadzenStack style="margin-top:1rem;" Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.End" Gap="0.5rem">
                     <RadzenButton ButtonStyle="ButtonStyle.Primary" ButtonType="ButtonType.Submit" Icon="save" Text="Sauvegarder" Variant="Variant.Flat" />

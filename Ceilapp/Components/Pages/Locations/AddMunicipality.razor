@@ -15,6 +15,14 @@
                     <RadzenRequiredValidator Component="Name" Text="Name is required" />
                   </Helper>
             </RadzenFormField>
+<RadzenFormField Text="Name" Variant="Variant.Filled">
+                  <ChildContent>
+                    <RadzenTextBox style="display: block; width: 100%" @bind-Value="@municipality.NameAr" Name="NameAr" />
+                  </ChildContent>    
+                  <Helper>
+                    <RadzenRequiredValidator Component="NameAr" Text="Nom arabe est requis" />
+                  </Helper>
+            </RadzenFormField>
             <RadzenFormField Text="State" Variant="Variant.Filled">
                   <ChildContent>
                     <RadzenDropDown Data="@(statesForStateId)" TextProperty="NameAr" ValueProperty="Id" AllowClear=true
