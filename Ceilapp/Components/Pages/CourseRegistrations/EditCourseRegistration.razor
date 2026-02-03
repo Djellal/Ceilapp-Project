@@ -221,7 +221,7 @@
             
           </RadzenStack>
           <RadzenStack style="margin-top:1rem;" Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="Radzen.JustifyContent.SpaceAround" Gap="0.5rem">
-                    <RadzenButton ButtonStyle="ButtonStyle.Primary" ButtonType="Radzen.ButtonType.Button" Icon="save" Text="Sauvegarder" Variant="Variant.Flat" Size="Radzen.ButtonSize.Medium" Disabled="@(!courseRegistration.RegistrationTermsAccepted)" Click="@Button1Click" />
+                    <RadzenButton ButtonStyle="ButtonStyle.Primary" ButtonType="Radzen.ButtonType.Button" Icon="save" Text="Sauvegarder" Variant="Variant.Flat" Size="Radzen.ButtonSize.Medium" Disabled="@(!courseRegistration.RegistrationTermsAccepted && isnew)" Click="@Button1Click" />
                     <RadzenButton ButtonStyle="ButtonStyle.Info" Text="Fiche d'inscription" Variant="Variant.Flat" Click="@GenerateFicheInscription" Size="Radzen.ButtonSize.Medium" Icon="picture_as_pdf" Visible="@(!isnew)" />
                     <RadzenButton ButtonStyle="ButtonStyle.Light" Text="Annuler" Variant="Variant.Flat" Click="@CancelButtonClick" Size="Radzen.ButtonSize.Medium" Icon="close" />
           </RadzenStack>
