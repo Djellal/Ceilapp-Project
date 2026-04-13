@@ -54,8 +54,8 @@
 
     <RadzenRow>
       <RadzenColumn SizeMD=12>
-        <RadzenDataGrid @ref="grid0" ColumnWidth="200px"   AllowFiltering="true" FilterMode="FilterMode.Advanced" AllowPaging="true" AllowSorting="true" ShowPagingSummary="true" PageSizeOptions=@(new int[]{5, 10, 20, 30})
-            Data="@(courseRegistrations)" TItem="Ceilapp.Models.ceilapp.CourseRegistration" RowSelect="@EditRow">
+        <RadzenDataGrid @ref="grid0" ColumnWidth="200px"   AllowFiltering="true" FilterMode="Radzen.FilterMode.Simple" AllowPaging="true" AllowSorting="true" ShowPagingSummary="true" PageSizeOptions=@(new int[]{5, 10, 20, 30})
+            Data="@(courseRegistrations)" TItem="Ceilapp.Models.ceilapp.CourseRegistration" RowSelect="@EditRow" FilterCaseSensitivity="Radzen.FilterCaseSensitivity.CaseInsensitive">
             <Columns>
                 <RadzenDataGridColumn TItem="Ceilapp.Models.ceilapp.CourseRegistration" Width="70px">
                     <Template>
