@@ -29,4 +29,6 @@ public class ApplicationDbContext : DbContext
 
     public DbSet<CourseFee> CourseFees { get; set; }
 
+    public DbSet<Compensation> Compensations { get; set; }
+
 }
