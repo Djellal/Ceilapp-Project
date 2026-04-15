@@ -47,5 +47,6 @@ namespace DataModel
 
         public bool IsRegistrationOpened { get; set; } = false;
         public int MaxRegistrationPerSession { get; set; } = 2;
+		public int MaxComponsationsPerCourse { get; set; } = 3;
     }
 }

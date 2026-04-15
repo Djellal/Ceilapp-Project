@@ -10,12 +10,15 @@ namespace Ceilapp.Models.ceilapp
     {
         [Key]
         [Required]
+        [MaxLength(10)]
         public string Id { get; set; }
 
         [Required]
+        [MaxLength(250)]
         public string Name { get; set; }
 
         [Required]
+        [MaxLength(250)]
         public string NameAr { get; set; }
 
         public ICollection<Municipality> Municipalities { get; set; }

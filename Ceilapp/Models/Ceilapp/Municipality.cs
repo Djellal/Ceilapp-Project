@@ -13,12 +13,15 @@ namespace Ceilapp.Models.ceilapp
         public int Id { get; set; }
 
         [Required]
+        [MaxLength(250)]
         public string Name { get; set; }
 
         [Required]
+        [MaxLength(250)]
         public string NameAr { get; set; }
 
         [Required]
+        [MaxLength(10)]
         public string StateId { get; set; }
 
         public State State { get; set; }

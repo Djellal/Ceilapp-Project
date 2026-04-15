@@ -28,10 +28,28 @@ namespace Ceilapp.Data
               .HasForeignKey(i => i.CurrentSessionId)
               .HasPrincipalKey(i => i.Id);
 
+            builder.Entity<Ceilapp.Models.ceilapp.Compensation>()
+              .HasOne(i => i.CourseRegistration)
+              .WithMany(i => i.Compensations)
+              .HasForeignKey(i => i.CourseRegistrationId)
+              .HasPrincipalKey(i => i.Id);
+
             builder.Entity<Ceilapp.Models.ceilapp.CourseComponent>()
               .HasOne(i => i.Course)
               .WithMany(i => i.CourseComponents)
               .HasForeignKey(i => i.CourseId)
+              .HasPrincipalKey(i => i.Id);
+
+            builder.Entity<Ceilapp.Models.ceilapp.CourseFee>()
+              .HasOne(i => i.Course)
+              .WithMany(i => i.CourseFees)
+              .HasForeignKey(i => i.CourseId)
+              .HasPrincipalKey(i => i.Id);
+
+            builder.Entity<Ceilapp.Models.ceilapp.CourseFee>()
+              .HasOne(i => i.Profession)
+              .WithMany(i => i.CourseFees)
+              .HasForeignKey(i => i.ProfessionId)
               .HasPrincipalKey(i => i.Id);
 
             builder.Entity<Ceilapp.Models.ceilapp.CourseLevel>()
@@ -130,21 +148,13 @@ namespace Ceilapp.Data
               .HasForeignKey(i => i.StateId)
               .HasPrincipalKey(i => i.Id);
 
-            builder.Entity<Ceilapp.Models.ceilapp.CourseFee>()
-              .HasOne(i => i.Course)
-              .WithMany(i => i.CourseFees)
-              .HasForeignKey(i => i.CourseId)
-              .HasPrincipalKey(i => i.Id);
-
-            builder.Entity<Ceilapp.Models.ceilapp.CourseFee>()
-              .HasOne(i => i.Profession)
-              .WithMany(i => i.CourseFees)
-              .HasForeignKey(i => i.ProfessionId)
-              .HasPrincipalKey(i => i.Id);
-
             builder.Entity<Ceilapp.Models.ceilapp.Groupe>()
               .Property(p => p.Description)
               .HasDefaultValueSql(@"''::text");
+
+            builder.Entity<Ceilapp.Models.ceilapp.CourseFee>()
+              .Property(p => p.FeeValue)
+              .HasPrecision(18,2);
 
             builder.Entity<Ceilapp.Models.ceilapp.CourseRegistration>()
               .Property(p => p.PaidFeeValue)
@@ -157,16 +167,16 @@ namespace Ceilapp.Data
             builder.Entity<Ceilapp.Models.ceilapp.Profession>()
               .Property(p => p.FeeValue)
               .HasPrecision(18,2);
-
-            builder.Entity<Ceilapp.Models.ceilapp.CourseFee>()
-              .Property(p => p.FeeValue)
-              .HasPrecision(18,2);
             this.OnModelBuilding(builder);
         }
 
         public DbSet<Ceilapp.Models.ceilapp.AppSetting> AppSettings { get; set; }
 
+        public DbSet<Ceilapp.Models.ceilapp.Compensation> Compensations { get; set; }
+
         public DbSet<Ceilapp.Models.ceilapp.CourseComponent> CourseComponents { get; set; }
+
+        public DbSet<Ceilapp.Models.ceilapp.CourseFee> CourseFees { get; set; }
 
         public DbSet<Ceilapp.Models.ceilapp.CourseLevel> CourseLevels { get; set; }
 
@@ -187,9 +197,6 @@ namespace Ceilapp.Data
         public DbSet<Ceilapp.Models.ceilapp.Session> Sessions { get; set; }
 
         public DbSet<Ceilapp.Models.ceilapp.State> States { get; set; }
-
-        public DbSet<Ceilapp.Models.ceilapp.CourseFee> CourseFees { get; set; }
-
         protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)
         {
             configurationBuilder.Conventions.Add(_ => new BlankTriggerAddingConvention());

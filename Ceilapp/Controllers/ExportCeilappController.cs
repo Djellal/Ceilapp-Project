@@ -33,6 +33,20 @@ namespace Ceilapp.Controllers
             return ToExcel(ApplyQuery(await service.GetAppSettings(), Request.Query, false), fileName);
         }
 
+        [HttpGet("/export/ceilapp/compensations/csv")]
+        [HttpGet("/export/ceilapp/compensations/csv(fileName='{fileName}')")]
+        public async Task<FileStreamResult> ExportCompensationsToCSV(string fileName = null)
+        {
+            return ToCSV(ApplyQuery(await service.GetCompensations(), Request.Query, false), fileName);
+        }
+
+        [HttpGet("/export/ceilapp/compensations/excel")]
+        [HttpGet("/export/ceilapp/compensations/excel(fileName='{fileName}')")]
+        public async Task<FileStreamResult> ExportCompensationsToExcel(string fileName = null)
+        {
+            return ToExcel(ApplyQuery(await service.GetCompensations(), Request.Query, false), fileName);
+        }
+
         [HttpGet("/export/ceilapp/coursecomponents/csv")]
         [HttpGet("/export/ceilapp/coursecomponents/csv(fileName='{fileName}')")]
         public async Task<FileStreamResult> ExportCourseComponentsToCSV(string fileName = null)
@@ -45,6 +59,20 @@ namespace Ceilapp.Controllers
         public async Task<FileStreamResult> ExportCourseComponentsToExcel(string fileName = null)
         {
             return ToExcel(ApplyQuery(await service.GetCourseComponents(), Request.Query, false), fileName);
+        }
+
+        [HttpGet("/export/ceilapp/coursefees/csv")]
+        [HttpGet("/export/ceilapp/coursefees/csv(fileName='{fileName}')")]
+        public async Task<FileStreamResult> ExportCourseFeesToCSV(string fileName = null)
+        {
+            return ToCSV(ApplyQuery(await service.GetCourseFees(), Request.Query, false), fileName);
+        }
+
+        [HttpGet("/export/ceilapp/coursefees/excel")]
+        [HttpGet("/export/ceilapp/coursefees/excel(fileName='{fileName}')")]
+        public async Task<FileStreamResult> ExportCourseFeesToExcel(string fileName = null)
+        {
+            return ToExcel(ApplyQuery(await service.GetCourseFees(), Request.Query, false), fileName);
         }
 
         [HttpGet("/export/ceilapp/courselevels/csv")]
@@ -185,20 +213,6 @@ namespace Ceilapp.Controllers
         public async Task<FileStreamResult> ExportStatesToExcel(string fileName = null)
         {
             return ToExcel(ApplyQuery(await service.GetStates(), Request.Query, false), fileName);
-        }
-
-        [HttpGet("/export/ceilapp/coursefees/csv")]
-        [HttpGet("/export/ceilapp/coursefees/csv(fileName='{fileName}')")]
-        public async Task<FileStreamResult> ExportCourseFeesToCSV(string fileName = null)
-        {
-            return ToCSV(ApplyQuery(await service.GetCourseFees(), Request.Query, false), fileName);
-        }
-
-        [HttpGet("/export/ceilapp/coursefees/excel")]
-        [HttpGet("/export/ceilapp/coursefees/excel(fileName='{fileName}')")]
-        public async Task<FileStreamResult> ExportCourseFeesToExcel(string fileName = null)
-        {
-            return ToExcel(ApplyQuery(await service.GetCourseFees(), Request.Query, false), fileName);
         }
     }
 }

@@ -1,0 +1,139 @@
+@page "/request-compensation"
+@using Ceilapp.Models.ceilapp
+@attribute [Authorize]
+
+<PageTitle>Demande de compensation</PageTitle>
+<div class="container-fluid py-4">
+    <RadzenCard class="shadow-lg rounded-4 border-0">
+        <RadzenCardHeader class="bg-primary bg-opacity-10 border-bottom">
+            <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="1rem">
+                <i class="bi bi-calendar-plus fs-3 text-primary"></i>
+                <RadzenText TextStyle="TextStyle.H5" class="mb-0 fw-bold">Demande de compensation</RadzenText>
+            </RadzenStack>
+        </RadzenCardHeader>
+        <div class="p-4">
+            <RadzenAlert Shade="Shade.Lighter" Variant="Variant.Flat" Size="AlertSize.Small" AlertStyle="AlertStyle.Danger" Visible="@errorVisible">@errorMessage</RadzenAlert>
+            <RadzenAlert Shade="Shade.Lighter" Variant="Variant.Flat" Size="AlertSize.Small" AlertStyle="AlertStyle.Success" Visible="@successVisible">Votre demande de compensation a été envoyée avec succès.</RadzenAlert>
+
+            @if (studentRegistrations == null)
+            {
+                <div class="text-center p-5">
+                    <RadzenProgressBarCircular ShowValue="false" Mode="ProgressBarMode.Indeterminate" />
+                </div>
+            }
+            else if (!studentRegistrations.Any())
+            {
+                <div class="text-center p-5">
+                    <i class="bi bi-inbox fs-1 text-muted opacity-50"></i>
+                    <p class="mt-3 text-muted">Vous n'avez aucune inscription validée pour la session actuelle.</p>
+                    <RadzenButton Text="Retour au tableau de bord" Icon="arrow_back" ButtonStyle="ButtonStyle.Light" Click="@GoToDashboard" />
+                </div>
+            }
+            else
+            {
+                <RadzenTemplateForm TItem="Ceilapp.Models.ceilapp.Compensation" Data="@compensation" Submit="@FormSubmit">
+                    <RadzenStack Gap="1rem">
+                        <RadzenFormField Text="Inscription au cours" Variant="Variant.Filled">
+                            <ChildContent>
+                                <RadzenDropDown TValue="int" Data="@studentRegistrations"
+                                                TextProperty="DisplayText" ValueProperty="Id"
+                                                style="display: block; width: 100%"
+                                                @bind-Value="@(compensation.CourseRegistrationId)"
+                                                Name="CourseRegistrationId"
+                                                Placeholder="Sélectionner une inscription" />
+                            </ChildContent>
+                            <Helper>
+                                <RadzenRequiredValidator Component="CourseRegistrationId" Text="L'inscription est requise" DefaultValue="0" />
+                            </Helper>
+                        </RadzenFormField>
+
+                        <RadzenText TextStyle="TextStyle.Subtitle1" class="fw-bold mt-3">
+                            <i class="bi bi-calendar-x me-2"></i>Détails de l'absence
+                        </RadzenText>
+
+                        <RadzenFormField Text="Date d'absence" Variant="Variant.Filled">
+                            <ChildContent>
+                                <RadzenDatePicker DateFormat="dd/MM/yyyy" style="display: block; width: 100%"
+                                                  @bind-Value="@(compensation.AbsenceDate)" Name="AbsenceDate" />
+                            </ChildContent>
+                            <Helper>
+                                <RadzenRequiredValidator Component="AbsenceDate" Text="La date d'absence est requise" />
+                            </Helper>
+                        </RadzenFormField>
+
+                        <RadzenStack Orientation="Orientation.Horizontal" Gap="1rem">
+                            <RadzenFormField Text="Heure début absence" Variant="Variant.Filled" style="flex:1">
+                                <ChildContent>
+                                    <RadzenMask CharacterPattern="[0-9]" Mask="**:**:**"
+                                                Value="@(compensation.AbsenceFrom.ToString())"
+                                                Change="@(args => { try { compensation.AbsenceFrom = TimeSpan.Parse(!string.IsNullOrEmpty(args) ? args : "00:00"); } catch{} })"
+                                                style="display: block; width: 100%" Name="AbsenceFrom" />
+                                </ChildContent>
+                                <Helper>
+                                    <RadzenRequiredValidator Component="AbsenceFrom" Text="L'heure de début est requise" />
+                                </Helper>
+                            </RadzenFormField>
+
+                            <RadzenFormField Text="Heure fin absence" Variant="Variant.Filled" style="flex:1">
+                                <ChildContent>
+                                    <RadzenMask CharacterPattern="[0-9]" Mask="**:**:**"
+                                                Value="@(compensation.AbsenceTo.ToString())"
+                                                Change="@(args => { try { compensation.AbsenceTo = TimeSpan.Parse(!string.IsNullOrEmpty(args) ? args : "00:00"); } catch{} })"
+                                                style="display: block; width: 100%" Name="AbsenceTo" />
+                                </ChildContent>
+                                <Helper>
+                                    <RadzenRequiredValidator Component="AbsenceTo" Text="L'heure de fin est requise" />
+                                </Helper>
+                            </RadzenFormField>
+                        </RadzenStack>
+
+                        <RadzenText TextStyle="TextStyle.Subtitle1" class="fw-bold mt-3">
+                            <i class="bi bi-calendar-check me-2"></i>Séance de rattrapage souhaitée
+                        </RadzenText>
+
+                        <RadzenFormField Text="Date de rattrapage" Variant="Variant.Filled">
+                            <ChildContent>
+                                <RadzenDatePicker DateFormat="dd/MM/yyyy" style="display: block; width: 100%"
+                                                  @bind-Value="@(compensation.MakeupDate)" Name="MakeupDate" />
+                            </ChildContent>
+                            <Helper>
+                                <RadzenRequiredValidator Component="MakeupDate" Text="La date de rattrapage est requise" />
+                            </Helper>
+                        </RadzenFormField>
+
+                        <RadzenStack Orientation="Orientation.Horizontal" Gap="1rem">
+                            <RadzenFormField Text="Heure début rattrapage" Variant="Variant.Filled" style="flex:1">
+                                <ChildContent>
+                                    <RadzenMask CharacterPattern="[0-9]" Mask="**:**:**"
+                                                Value="@(compensation.MakeupFrom.ToString())"
+                                                Change="@(args => { try { compensation.MakeupFrom = TimeSpan.Parse(!string.IsNullOrEmpty(args) ? args : "00:00"); } catch{} })"
+                                                style="display: block; width: 100%" Name="MakeupFrom" />
+                                </ChildContent>
+                                <Helper>
+                                    <RadzenRequiredValidator Component="MakeupFrom" Text="L'heure de début est requise" />
+                                </Helper>
+                            </RadzenFormField>
+
+                            <RadzenFormField Text="Heure fin rattrapage" Variant="Variant.Filled" style="flex:1">
+                                <ChildContent>
+                                    <RadzenMask CharacterPattern="[0-9]" Mask="**:**:**"
+                                                Value="@(compensation.MakeupTo.ToString())"
+                                                Change="@(args => { try { compensation.MakeupTo = TimeSpan.Parse(!string.IsNullOrEmpty(args) ? args : "00:00"); } catch{} })"
+                                                style="display: block; width: 100%" Name="MakeupTo" />
+                                </ChildContent>
+                                <Helper>
+                                    <RadzenRequiredValidator Component="MakeupTo" Text="L'heure de fin est requise" />
+                                </Helper>
+                            </RadzenFormField>
+                        </RadzenStack>
+                    </RadzenStack>
+
+                    <RadzenStack style="margin-top:1.5rem;" Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.End" Gap="0.5rem">
+                        <RadzenButton ButtonStyle="ButtonStyle.Primary" ButtonType="ButtonType.Submit" Icon="send" Text="Envoyer la demande" Variant="Variant.Flat" />
+                        <RadzenButton ButtonStyle="ButtonStyle.Light" Text="Annuler" Variant="Variant.Flat" Click="@GoToDashboard" />
+                    </RadzenStack>
+                </RadzenTemplateForm>
+            }
+        </div>
+    </RadzenCard>
+</div>

@@ -13,34 +13,44 @@ namespace Ceilapp.Models.ceilapp
         public int Id { get; set; }
 
         [Required]
+        [MaxLength(250)]
         public string OrganizationName { get; set; }
 
         [Required]
+        [MaxLength(250)]
         public string Address { get; set; }
 
         [Required]
+        [MaxLength(100)]
         public string Tel { get; set; }
 
         [Required]
+        [MaxLength(100)]
         public string Email { get; set; }
 
         [Required]
+        [MaxLength(250)]
         public string WebSite { get; set; }
 
         [Column("FB")]
         [Required]
+        [MaxLength(250)]
         public string Fb { get; set; }
 
         [Required]
+        [MaxLength(250)]
         public string LinkedIn { get; set; }
 
         [Required]
+        [MaxLength(250)]
         public string Youtube { get; set; }
 
         [Required]
+        [MaxLength(250)]
         public string Instagram { get; set; }
 
         [Required]
+        [MaxLength(250)]
         public string X { get; set; }
 
         [Required]
@@ -57,5 +67,8 @@ namespace Ceilapp.Models.ceilapp
 
         [Required]
         public int MaxRegistrationPerSession { get; set; }
+
+        [Required]
+        public int MaxComponsationsPerCourse { get; set; }
     }
 }

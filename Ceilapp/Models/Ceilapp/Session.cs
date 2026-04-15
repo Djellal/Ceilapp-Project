@@ -13,12 +13,15 @@ namespace Ceilapp.Models.ceilapp
         public int Id { get; set; }
 
         [Required]
+        [MaxLength(30)]
         public string SessionCode { get; set; }
 
         [Required]
+        [MaxLength(250)]
         public string SessionName { get; set; }
 
         [Required]
+        [MaxLength(250)]
         public string SessionNameAr { get; set; }
 
         [Required]

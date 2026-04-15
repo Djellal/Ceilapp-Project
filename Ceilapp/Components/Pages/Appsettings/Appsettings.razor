@@ -146,6 +146,18 @@
             </RadzenRow>
 
             <RadzenRow Gap="1rem" class="rz-mb-4">
+                <RadzenColumn SizeMD="6">
+                    <RadzenFormField Text="Max Compensations Per Course" Variant="Variant.Outlined" Style="width: 100%">
+                        <RadzenNumeric @bind-Value="appSetting.MaxComponsationsPerCourse" 
+                                     Name="MaxComponsationsPerCourse" Min="0" Max="100" 
+                                     class="w-100" />
+                        <RadzenRequiredValidator Component="MaxComponsationsPerCourse" 
+                                               Text="Maximum compensations is required" />
+                    </RadzenFormField>
+                </RadzenColumn>
+            </RadzenRow>
+
+            <RadzenRow Gap="1rem" class="rz-mb-4">
                 <RadzenColumn Size="12">
                     <RadzenCard Variant="Variant.Outlined" class="rz-p-4">
                         <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="1rem">

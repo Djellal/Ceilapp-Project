@@ -16,24 +16,30 @@ namespace Ceilapp.Models.ceilapp
         public string UserId { get; set; }
 
         [Required]
+        [MaxLength(20)]
         public string InscriptionCode { get; set; }
 
         [Required]
+        [MaxLength(100)]
         public string FirstName { get; set; }
 
         [Required]
+        [MaxLength(100)]
         public string LastName { get; set; }
 
         [Required]
+        [MaxLength(100)]
         public string FirstNameAr { get; set; }
 
         [Required]
+        [MaxLength(100)]
         public string LastNameAr { get; set; }
 
         [Required]
         public DateTime BirthDate { get; set; }
 
         [Required]
+        [MaxLength(10)]
         public string BirthStateId { get; set; }
 
         public State State { get; set; }
@@ -44,9 +50,11 @@ namespace Ceilapp.Models.ceilapp
         public Municipality Municipality { get; set; }
 
         [Required]
+        [MaxLength(250)]
         public string Address { get; set; }
 
         [Required]
+        [MaxLength(20)]
         public string Tel { get; set; }
 
         public int? ProfessionId { get; set; }
@@ -69,6 +77,7 @@ namespace Ceilapp.Models.ceilapp
         [Required]
         public DateTime RegistrationDate { get; set; }
 
+        [MaxLength(250)]
         public string Notes { get; set; }
 
         [Required]
@@ -86,6 +95,8 @@ namespace Ceilapp.Models.ceilapp
 
         [Required]
         public decimal FeeValue { get; set; }
+
+        public ICollection<Compensation> Compensations { get; set; }
 
         public ICollection<Evaluation> Evaluations { get; set; }
     }

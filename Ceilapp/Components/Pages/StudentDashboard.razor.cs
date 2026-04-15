@@ -92,5 +92,10 @@ namespace Ceilapp.Components.Pages
         {
             NavigationManager.NavigateTo($"/edit-course-registration/true/0/true");
         }
+
+        protected async System.Threading.Tasks.Task RequestCompensationClick(Microsoft.AspNetCore.Components.Web.MouseEventArgs args)
+        {
+            NavigationManager.NavigateTo("/request-compensation");
+        }
     }
 }

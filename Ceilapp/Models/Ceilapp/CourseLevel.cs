@@ -13,9 +13,11 @@ namespace Ceilapp.Models.ceilapp
         public int Id { get; set; }
 
         [Required]
+        [MaxLength(250)]
         public string Name { get; set; }
 
         [Required]
+        [MaxLength(250)]
         public string NameAr { get; set; }
 
         [Required]
@@ -35,9 +37,9 @@ namespace Ceilapp.Models.ceilapp
         [Required]
         public int LevelOrder { get; set; }
 
-        public ICollection<CourseLevel> CourseLevels1 { get; set; }
-
         public ICollection<Groupe> Groupes { get; set; }
+
+        public ICollection<CourseLevel> CourseLevels1 { get; set; }
 
         public ICollection<CourseRegistration> CourseRegistrations { get; set; }
     }

@@ -231,6 +231,169 @@ namespace Ceilapp
             return itemToDelete;
         }
     
+        public async Task ExportCompensationsToExcel(Query query = null, string fileName = null)
+        {
+            navigationManager.NavigateTo(query != null ? query.ToUrl($"export/ceilapp/compensations/excel(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')") : $"export/ceilapp/compensations/excel(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')", true);
+        }
+
+        public async Task ExportCompensationsToCSV(Query query = null, string fileName = null)
+        {
+            navigationManager.NavigateTo(query != null ? query.ToUrl($"export/ceilapp/compensations/csv(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')") : $"export/ceilapp/compensations/csv(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')", true);
+        }
+
+        partial void OnCompensationsRead(ref IQueryable<Ceilapp.Models.ceilapp.Compensation> items);
+
+        public async Task<IQueryable<Ceilapp.Models.ceilapp.Compensation>> GetCompensations(Query query = null)
+        {
+            var items = Context.Compensations.AsQueryable();
+
+            items = items.Include(i => i.CourseRegistration);
+
+            if (query != null)
+            {
+                if (!string.IsNullOrEmpty(query.Expand))
+                {
+                    var propertiesToExpand = query.Expand.Split(',');
+                    foreach(var p in propertiesToExpand)
+                    {
+                        items = items.Include(p.Trim());
+                    }
+                }
+
+                ApplyQuery(ref items, query);
+            }
+
+            OnCompensationsRead(ref items);
+
+            return await Task.FromResult(items);
+        }
+
+        partial void OnCompensationGet(Ceilapp.Models.ceilapp.Compensation item);
+        partial void OnGetCompensationById(ref IQueryable<Ceilapp.Models.ceilapp.Compensation> items);
+
+
+        public async Task<Ceilapp.Models.ceilapp.Compensation> GetCompensationById(int id)
+        {
+            var items = Context.Compensations
+                              .AsNoTracking()
+                              .Where(i => i.Id == id);
+
+            items = items.Include(i => i.CourseRegistration);
+ 
+            OnGetCompensationById(ref items);
+
+            var itemToReturn = items.FirstOrDefault();
+
+            OnCompensationGet(itemToReturn);
+
+            return await Task.FromResult(itemToReturn);
+        }
+
+        partial void OnCompensationCreated(Ceilapp.Models.ceilapp.Compensation item);
+        partial void OnAfterCompensationCreated(Ceilapp.Models.ceilapp.Compensation item);
+
+        public async Task<Ceilapp.Models.ceilapp.Compensation> CreateCompensation(Ceilapp.Models.ceilapp.Compensation compensation)
+        {
+            OnCompensationCreated(compensation);
+
+            var existingItem = Context.Compensations
+                              .Where(i => i.Id == compensation.Id)
+                              .FirstOrDefault();
+
+            if (existingItem != null)
+            {
+               throw new Exception("Item already available");
+            }            
+
+            try
+            {
+                Context.Compensations.Add(compensation);
+                Context.SaveChanges();
+            }
+            catch
+            {
+                Context.Entry(compensation).State = EntityState.Detached;
+                throw;
+            }
+
+            OnAfterCompensationCreated(compensation);
+
+            return compensation;
+        }
+
+        public async Task<Ceilapp.Models.ceilapp.Compensation> CancelCompensationChanges(Ceilapp.Models.ceilapp.Compensation item)
+        {
+            var entityToCancel = Context.Entry(item);
+            if (entityToCancel.State == EntityState.Modified)
+            {
+              entityToCancel.CurrentValues.SetValues(entityToCancel.OriginalValues);
+              entityToCancel.State = EntityState.Unchanged;
+            }
+
+            return item;
+        }
+
+        partial void OnCompensationUpdated(Ceilapp.Models.ceilapp.Compensation item);
+        partial void OnAfterCompensationUpdated(Ceilapp.Models.ceilapp.Compensation item);
+
+        public async Task<Ceilapp.Models.ceilapp.Compensation> UpdateCompensation(int id, Ceilapp.Models.ceilapp.Compensation compensation)
+        {
+            OnCompensationUpdated(compensation);
+
+            var itemToUpdate = Context.Compensations
+                              .Where(i => i.Id == compensation.Id)
+                              .FirstOrDefault();
+
+            if (itemToUpdate == null)
+            {
+               throw new Exception("Item no longer available");
+            }
+                
+            var entryToUpdate = Context.Entry(itemToUpdate);
+            entryToUpdate.CurrentValues.SetValues(compensation);
+            entryToUpdate.State = EntityState.Modified;
+
+            Context.SaveChanges();
+
+            OnAfterCompensationUpdated(compensation);
+
+            return compensation;
+        }
+
+        partial void OnCompensationDeleted(Ceilapp.Models.ceilapp.Compensation item);
+        partial void OnAfterCompensationDeleted(Ceilapp.Models.ceilapp.Compensation item);
+
+        public async Task<Ceilapp.Models.ceilapp.Compensation> DeleteCompensation(int id)
+        {
+            var itemToDelete = Context.Compensations
+                              .Where(i => i.Id == id)
+                              .FirstOrDefault();
+
+            if (itemToDelete == null)
+            {
+               throw new Exception("Item no longer available");
+            }
+
+            OnCompensationDeleted(itemToDelete);
+
+
+            Context.Compensations.Remove(itemToDelete);
+
+            try
+            {
+                Context.SaveChanges();
+            }
+            catch
+            {
+                Context.Entry(itemToDelete).State = EntityState.Unchanged;
+                throw;
+            }
+
+            OnAfterCompensationDeleted(itemToDelete);
+
+            return itemToDelete;
+        }
+    
         public async Task ExportCourseComponentsToExcel(Query query = null, string fileName = null)
         {
             navigationManager.NavigateTo(query != null ? query.ToUrl($"export/ceilapp/coursecomponents/excel(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')") : $"export/ceilapp/coursecomponents/excel(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')", true);
@@ -395,6 +558,171 @@ namespace Ceilapp
             return itemToDelete;
         }
     
+        public async Task ExportCourseFeesToExcel(Query query = null, string fileName = null)
+        {
+            navigationManager.NavigateTo(query != null ? query.ToUrl($"export/ceilapp/coursefees/excel(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')") : $"export/ceilapp/coursefees/excel(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')", true);
+        }
+
+        public async Task ExportCourseFeesToCSV(Query query = null, string fileName = null)
+        {
+            navigationManager.NavigateTo(query != null ? query.ToUrl($"export/ceilapp/coursefees/csv(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')") : $"export/ceilapp/coursefees/csv(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')", true);
+        }
+
+        partial void OnCourseFeesRead(ref IQueryable<Ceilapp.Models.ceilapp.CourseFee> items);
+
+        public async Task<IQueryable<Ceilapp.Models.ceilapp.CourseFee>> GetCourseFees(Query query = null)
+        {
+            var items = Context.CourseFees.AsQueryable();
+
+            items = items.Include(i => i.Course);
+            items = items.Include(i => i.Profession);
+
+            if (query != null)
+            {
+                if (!string.IsNullOrEmpty(query.Expand))
+                {
+                    var propertiesToExpand = query.Expand.Split(',');
+                    foreach(var p in propertiesToExpand)
+                    {
+                        items = items.Include(p.Trim());
+                    }
+                }
+
+                ApplyQuery(ref items, query);
+            }
+
+            OnCourseFeesRead(ref items);
+
+            return await Task.FromResult(items);
+        }
+
+        partial void OnCourseFeeGet(Ceilapp.Models.ceilapp.CourseFee item);
+        partial void OnGetCourseFeeById(ref IQueryable<Ceilapp.Models.ceilapp.CourseFee> items);
+
+
+        public async Task<Ceilapp.Models.ceilapp.CourseFee> GetCourseFeeById(int id)
+        {
+            var items = Context.CourseFees
+                              .AsNoTracking()
+                              .Where(i => i.Id == id);
+
+            items = items.Include(i => i.Course);
+            items = items.Include(i => i.Profession);
+ 
+            OnGetCourseFeeById(ref items);
+
+            var itemToReturn = items.FirstOrDefault();
+
+            OnCourseFeeGet(itemToReturn);
+
+            return await Task.FromResult(itemToReturn);
+        }
+
+        partial void OnCourseFeeCreated(Ceilapp.Models.ceilapp.CourseFee item);
+        partial void OnAfterCourseFeeCreated(Ceilapp.Models.ceilapp.CourseFee item);
+
+        public async Task<Ceilapp.Models.ceilapp.CourseFee> CreateCourseFee(Ceilapp.Models.ceilapp.CourseFee coursefee)
+        {
+            OnCourseFeeCreated(coursefee);
+
+            var existingItem = Context.CourseFees
+                              .Where(i => i.Id == coursefee.Id)
+                              .FirstOrDefault();
+
+            if (existingItem != null)
+            {
+               throw new Exception("Item already available");
+            }            
+
+            try
+            {
+                Context.CourseFees.Add(coursefee);
+                Context.SaveChanges();
+            }
+            catch
+            {
+                Context.Entry(coursefee).State = EntityState.Detached;
+                throw;
+            }
+
+            OnAfterCourseFeeCreated(coursefee);
+
+            return coursefee;
+        }
+
+        public async Task<Ceilapp.Models.ceilapp.CourseFee> CancelCourseFeeChanges(Ceilapp.Models.ceilapp.CourseFee item)
+        {
+            var entityToCancel = Context.Entry(item);
+            if (entityToCancel.State == EntityState.Modified)
+            {
+              entityToCancel.CurrentValues.SetValues(entityToCancel.OriginalValues);
+              entityToCancel.State = EntityState.Unchanged;
+            }
+
+            return item;
+        }
+
+        partial void OnCourseFeeUpdated(Ceilapp.Models.ceilapp.CourseFee item);
+        partial void OnAfterCourseFeeUpdated(Ceilapp.Models.ceilapp.CourseFee item);
+
+        public async Task<Ceilapp.Models.ceilapp.CourseFee> UpdateCourseFee(int id, Ceilapp.Models.ceilapp.CourseFee coursefee)
+        {
+            OnCourseFeeUpdated(coursefee);
+
+            var itemToUpdate = Context.CourseFees
+                              .Where(i => i.Id == coursefee.Id)
+                              .FirstOrDefault();
+
+            if (itemToUpdate == null)
+            {
+               throw new Exception("Item no longer available");
+            }
+                
+            var entryToUpdate = Context.Entry(itemToUpdate);
+            entryToUpdate.CurrentValues.SetValues(coursefee);
+            entryToUpdate.State = EntityState.Modified;
+
+            Context.SaveChanges();
+
+            OnAfterCourseFeeUpdated(coursefee);
+
+            return coursefee;
+        }
+
+        partial void OnCourseFeeDeleted(Ceilapp.Models.ceilapp.CourseFee item);
+        partial void OnAfterCourseFeeDeleted(Ceilapp.Models.ceilapp.CourseFee item);
+
+        public async Task<Ceilapp.Models.ceilapp.CourseFee> DeleteCourseFee(int id)
+        {
+            var itemToDelete = Context.CourseFees
+                              .Where(i => i.Id == id)
+                              .FirstOrDefault();
+
+            if (itemToDelete == null)
+            {
+               throw new Exception("Item no longer available");
+            }
+
+            OnCourseFeeDeleted(itemToDelete);
+
+
+            Context.CourseFees.Remove(itemToDelete);
+
+            try
+            {
+                Context.SaveChanges();
+            }
+            catch
+            {
+                Context.Entry(itemToDelete).State = EntityState.Unchanged;
+                throw;
+            }
+
+            OnAfterCourseFeeDeleted(itemToDelete);
+
+            return itemToDelete;
+        }
+    
         public async Task ExportCourseLevelsToExcel(Query query = null, string fileName = null)
         {
             navigationManager.NavigateTo(query != null ? query.ToUrl($"export/ceilapp/courselevels/excel(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')") : $"export/ceilapp/courselevels/excel(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')", true);
@@ -533,8 +861,8 @@ namespace Ceilapp
         {
             var itemToDelete = Context.CourseLevels
                               .Where(i => i.Id == id)
-                              .Include(i => i.CourseLevels1)
                               .Include(i => i.Groupes)
+                              .Include(i => i.CourseLevels1)
                               .Include(i => i.CourseRegistrations)
                               .FirstOrDefault();
 
@@ -711,6 +1039,7 @@ namespace Ceilapp
         {
             var itemToDelete = Context.CourseRegistrations
                               .Where(i => i.Id == id)
+                              .Include(i => i.Compensations)
                               .Include(i => i.Evaluations)
                               .FirstOrDefault();
 
@@ -875,10 +1204,10 @@ namespace Ceilapp
         {
             var itemToDelete = Context.Courses
                               .Where(i => i.Id == id)
-                              .Include(i => i.CourseFees)
                               .Include(i => i.CourseComponents)
-                              .Include(i => i.CourseLevels)
                               .Include(i => i.Groupes)
+                              .Include(i => i.CourseLevels)
+                              .Include(i => i.CourseFees)
                               .Include(i => i.CourseRegistrations)
                               .FirstOrDefault();
 
@@ -2052,171 +2381,6 @@ namespace Ceilapp
             }
 
             OnAfterStateDeleted(itemToDelete);
-
-            return itemToDelete;
-        }
-    
-        public async Task ExportCourseFeesToExcel(Query query = null, string fileName = null)
-        {
-            navigationManager.NavigateTo(query != null ? query.ToUrl($"export/ceilapp/coursefees/excel(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')") : $"export/ceilapp/coursefees/excel(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')", true);
-        }
-
-        public async Task ExportCourseFeesToCSV(Query query = null, string fileName = null)
-        {
-            navigationManager.NavigateTo(query != null ? query.ToUrl($"export/ceilapp/coursefees/csv(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')") : $"export/ceilapp/coursefees/csv(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')", true);
-        }
-
-        partial void OnCourseFeesRead(ref IQueryable<Ceilapp.Models.ceilapp.CourseFee> items);
-
-        public async Task<IQueryable<Ceilapp.Models.ceilapp.CourseFee>> GetCourseFees(Query query = null)
-        {
-            var items = Context.CourseFees.AsQueryable();
-
-            items = items.Include(i => i.Course);
-            items = items.Include(i => i.Profession);
-
-            if (query != null)
-            {
-                if (!string.IsNullOrEmpty(query.Expand))
-                {
-                    var propertiesToExpand = query.Expand.Split(',');
-                    foreach(var p in propertiesToExpand)
-                    {
-                        items = items.Include(p.Trim());
-                    }
-                }
-
-                ApplyQuery(ref items, query);
-            }
-
-            OnCourseFeesRead(ref items);
-
-            return await Task.FromResult(items);
-        }
-
-        partial void OnCourseFeeGet(Ceilapp.Models.ceilapp.CourseFee item);
-        partial void OnGetCourseFeeById(ref IQueryable<Ceilapp.Models.ceilapp.CourseFee> items);
-
-
-        public async Task<Ceilapp.Models.ceilapp.CourseFee> GetCourseFeeById(int id)
-        {
-            var items = Context.CourseFees
-                              .AsNoTracking()
-                              .Where(i => i.Id == id);
-
-            items = items.Include(i => i.Course);
-            items = items.Include(i => i.Profession);
- 
-            OnGetCourseFeeById(ref items);
-
-            var itemToReturn = items.FirstOrDefault();
-
-            OnCourseFeeGet(itemToReturn);
-
-            return await Task.FromResult(itemToReturn);
-        }
-
-        partial void OnCourseFeeCreated(Ceilapp.Models.ceilapp.CourseFee item);
-        partial void OnAfterCourseFeeCreated(Ceilapp.Models.ceilapp.CourseFee item);
-
-        public async Task<Ceilapp.Models.ceilapp.CourseFee> CreateCourseFee(Ceilapp.Models.ceilapp.CourseFee coursefee)
-        {
-            OnCourseFeeCreated(coursefee);
-
-            var existingItem = Context.CourseFees
-                              .Where(i => i.Id == coursefee.Id)
-                              .FirstOrDefault();
-
-            if (existingItem != null)
-            {
-               throw new Exception("Item already available");
-            }            
-
-            try
-            {
-                Context.CourseFees.Add(coursefee);
-                Context.SaveChanges();
-            }
-            catch
-            {
-                Context.Entry(coursefee).State = EntityState.Detached;
-                throw;
-            }
-
-            OnAfterCourseFeeCreated(coursefee);
-
-            return coursefee;
-        }
-
-        public async Task<Ceilapp.Models.ceilapp.CourseFee> CancelCourseFeeChanges(Ceilapp.Models.ceilapp.CourseFee item)
-        {
-            var entityToCancel = Context.Entry(item);
-            if (entityToCancel.State == EntityState.Modified)
-            {
-              entityToCancel.CurrentValues.SetValues(entityToCancel.OriginalValues);
-              entityToCancel.State = EntityState.Unchanged;
-            }
-
-            return item;
-        }
-
-        partial void OnCourseFeeUpdated(Ceilapp.Models.ceilapp.CourseFee item);
-        partial void OnAfterCourseFeeUpdated(Ceilapp.Models.ceilapp.CourseFee item);
-
-        public async Task<Ceilapp.Models.ceilapp.CourseFee> UpdateCourseFee(int id, Ceilapp.Models.ceilapp.CourseFee coursefee)
-        {
-            OnCourseFeeUpdated(coursefee);
-
-            var itemToUpdate = Context.CourseFees
-                              .Where(i => i.Id == coursefee.Id)
-                              .FirstOrDefault();
-
-            if (itemToUpdate == null)
-            {
-               throw new Exception("Item no longer available");
-            }
-                
-            var entryToUpdate = Context.Entry(itemToUpdate);
-            entryToUpdate.CurrentValues.SetValues(coursefee);
-            entryToUpdate.State = EntityState.Modified;
-
-            Context.SaveChanges();
-
-            OnAfterCourseFeeUpdated(coursefee);
-
-            return coursefee;
-        }
-
-        partial void OnCourseFeeDeleted(Ceilapp.Models.ceilapp.CourseFee item);
-        partial void OnAfterCourseFeeDeleted(Ceilapp.Models.ceilapp.CourseFee item);
-
-        public async Task<Ceilapp.Models.ceilapp.CourseFee> DeleteCourseFee(int id)
-        {
-            var itemToDelete = Context.CourseFees
-                              .Where(i => i.Id == id)
-                              .FirstOrDefault();
-
-            if (itemToDelete == null)
-            {
-               throw new Exception("Item no longer available");
-            }
-
-            OnCourseFeeDeleted(itemToDelete);
-
-
-            Context.CourseFees.Remove(itemToDelete);
-
-            try
-            {
-                Context.SaveChanges();
-            }
-            catch
-            {
-                Context.Entry(itemToDelete).State = EntityState.Unchanged;
-                throw;
-            }
-
-            OnAfterCourseFeeDeleted(itemToDelete);
 
             return itemToDelete;
         }

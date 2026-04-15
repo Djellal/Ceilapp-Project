@@ -13,6 +13,7 @@ namespace Ceilapp.Models.ceilapp
         public int Id { get; set; }
 
         [Required]
+        [MaxLength(250)]
         public string GroupeName { get; set; }
 
         [Required]

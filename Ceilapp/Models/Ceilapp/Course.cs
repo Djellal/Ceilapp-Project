@@ -13,12 +13,15 @@ namespace Ceilapp.Models.ceilapp
         public int Id { get; set; }
 
         [Required]
+        [MaxLength(30)]
         public string Code { get; set; }
 
         [Required]
+        [MaxLength(250)]
         public string Name { get; set; }
 
         [Required]
+        [MaxLength(250)]
         public string NameAr { get; set; }
 
         public bool IsActive { get; set; }
@@ -34,13 +37,13 @@ namespace Ceilapp.Models.ceilapp
         [Required]
         public int Order { get; set; }
 
-        public ICollection<CourseFee> CourseFees { get; set; }
-
         public ICollection<CourseComponent> CourseComponents { get; set; }
+
+        public ICollection<Groupe> Groupes { get; set; }
 
         public ICollection<CourseLevel> CourseLevels { get; set; }
 
-        public ICollection<Groupe> Groupes { get; set; }
+        public ICollection<CourseFee> CourseFees { get; set; }
 
         public ICollection<CourseRegistration> CourseRegistrations { get; set; }
     }
