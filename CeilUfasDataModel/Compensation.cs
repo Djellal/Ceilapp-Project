@@ -43,5 +43,8 @@ namespace DataModel
         [MaxLength(100)]
         [Display(Name = "Makeup Teacher")]
         public string MakeupTeacherId { get; set; } = "";
+
+        [Display(Name = "Is Approved")]
+        public bool IsApproved { get; set; }
     }
 }

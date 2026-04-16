@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.JSInterop;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
@@ -46,11 +47,19 @@ namespace Ceilapp.Components.Pages.Compensations
                 Id = r.Id,
                 DisplayText = $"{r.LastName} {r.FirstName} - {r.Course?.Name} ({r.InscriptionCode})"
             }).ToList();
+
+            teacherNames = (await Security.GetUsers(Constants.TEACHER)).Select(t => t.Name).ToList();
+
+            var appSetting = await ceilappService.GetAppSettingById(1);
+            maxCompensationsPerCourse = appSetting?.MaxComponsationsPerCourse ?? 0;
         }
         protected bool errorVisible;
+        protected string errorMessage = "Impossible d'enregistrer la séance de rattrapage";
+        protected int maxCompensationsPerCourse;
         protected Ceilapp.Models.ceilapp.Compensation compensation;
 
         protected List<RegistrationDisplayItem> registrationDisplayItems;
+        protected List<string> teacherNames;
 
         public class RegistrationDisplayItem
         {
@@ -65,12 +74,29 @@ namespace Ceilapp.Components.Pages.Compensations
         {
             try
             {
+                errorVisible = false;
+
+                if (compensation.IsApproved)
+                {
+                    var approvedCount = await ceilappService.dbContext.Compensations
+                        .CountAsync(c => c.CourseRegistrationId == compensation.CourseRegistrationId
+                            && c.IsApproved && c.Id != Id);
+
+                    if (approvedCount >= maxCompensationsPerCourse)
+                    {
+                        errorVisible = true;
+                        errorMessage = $"Cet étudiant a atteint le nombre maximum de séances de rattrapage approuvées ({maxCompensationsPerCourse}) pour ce cours.";
+                        return;
+                    }
+                }
+
                 await ceilappService.UpdateCompensation(Id, compensation);
                 DialogService.Close(compensation);
             }
             catch (Exception ex)
             {
                 errorVisible = true;
+                errorMessage = "Impossible d'enregistrer la séance de rattrapage.";
             }
         }
 

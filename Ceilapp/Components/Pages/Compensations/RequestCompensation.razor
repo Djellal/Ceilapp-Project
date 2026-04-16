@@ -2,18 +2,18 @@
 @using Ceilapp.Models.ceilapp
 @attribute [Authorize]
 
-<PageTitle>Demande de compensation</PageTitle>
+<PageTitle>Demande de séance de rattrapage</PageTitle>
 <div class="container-fluid py-4">
     <RadzenCard class="shadow-lg rounded-4 border-0">
         <RadzenCardHeader class="bg-primary bg-opacity-10 border-bottom">
             <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="1rem">
                 <i class="bi bi-calendar-plus fs-3 text-primary"></i>
-                <RadzenText TextStyle="TextStyle.H5" class="mb-0 fw-bold">Demande de compensation</RadzenText>
+                <RadzenText TextStyle="TextStyle.H5" class="mb-0 fw-bold">Demande de séance de rattrapage</RadzenText>
             </RadzenStack>
         </RadzenCardHeader>
         <div class="p-4">
             <RadzenAlert Shade="Shade.Lighter" Variant="Variant.Flat" Size="AlertSize.Small" AlertStyle="AlertStyle.Danger" Visible="@errorVisible">@errorMessage</RadzenAlert>
-            <RadzenAlert Shade="Shade.Lighter" Variant="Variant.Flat" Size="AlertSize.Small" AlertStyle="AlertStyle.Success" Visible="@successVisible">Votre demande de compensation a été envoyée avec succès.</RadzenAlert>
+            <RadzenAlert Shade="Shade.Lighter" Variant="Variant.Flat" Size="AlertSize.Small" AlertStyle="AlertStyle.Success" Visible="@successVisible">Votre demande de séance de rattrapage a été envoyée avec succès.</RadzenAlert>
 
             @if (studentRegistrations == null)
             {
@@ -126,6 +126,17 @@
                                 </Helper>
                             </RadzenFormField>
                         </RadzenStack>
+
+                        <RadzenFormField Text="Enseignant de rattrapage" Variant="Variant.Filled">
+                            <ChildContent>
+                                <RadzenAutoComplete Data="@teacherNames" style="display: block; width: 100%"
+                                    @bind-Value="@(compensation.MakeupTeacherId)" Name="MakeupTeacherId"
+                                    Placeholder="Saisir le nom de l'enseignant..." FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" />
+                            </ChildContent>
+                            <Helper>
+                                <RadzenRequiredValidator Component="MakeupTeacherId" Text="L'enseignant de rattrapage est requis" />
+                            </Helper>
+                        </RadzenFormField>
                     </RadzenStack>
 
                     <RadzenStack style="margin-top:1.5rem;" Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.End" Gap="0.5rem">

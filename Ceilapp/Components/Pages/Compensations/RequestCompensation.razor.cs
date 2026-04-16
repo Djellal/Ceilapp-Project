@@ -39,10 +39,11 @@ namespace Ceilapp.Components.Pages.Compensations
 
         protected bool errorVisible;
         protected bool successVisible;
-        protected string errorMessage = "Impossible d'envoyer la demande de compensation.";
+        protected string errorMessage = "Impossible d'envoyer la demande de séance de rattrapage.";
         protected Ceilapp.Models.ceilapp.Compensation compensation;
         protected IEnumerable<RegistrationDisplayItem> studentRegistrations;
         protected int maxCompensationsPerCourse;
+        protected List<string> teacherNames;
 
         public class RegistrationDisplayItem
         {
@@ -86,6 +87,8 @@ namespace Ceilapp.Components.Pages.Compensations
                     Id = r.Id,
                     DisplayText = $"{r.Course?.Name} - {r.CourseLevel?.Name} ({r.InscriptionCode}) — {r.Compensations?.Count ?? 0}/{maxCompensationsPerCourse}"
                 }).ToList();
+
+            teacherNames = (await Security.GetUsers(Constants.TEACHER)).Select(t => t.Name).ToList();
         }
 
         protected async Task FormSubmit()
@@ -101,11 +104,9 @@ namespace Ceilapp.Components.Pages.Compensations
                 if (existingCount >= maxCompensationsPerCourse)
                 {
                     errorVisible = true;
-                    errorMessage = $"Vous avez atteint le nombre maximum de compensations autorisées ({maxCompensationsPerCourse}) pour ce cours.";
+                    errorMessage = $"Vous avez atteint le nombre maximum de séances de rattrapage autorisées ({maxCompensationsPerCourse}) pour ce cours.";
                     return;
                 }
-
-                compensation.MakeupTeacherId = "";
 
                 await ceilappService.CreateCompensation(compensation);
 

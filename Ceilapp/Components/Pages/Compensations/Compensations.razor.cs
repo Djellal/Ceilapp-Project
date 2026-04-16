@@ -41,18 +41,18 @@ namespace Ceilapp.Components.Pages.Compensations
         protected SecurityService Security { get; set; }
         protected override async Task OnInitializedAsync()
         {
-            compensations = await ceilappService.GetCompensations(new Query { Expand = "CourseRegistration" });
+            compensations = await ceilappService.GetCompensations(new Query { Expand = "CourseRegistration($expand=Course)" });
         }
 
         protected async Task AddButtonClick(MouseEventArgs args)
         {
-            await DialogService.OpenAsync<AddCompensation>("Ajouter une compensation", options: new DialogOptions { Resizable = false, Draggable = false });
+            await DialogService.OpenAsync<AddCompensation>("Ajouter une séance de rattrapage", options: new DialogOptions { Resizable = false, Draggable = false });
             await grid0.Reload();
         }
 
         protected async Task EditRow(Ceilapp.Models.ceilapp.Compensation args)
         {
-            await DialogService.OpenAsync<EditCompensation>("Modifier la compensation", new Dictionary<string, object> { {"Id", args.Id} }, new DialogOptions { Resizable = false, Draggable = false });
+            await DialogService.OpenAsync<EditCompensation>("Modifier la séance de rattrapage", new Dictionary<string, object> { {"Id", args.Id} }, new DialogOptions { Resizable = false, Draggable = false });
         }
 
         protected async Task GridDeleteButtonClick(MouseEventArgs args, Ceilapp.Models.ceilapp.Compensation compensation)

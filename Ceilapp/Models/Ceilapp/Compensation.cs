@@ -38,5 +38,7 @@ namespace Ceilapp.Models.ceilapp
         [Required]
         [MaxLength(100)]
         public string MakeupTeacherId { get; set; }
+
+        public bool IsApproved { get; set; }
     }
 }
