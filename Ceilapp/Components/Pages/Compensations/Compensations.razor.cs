@@ -41,7 +41,7 @@ namespace Ceilapp.Components.Pages.Compensations
         protected SecurityService Security { get; set; }
         protected override async Task OnInitializedAsync()
         {
-            compensations = await ceilappService.GetCompensations(new Query { Expand = "CourseRegistration($expand=Course)" });
+            compensations = await ceilappService.GetCompensations(new Query { Expand = "CourseRegistration,CourseRegistration.Course" });
         }
 
         protected async Task AddButtonClick(MouseEventArgs args)
