@@ -34,6 +34,8 @@ namespace Ceilapp.Components.Pages.Compensations
         public ceilappService ceilappService { get; set; }
 
         protected IEnumerable<Ceilapp.Models.ceilapp.Compensation> compensations;
+        protected IEnumerable<Ceilapp.Models.ceilapp.Compensation> filteredCompensations;
+        protected string searchText;
 
         protected RadzenDataGrid<Ceilapp.Models.ceilapp.Compensation> grid0;
 
@@ -42,12 +44,39 @@ namespace Ceilapp.Components.Pages.Compensations
         protected override async Task OnInitializedAsync()
         {
             compensations = await ceilappService.GetCompensations(new Query { Expand = "CourseRegistration,CourseRegistration.Course" });
+            filteredCompensations = compensations;
+        }
+
+        protected void OnSearch(string value)
+        {
+            searchText = value;
+            if (string.IsNullOrWhiteSpace(searchText))
+            {
+                filteredCompensations = compensations;
+            }
+            else
+            {
+                var term = searchText.ToLower();
+                filteredCompensations = compensations.Where(c =>
+                    (c.CourseRegistration?.LastName?.ToLower().Contains(term) == true) ||
+                    (c.CourseRegistration?.FirstName?.ToLower().Contains(term) == true) ||
+                    (c.CourseRegistration?.InscriptionCode?.ToLower().Contains(term) == true) ||
+                    (c.CourseRegistration?.Course?.Name?.ToLower().Contains(term) == true) ||
+                    (c.MakeupTeacherId?.ToLower().Contains(term) == true));
+            }
+        }
+
+        protected void ClearSearch(MouseEventArgs args)
+        {
+            searchText = "";
+            filteredCompensations = compensations;
         }
 
         protected async Task AddButtonClick(MouseEventArgs args)
         {
             await DialogService.OpenAsync<AddCompensation>("Ajouter une séance de rattrapage", options: new DialogOptions { Resizable = false, Draggable = false });
-            await grid0.Reload();
+            compensations = await ceilappService.GetCompensations(new Query { Expand = "CourseRegistration,CourseRegistration.Course" });
+            OnSearch(searchText);
         }
 
         protected async Task EditRow(Ceilapp.Models.ceilapp.Compensation args)

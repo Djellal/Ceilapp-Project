@@ -117,4 +117,47 @@ a:focus {
     }
 }
 
+/* ------------------------------------------------------------------
+    Compensations Page Enhancements
+    ------------------------------------------------------------------*/
+.search-container .rz-textbox {
+    transition: all 0.2s ease;
+    border: 1px solid var(--rz-border-color);
+}
+
+.search-container .rz-textbox:focus {
+    border-color: var(--rz-primary);
+    box-shadow: 0 0 0 2px rgba(27, 110, 194, 0.15);
+}
+
+.add-btn {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.add-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(27, 110, 194, 0.3);
+}
+
+.delete-btn {
+    transition: all 0.2s ease;
+}
+
+.delete-btn:hover {
+    transform: scale(1.1);
+}
+
+.status-badge {
+    font-weight: 500;
+    letter-spacing: 0.25px;
+}
+
+.compensation-grid .rz-dataGrid-header {
+    background-color: var(--rz-base-background-color);
+}
+
+.compensation-grid tr:hover {
+    background-color: rgba(27, 110, 194, 0.05);
+}
+
 /* ------------------------------------------------------------------ */

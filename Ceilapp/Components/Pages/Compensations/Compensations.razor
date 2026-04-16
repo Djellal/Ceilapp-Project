@@ -4,62 +4,60 @@
 
 <PageTitle>Séances de Rattrapages</PageTitle>
 <div class="container-fluid py-4">
+    <RadzenPanel>
+        <RadzenRow AlignItems="AlignItems.Center" class="p-2">
+            <RadzenColumn Size="12" SizeMD="6">
+                <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="1rem">
+                    <RadzenIcon Icon="cameraswitch" Style="font-size: 1.75rem; color: var(--rz-primary);" />
+                    <RadzenText Text="Séances de Rattrapages" TextStyle="TextStyle.H5" TagName="TagName.H1" class="mb-0 fw-bold" />
+                </RadzenStack>
+            </RadzenColumn>
+            <RadzenColumn Size="12" SizeMD="6">
+                <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.End" Gap="0.75rem">
+                    <div class="search-container" style="position: relative;">
+                        <RadzenIcon Icon="search" Style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); font-size: 1rem; color: var(--rz-text-color-light); z-index: 1;" />
+                        <RadzenTextBox Placeholder="Rechercher..." @bind-Value="@searchText" @oninput="@(args => OnSearch(args.Value?.ToString()))" Style="width: 250px; padding-left: 36px; padding-right: 36px; border-radius: 8px; border: 1px solid #000000" />
+                        @if (!string.IsNullOrEmpty(searchText))
+                        {
+                            <RadzenButton Icon="close" Size="ButtonSize.Small" ButtonStyle="Radzen.ButtonStyle.Primary"
+                                Style="position: absolute; right: 4px; top: 50%; transform: translateY(-50%); background: transparent; border: none; cursor: pointer; padding: 4px"
+                                Click="@ClearSearch" @onclick:stopPropagation="true" Text="" Shade="Radzen.Shade.Lighter" />
+                        }
+                    </div>
+                    <RadzenButton Icon="add_circle_outline" Text="Ajouter" Click="@AddButtonClick" Variant="Variant.Flat" ButtonStyle="ButtonStyle.Primary" class="add-btn" />
+                </RadzenStack>
+            </RadzenColumn>
+        </RadzenRow>
+    </RadzenPanel>
     <RadzenCard class="shadow-lg rounded-4 border-0">
-        <RadzenCardHeader class="bg-primary bg-opacity-10 border-bottom">
-            <RadzenRow AlignItems="AlignItems.Center">
-                <RadzenColumn Size="12" SizeMD="6">
-                    <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="1rem">
-                        <RadzenIcon Icon="cameraswitch" Style="font-size:1.75rem" />
-                        <RadzenText Text="Séances de Rattrapages" TextStyle="TextStyle.H5" TagName="TagName.H1" class="mb-0 fw-bold" />
-                    </RadzenStack>
-                </RadzenColumn>
-                <RadzenColumn Size="12" SizeMD="6">
-                    <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.End" Gap="0.5rem">
-                        <RadzenButton Icon="add_circle_outline" Text="Ajouter" Click="@AddButtonClick" Variant="Variant.Flat" ButtonStyle="ButtonStyle.Primary" />
-                    </RadzenStack>
-                </RadzenColumn>
-            </RadzenRow>
-        </RadzenCardHeader>
         <div class="p-4">
             <RadzenDataGrid @ref="grid0" ColumnWidth="200px" AllowFiltering="true" AllowPaging="true" AllowSorting="true"
                 ShowPagingSummary="true" PageSizeOptions=@([5, 10, 20, 30])
-                Data="@(compensations)" TItem="Ceilapp.Models.ceilapp.Compensation" RowSelect="@EditRow"
-                GridLines="DataGridGridLines.Horizontal" Density="Density.Compact">
+                Data="@(filteredCompensations)" TItem="Ceilapp.Models.ceilapp.Compensation" RowSelect="@EditRow"
+                GridLines="DataGridGridLines.Horizontal" Density="Density.Compact" class="compensation-grid">
                 <Columns>
                     <RadzenDataGridColumn TItem="Ceilapp.Models.ceilapp.Compensation" Title="Inscription" Property="CourseRegistration.LastName">
                         <Template Context="c">@($"{c.CourseRegistration?.LastName} {c.CourseRegistration?.FirstName} - {c.CourseRegistration?.Course?.Name} ({c.CourseRegistration?.InscriptionCode})")</Template>
                     </RadzenDataGridColumn>
                     <RadzenDataGridColumn TItem="Ceilapp.Models.ceilapp.Compensation" Property="AbsenceDate" Title="Date absence" FormatString="{0:dd/MM/yyyy}" Width="140px" />
-                    <RadzenDataGridColumn TItem="Ceilapp.Models.ceilapp.Compensation" Property="AbsenceFrom" Title="Début" Width="100px">
-                        <Template Context="c">@c.AbsenceFrom.ToString(@"hh\:mm")</Template>
-                    </RadzenDataGridColumn>
-                    <RadzenDataGridColumn TItem="Ceilapp.Models.ceilapp.Compensation" Property="AbsenceTo" Title="Fin" Width="100px">
-                        <Template Context="c">@c.AbsenceTo.ToString(@"hh\:mm")</Template>
-                    </RadzenDataGridColumn>
                     <RadzenDataGridColumn TItem="Ceilapp.Models.ceilapp.Compensation" Property="MakeupDate" Title="Date rattrapage" FormatString="{0:dd/MM/yyyy}" Width="140px" />
-                    <RadzenDataGridColumn TItem="Ceilapp.Models.ceilapp.Compensation" Property="MakeupFrom" Title="Début" Width="100px">
-                        <Template Context="c">@c.MakeupFrom.ToString(@"hh\:mm")</Template>
-                    </RadzenDataGridColumn>
-                    <RadzenDataGridColumn TItem="Ceilapp.Models.ceilapp.Compensation" Property="MakeupTo" Title="Fin" Width="100px">
-                        <Template Context="c">@c.MakeupTo.ToString(@"hh\:mm")</Template>
-                    </RadzenDataGridColumn>
                     <RadzenDataGridColumn TItem="Ceilapp.Models.ceilapp.Compensation" Property="MakeupTeacherId" Title="Enseignant" />
                     <RadzenDataGridColumn TItem="Ceilapp.Models.ceilapp.Compensation" Property="IsApproved" Title="Statut" Width="130px" TextAlign="TextAlign.Center">
                         <Template Context="compensation">
                             @if (compensation.IsApproved)
                             {
-                                <RadzenBadge BadgeStyle="BadgeStyle.Success" Text="Approuvée" />
+                                <RadzenBadge BadgeStyle="BadgeStyle.Success" Text="Approuvée" class="status-badge" />
                             }
                             else
                             {
-                                <RadzenBadge BadgeStyle="BadgeStyle.Warning" Text="En attente" />
+                                <RadzenBadge BadgeStyle="BadgeStyle.Warning" Text="En attente" class="status-badge" />
                             }
                         </Template>
                     </RadzenDataGridColumn>
                     <RadzenDataGridColumn TItem="Ceilapp.Models.ceilapp.Compensation" Filterable="false" Sortable="false" Width="70px" TextAlign="TextAlign.Center">
                         <Template Context="compensation">
                             <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="delete" Size="ButtonSize.Medium"
-                                Shade="Shade.Lighter" Variant="Variant.Flat"
+                                Shade="Shade.Lighter" Variant="Variant.Flat" class="delete-btn"
                                 Click=@(args => GridDeleteButtonClick(args, compensation)) @onclick:stopPropagation="true" />
                         </Template>
                     </RadzenDataGridColumn>
