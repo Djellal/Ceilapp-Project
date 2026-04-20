@@ -148,6 +148,18 @@ namespace Ceilapp.Data
               .HasForeignKey(i => i.StateId)
               .HasPrincipalKey(i => i.Id);
 
+            builder.Entity<Ceilapp.Models.ceilapp.Compensation>()
+              .Property(p => p.CourseLevel)
+              .HasDefaultValueSql(@"''::character varying");
+
+            builder.Entity<Ceilapp.Models.ceilapp.Compensation>()
+              .Property(p => p.OriginGroup)
+              .HasDefaultValueSql(@"''::character varying");
+
+            builder.Entity<Ceilapp.Models.ceilapp.Compensation>()
+              .Property(p => p.RecipientGroup)
+              .HasDefaultValueSql(@"''::character varying");
+
             builder.Entity<Ceilapp.Models.ceilapp.Groupe>()
               .Property(p => p.Description)
               .HasDefaultValueSql(@"''::text");

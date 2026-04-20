@@ -62,7 +62,10 @@ namespace Ceilapp.Components.Pages.Compensations
                     (c.CourseRegistration?.FirstName?.ToLower().Contains(term) == true) ||
                     (c.CourseRegistration?.InscriptionCode?.ToLower().Contains(term) == true) ||
                     (c.CourseRegistration?.Course?.Name?.ToLower().Contains(term) == true) ||
-                    (c.MakeupTeacherId?.ToLower().Contains(term) == true));
+                    (c.MakeupTeacherId?.ToLower().Contains(term) == true) ||
+                    (c.CourseLevel?.ToLower().Contains(term) == true) ||
+                    (c.OriginGroup?.ToLower().Contains(term) == true) ||
+                    (c.RecipientGroup?.ToLower().Contains(term) == true));
             }
         }
 
@@ -82,6 +85,11 @@ namespace Ceilapp.Components.Pages.Compensations
         protected async Task EditRow(Ceilapp.Models.ceilapp.Compensation args)
         {
             await DialogService.OpenAsync<EditCompensation>("Modifier la séance de rattrapage", new Dictionary<string, object> { {"Id", args.Id} }, new DialogOptions { Resizable = false, Draggable = false });
+        }
+
+        protected async Task DownloadCompensationPdf(Ceilapp.Models.ceilapp.Compensation compensation)
+        {
+            await JSRuntime.InvokeVoidAsync("open", $"/Document/CompensationPdf?id={compensation.Id}", "_blank");
         }
 
         protected async Task GridDeleteButtonClick(MouseEventArgs args, Ceilapp.Models.ceilapp.Compensation compensation)

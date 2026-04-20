@@ -57,6 +57,11 @@
                                 <RadzenRequiredValidator Component="AbsenceTo" Text="L'heure de fin d'absence est requise" />
                             </Helper>
                         </RadzenFormField>
+
+                        <RadzenStack Orientation="Orientation.Vertical" Gap="0.25rem" Style="align-self: flex-end;">
+                            <RadzenButton Size="ButtonSize.Small" Variant="Variant.Outlined" Text="9:00-12:00" Click="@(() => SetAbsenceTimeSlot(9, 12))" Title="Sélectionner 9:00 - 12:00" />
+                            <RadzenButton Size="ButtonSize.Small" Variant="Variant.Outlined" Text="13:00-16:00" Click="@(() => SetAbsenceTimeSlot(13, 16))" Title="Sélectionner 13:00 - 16:00" />
+                        </RadzenStack>
                     </RadzenStack>
 
                     <RadzenText TextStyle="TextStyle.Subtitle1" class="fw-bold mt-3">
@@ -90,6 +95,11 @@
                                 <RadzenRequiredValidator Component="MakeupTo" Text="L'heure de fin de rattrapage est requise" />
                             </Helper>
                         </RadzenFormField>
+
+                        <RadzenStack Orientation="Orientation.Vertical" Gap="0.25rem" Style="align-self: flex-end;">
+                            <RadzenButton Size="ButtonSize.Small" Variant="Variant.Outlined" Text="9:00-12:00" Click="@(() => SetMakeupTimeSlot(9, 12))" Title="Sélectionner 9:00 - 12:00" />
+                            <RadzenButton Size="ButtonSize.Small" Variant="Variant.Outlined" Text="13:00-16:00" Click="@(() => SetMakeupTimeSlot(13, 16))" Title="Sélectionner 13:00 - 16:00" />
+                        </RadzenStack>
                     </RadzenStack>
 
                     <RadzenFormField Text="Enseignant de rattrapage" Variant="Variant.Filled">
@@ -102,6 +112,36 @@
                             <RadzenRequiredValidator Component="MakeupTeacherId" Text="L'enseignant de rattrapage est requis" />
                         </Helper>
                     </RadzenFormField>
+
+                    <RadzenText TextStyle="TextStyle.Subtitle1" class="fw-bold mt-3">
+                        <i class="bi bi-people me-2"></i>Informations complémentaires
+                    </RadzenText>
+
+                    <RadzenFormField Text="Niveau du cours" Variant="Variant.Filled">
+                        <ChildContent>
+                            <RadzenAutoComplete Data="@courseLevelSuggestions" style="display: block; width: 100%"
+                                @bind-Value="@(compensation.CourseLevel)" Name="CourseLevel"
+                                Placeholder="Saisir le niveau du cours..." FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" />
+                        </ChildContent>
+                    </RadzenFormField>
+
+                    <RadzenStack Orientation="Orientation.Horizontal" Gap="1rem">
+                        <RadzenFormField Text="Groupe d'origine" Variant="Variant.Filled" style="flex:1">
+                            <ChildContent>
+                                <RadzenAutoComplete Data="@originGroupSuggestions" style="display: block; width: 100%"
+                                    @bind-Value="@(compensation.OriginGroup)" Name="OriginGroup"
+                                    Placeholder="Saisir le groupe d'origine..." FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" />
+                            </ChildContent>
+                        </RadzenFormField>
+
+                        <RadzenFormField Text="Groupe destinataire" Variant="Variant.Filled" style="flex:1">
+                            <ChildContent>
+                                <RadzenAutoComplete Data="@recipientGroupSuggestions" style="display: block; width: 100%"
+                                    @bind-Value="@(compensation.RecipientGroup)" Name="RecipientGroup"
+                                    Placeholder="Saisir le groupe destinataire..." FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" />
+                            </ChildContent>
+                        </RadzenFormField>
+                    </RadzenStack>
                 </RadzenStack>
 
                 <RadzenStack style="margin-top:1.5rem;" Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.End" Gap="0.5rem">

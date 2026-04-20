@@ -89,6 +89,25 @@ namespace Ceilapp.Controllers
         }
        
 
+        [Authorize]
+        [HttpGet("/Document/CompensationPdf")]
+        public async Task<IActionResult> CompensationPdf([FromQuery] int id)
+        {
+            try
+            {
+                var fileBytes = await documentService.GenererCompensationPdfAsync(id);
+                if (fileBytes == null)
+                    return NotFound();
+
+                var stream = new MemoryStream(fileBytes);
+                return File(stream, "application/pdf", $"compensation_{id}.pdf");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "An error occurred while processing your request");
+            }
+        }
+
         // [HttpGet("/Document/AttestationsList(ids='{ids}')")]
         // public IActionResult AttestationsList(string ids = null)
         // {

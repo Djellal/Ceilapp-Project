@@ -50,6 +50,11 @@ namespace Ceilapp.Components.Pages.Compensations
 
             teacherNames = (await Security.GetUsers(Constants.TEACHER)).Select(t => t.Name).ToList();
 
+            var existingCompensations = (await ceilappService.GetCompensations()).ToList();
+            courseLevelSuggestions = existingCompensations.Select(c => c.CourseLevel).Where(v => !string.IsNullOrWhiteSpace(v)).Distinct().ToList();
+            originGroupSuggestions = existingCompensations.Select(c => c.OriginGroup).Where(v => !string.IsNullOrWhiteSpace(v)).Distinct().ToList();
+            recipientGroupSuggestions = existingCompensations.Select(c => c.RecipientGroup).Where(v => !string.IsNullOrWhiteSpace(v)).Distinct().ToList();
+
             var appSetting = await ceilappService.GetAppSettingById(1);
             maxCompensationsPerCourse = appSetting?.MaxComponsationsPerCourse ?? 0;
         }
@@ -60,6 +65,9 @@ namespace Ceilapp.Components.Pages.Compensations
 
         protected List<RegistrationDisplayItem> registrationDisplayItems;
         protected List<string> teacherNames;
+        protected List<string> courseLevelSuggestions;
+        protected List<string> originGroupSuggestions;
+        protected List<string> recipientGroupSuggestions;
 
         public class RegistrationDisplayItem
         {
@@ -103,6 +111,18 @@ namespace Ceilapp.Components.Pages.Compensations
         protected async Task CancelButtonClick(MouseEventArgs args)
         {
             DialogService.Close(null);
+        }
+
+        protected void SetAbsenceTimeSlot(int fromHour, int toHour)
+        {
+            compensation.AbsenceFrom = new TimeSpan(fromHour, 0, 0);
+            compensation.AbsenceTo = new TimeSpan(toHour, 0, 0);
+        }
+
+        protected void SetMakeupTimeSlot(int fromHour, int toHour)
+        {
+            compensation.MakeupFrom = new TimeSpan(fromHour, 0, 0);
+            compensation.MakeupTo = new TimeSpan(toHour, 0, 0);
         }
     }
 }

@@ -42,6 +42,9 @@
                     <RadzenDataGridColumn TItem="Ceilapp.Models.ceilapp.Compensation" Property="AbsenceDate" Title="Date absence" FormatString="{0:dd/MM/yyyy}" Width="140px" />
                     <RadzenDataGridColumn TItem="Ceilapp.Models.ceilapp.Compensation" Property="MakeupDate" Title="Date rattrapage" FormatString="{0:dd/MM/yyyy}" Width="140px" />
                     <RadzenDataGridColumn TItem="Ceilapp.Models.ceilapp.Compensation" Property="MakeupTeacherId" Title="Enseignant" />
+                    <RadzenDataGridColumn TItem="Ceilapp.Models.ceilapp.Compensation" Property="CourseLevel" Title="Niveau" Width="130px" />
+                    <RadzenDataGridColumn TItem="Ceilapp.Models.ceilapp.Compensation" Property="OriginGroup" Title="Groupe origine" Width="140px" />
+                    <RadzenDataGridColumn TItem="Ceilapp.Models.ceilapp.Compensation" Property="RecipientGroup" Title="Groupe dest." Width="140px" />
                     <RadzenDataGridColumn TItem="Ceilapp.Models.ceilapp.Compensation" Property="IsApproved" Title="Statut" Width="130px" TextAlign="TextAlign.Center">
                         <Template Context="compensation">
                             @if (compensation.IsApproved)
@@ -54,8 +57,11 @@
                             }
                         </Template>
                     </RadzenDataGridColumn>
-                    <RadzenDataGridColumn TItem="Ceilapp.Models.ceilapp.Compensation" Filterable="false" Sortable="false" Width="70px" TextAlign="TextAlign.Center">
+                    <RadzenDataGridColumn TItem="Ceilapp.Models.ceilapp.Compensation" Filterable="false" Sortable="false" Width="120px" TextAlign="TextAlign.Center">
                         <Template Context="compensation">
+                            <RadzenButton ButtonStyle="ButtonStyle.Info" Icon="picture_as_pdf" Size="ButtonSize.Medium"
+                                Shade="Shade.Lighter" Variant="Variant.Flat" title="Télécharger PDF"
+                                Click=@(args => DownloadCompensationPdf(compensation)) @onclick:stopPropagation="true" />
                             <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="delete" Size="ButtonSize.Medium"
                                 Shade="Shade.Lighter" Variant="Variant.Flat" class="delete-btn"
                                 Click=@(args => GridDeleteButtonClick(args, compensation)) @onclick:stopPropagation="true" />

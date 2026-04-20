@@ -40,5 +40,14 @@ namespace Ceilapp.Models.ceilapp
         public string MakeupTeacherId { get; set; }
 
         public bool IsApproved { get; set; }
+
+        [MaxLength(100)]
+        public string CourseLevel { get; set; }
+
+        [MaxLength(100)]
+        public string OriginGroup { get; set; }
+
+        [MaxLength(100)]
+        public string RecipientGroup { get; set; }
     }
 }

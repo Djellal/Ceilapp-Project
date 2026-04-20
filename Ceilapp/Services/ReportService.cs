@@ -967,5 +967,207 @@ namespace Ceilapp
                 return null;
             }
         }
+        public async Task<byte[]> GenererCompensationPdfAsync(int compensationId)
+        {
+            try
+            {
+                var compensation = ceilappService.dbContext.Compensations
+                    .Include(c => c.CourseRegistration)
+                        .ThenInclude(cr => cr.Course)
+                    .Include(c => c.CourseRegistration)
+                        .ThenInclude(cr => cr.CourseLevel)
+                    .Include(c => c.CourseRegistration)
+                        .ThenInclude(cr => cr.Groupe)
+                    .FirstOrDefault(c => c.Id == compensationId);
+
+                if (compensation == null)
+                    return null;
+
+                var reg = compensation.CourseRegistration;
+                var studentName = $"{reg?.LastNameAr} {reg?.FirstNameAr}";
+                var level = reg?.CourseLevel?.NameAr ?? reg?.CourseLevel?.Name ?? "";
+                var group = reg?.Groupe?.GroupeName ?? "";
+                var teacherName = compensation.MakeupTeacherId ?? "";
+
+                var borderColor = "#C8A415";
+
+                QuestPDF.Settings.License = LicenseType.Community;
+
+                return Document.Create(document =>
+                {
+                    document.Page(page =>
+                    {
+                        page.Size(PageSizes.A4.Landscape());
+                        page.Margin(1.2f, Unit.Centimetre);
+                        page.PageColor(Colors.White);
+                        page.DefaultTextStyle(x => x.FontSize(14).LineHeight(1.3f));
+
+                        page.Content()
+                            .Border(2.5f)
+                            .BorderColor(borderColor)
+                            .Padding(4)
+                            .Border(1)
+                            .BorderColor(borderColor)
+                            .Padding(25)
+                            .Column(column =>
+                            {
+                                // ── Header: Republic title ──
+                                column.Item().AlignCenter().Text("الجمهورية الجزائرية الديمقراطية الشعبية")
+                                    .FontSize(17).SemiBold();
+                                column.Item().PaddingBottom(2).AlignCenter().Text("PEOPLE'S DEMOCRATIC REPUBLIC OF ALGERIA")
+                                    .FontSize(11).FontColor(Colors.Grey.Darken1);
+
+                                    // Centered short separator
+                                column.Item().PaddingVertical(3).AlignCenter()
+                                    .Width(250).LineHorizontal(1.5f).LineColor(Colors.Black);
+
+                                // ── Sub-header: University / Logo / Arabic ──
+                                column.Item().PaddingVertical(4).Row(row =>
+                                {
+                                    row.RelativeItem().AlignLeft().AlignMiddle().Column(left =>
+                                    {
+                                        left.Item().Text("SETIF 1 UNIVERSITY - FERHAT ABBAS").FontSize(12).SemiBold();
+                                        left.Item().Text("INTENSIVE LANGUAGE TEACHING CENTER").FontSize(10).FontColor(Colors.Grey.Darken1);
+                                    });
+
+                                    row.ConstantItem(75).AlignCenter().AlignMiddle()
+                                        .Image("wwwroot/images/ceillogo.png")
+                                        .FitArea();
+
+                                    row.RelativeItem().AlignRight().AlignMiddle().Column(right =>
+                                    {
+                                        right.Item().AlignRight().Text("جامعة سطيف 1 - فرحات عباس").FontSize(12).SemiBold();
+                                        right.Item().AlignRight().Text("مركز التعليم المكثف للغات").FontSize(10).FontColor(Colors.Grey.Darken1);
+                                    });
+                                });
+
+                                // ── Title with decorative lines ──
+                                column.Item().PaddingVertical(5).Row(row =>
+                                {
+                                    row.RelativeItem().AlignMiddle().PaddingRight(10)
+                                        .LineHorizontal(2).LineColor(Colors.Black);
+                                    row.AutoItem().AlignCenter().AlignMiddle()
+                                        .Text("تعويض الحصة").FontSize(22).Bold();
+                                    row.RelativeItem().AlignMiddle().PaddingLeft(10)
+                                        .LineHorizontal(2).LineColor(Colors.Black);
+                                });
+
+                                // ── Introductory sentence ──
+                                column.Item().PaddingTop(8).AlignRight()
+                                    .Text("يشهد مدير مركز التعليم المكثف للغات بجامعة فرحات عباس سطيف 1 أن:")
+                                    .FontSize(15);
+
+                                // ── Form fields ──
+                                // Row 1: Name, Level, Group
+                                column.Item().PaddingTop(14).Row(row =>
+                                {
+                                    row.RelativeItem(1).AlignRight().Text(text =>
+                                    {
+                                        text.Span("الفوج:  ").SemiBold();
+                                        text.Span(PadValue(group, 20)).Underline();
+                                    });
+                                    row.RelativeItem(1.5f).AlignRight().Text(text =>
+                                    {
+                                        text.Span("المستوى:  ").SemiBold();
+                                        text.Span(PadValue(level, 25)).Underline();
+                                    });
+                                    row.RelativeItem(2).AlignRight().Text(text =>
+                                    {
+                                        text.Span("السيد(ة):  ").SemiBold();
+                                        text.Span(PadValue(studentName, 40)).Underline();
+                                    });
+                                });
+
+                                // Row 2: Absence date/time
+                                column.Item().PaddingTop(12).Row(row =>
+                                {
+                                    row.RelativeItem(1).AlignRight().Text(text =>
+                                    {
+                                        text.Span("إلى:  ").SemiBold();
+                                        text.Span(PadValue($"{compensation.AbsenceTo:hh\\:mm}", 15)).Underline();
+                                    });
+                                    row.RelativeItem(1).AlignRight().Text(text =>
+                                    {
+                                        text.Span("من:  ").SemiBold();
+                                        text.Span(PadValue($"{compensation.AbsenceFrom:hh\\:mm}", 15)).Underline();
+                                    });
+                                    row.RelativeItem(2).AlignRight().Text(text =>
+                                    {
+                                        text.Span("قد تغيب(ت) بتاريخ:  ").SemiBold();
+                                        text.Span(PadValue($"{compensation.AbsenceDate:dd/MM/yyyy}", 20)).Underline();
+                                    });
+                                });
+
+                                // Row 3: Makeup date/time
+                                column.Item().PaddingTop(12).Row(row =>
+                                {
+                                    row.RelativeItem(1).AlignRight().Text(text =>
+                                    {
+                                        text.Span("إلى:  ").SemiBold();
+                                        text.Span(PadValue($"{compensation.MakeupTo:hh\\:mm}", 15)).Underline();
+                                    });
+                                    row.RelativeItem(1).AlignRight().Text(text =>
+                                    {
+                                        text.Span("من:  ").SemiBold();
+                                        text.Span(PadValue($"{compensation.MakeupFrom:hh\\:mm}", 15)).Underline();
+                                    });
+                                    row.RelativeItem(2).AlignRight().Text(text =>
+                                    {
+                                        text.Span("وقد حضر(ت) حصة تعويضية بتاريخ:  ").SemiBold();
+                                        text.Span(PadValue($"{compensation.MakeupDate:dd/MM/yyyy}", 20)).Underline();
+                                    });
+                                });
+
+                                // Row 4: Teacher
+                                column.Item().PaddingTop(12).AlignRight().Text(text =>
+                                {
+                                    text.Span("  :مع الأستاذ(ة)").SemiBold();
+                                    text.Span(PadValue(teacherName, 50)).Underline();
+                                    
+                                });
+
+                                // ── Closing statement ──
+                                column.Item().PaddingTop(14).AlignRight()
+                                    .Text("واثباتا لما ذكر سلمت هذه الشهادة للمعني (ة) للإدلاء بها واستعمالها في حدود ما يسمح به القانون.")
+                                    .FontSize(14);
+
+                                    // ── Signature ──
+                                    column.Item().PaddingTop(14).AlignLeft().Column(sig =>
+                                    {
+                                        sig.Item().Text(":توقيع الأستاذ(ة)").SemiBold().FontSize(14);
+                                        sig.Item().PaddingTop(20).Text("..................................").FontSize(14);
+                                    });
+
+                                    // ── Note ──
+                                    column.Item().PaddingTop(14).AlignRight().Text(text =>
+                                    {
+                                    text.Span("⚠ ").FontColor(Colors.Red.Medium).FontSize(14);
+                                    text.Span("ملاحظة: ").SemiBold().FontSize(11).FontColor(Colors.Red.Darken2);
+                                    text.Span("إجمالي الحصص المعوضة يجب أن لا يتجاوز المرتين كحد أقصى خلال الدورة الواحدة")
+                                       .FontSize(11).FontColor(Colors.Grey.Darken2);
+                                    });
+                                    });
+                                    });
+                                    }).GeneratePdf();
+            }
+            catch (Exception ex)
+            {
+#if DEBUG
+                throw ex;
+#endif
+                return null;
+            }
+        }
+
+        private static string PadValue(string value, int minLength)
+        {
+            value = value ?? "";
+            if (value.Length >= minLength)
+                return $"  {value}  ";
+            var totalPad = minLength - value.Length;
+            var left = totalPad / 2;
+            var right = totalPad - left;
+            return new string(' ', left) + value + new string(' ', right);
+        }
     }
 }
