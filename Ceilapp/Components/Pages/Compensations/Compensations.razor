@@ -41,10 +41,18 @@
                     </RadzenDataGridColumn>
                     <RadzenDataGridColumn TItem="Ceilapp.Models.ceilapp.Compensation" Property="AbsenceDate" Title="Date absence" FormatString="{0:dd/MM/yyyy}" Width="140px" />
                     <RadzenDataGridColumn TItem="Ceilapp.Models.ceilapp.Compensation" Property="MakeupDate" Title="Date rattrapage" FormatString="{0:dd/MM/yyyy}" Width="140px" />
-                    <RadzenDataGridColumn TItem="Ceilapp.Models.ceilapp.Compensation" Property="MakeupTeacherId" Title="Enseignant" />
-                    <RadzenDataGridColumn TItem="Ceilapp.Models.ceilapp.Compensation" Property="CourseLevel" Title="Niveau" Width="130px" />
-                    <RadzenDataGridColumn TItem="Ceilapp.Models.ceilapp.Compensation" Property="OriginGroup" Title="Groupe origine" Width="140px" />
-                    <RadzenDataGridColumn TItem="Ceilapp.Models.ceilapp.Compensation" Property="RecipientGroup" Title="Groupe dest." Width="140px" />
+                    <RadzenDataGridColumn TItem="Ceilapp.Models.ceilapp.Compensation" Property="MakeupTeacherId" Title="Enseignant">
+                        <Template Context="c">@c.MakeupTeacherId</Template>
+                    </RadzenDataGridColumn>
+                    <RadzenDataGridColumn TItem="Ceilapp.Models.ceilapp.Compensation" Property="CourseLevel" Title="Niveau" Width="130px">
+                        <Template Context="c">@c.CourseLevel</Template>
+                    </RadzenDataGridColumn>
+                    <RadzenDataGridColumn TItem="Ceilapp.Models.ceilapp.Compensation" Property="OriginGroup" Title="Groupe origine" Width="140px">
+                        <Template Context="c">@c.OriginGroup</Template>
+                    </RadzenDataGridColumn>
+                    <RadzenDataGridColumn TItem="Ceilapp.Models.ceilapp.Compensation" Property="RecipientGroup" Title="Groupe dest." Width="140px">
+                        <Template Context="c">@c.RecipientGroup</Template>
+                    </RadzenDataGridColumn>
                     <RadzenDataGridColumn TItem="Ceilapp.Models.ceilapp.Compensation" Property="IsApproved" Title="Statut" Width="130px" TextAlign="TextAlign.Center">
                         <Template Context="compensation">
                             @if (compensation.IsApproved)
