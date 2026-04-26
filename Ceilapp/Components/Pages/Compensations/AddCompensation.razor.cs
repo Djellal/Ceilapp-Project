@@ -45,7 +45,21 @@ namespace Ceilapp.Components.Pages.Compensations
                 MakeupTo = new TimeSpan(16, 0, 0),
             };
 
+            var appSetting = await ceilappService.GetAppSettingById(1);
+            maxCompensationsPerCourse = appSetting?.MaxComponsationsPerCourse ?? 0;
+
             var courseRegistrations = (await ceilappService.GetCourseRegistrations()).ToList();
+
+            if (appSetting?.CurrentSessionId != null)
+            {
+                courseRegistrations = courseRegistrations
+                    .Where(r => r.SessionId == appSetting.CurrentSessionId)
+                    .ToList();
+            }
+
+            courseRegistrations = courseRegistrations
+                .Where(r => r.RegistrationValidated)
+                .ToList();
 
             registrationDisplayItems = courseRegistrations.Select(r => new RegistrationDisplayItem
             {
@@ -59,9 +73,6 @@ namespace Ceilapp.Components.Pages.Compensations
             courseLevelSuggestions = existingCompensations.Select(c => c.CourseLevel).Where(v => !string.IsNullOrWhiteSpace(v)).Distinct().ToList();
             originGroupSuggestions = existingCompensations.Select(c => c.OriginGroup).Where(v => !string.IsNullOrWhiteSpace(v)).Distinct().ToList();
             recipientGroupSuggestions = existingCompensations.Select(c => c.RecipientGroup).Where(v => !string.IsNullOrWhiteSpace(v)).Distinct().ToList();
-
-            var appSetting = await ceilappService.GetAppSettingById(1);
-            maxCompensationsPerCourse = appSetting?.MaxComponsationsPerCourse ?? 0;
         }
         protected bool errorVisible;
         protected string errorMessage = "Impossible d'enregistrer la séance de rattrapage";
