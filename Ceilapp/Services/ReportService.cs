@@ -986,7 +986,7 @@ namespace Ceilapp
                 var reg = compensation.CourseRegistration;
                 var studentName = $"{reg?.LastNameAr} {reg?.FirstNameAr}";
                 var level = reg?.CourseLevel?.NameAr ?? reg?.CourseLevel?.Name ?? "";
-                var group = reg?.Groupe?.GroupeName ?? "";
+                var group = compensation.OriginGroup ?? "";
                 var teacherName = compensation.MakeupTeacherId ?? "";
 
                 var borderColor = "#C8A415";
@@ -1061,69 +1061,138 @@ namespace Ceilapp
                                 // Row 1: Name, Level, Group
                                 column.Item().PaddingTop(14).Row(row =>
                                 {
-                                    row.RelativeItem(1).AlignRight().Text(text =>
+                                    row.RelativeItem(1).Row(inner =>
                                     {
-                                        text.Span("الفوج:  ").SemiBold();
-                                        text.Span(PadValue(group, 20)).Underline();
+                                        inner.RelativeItem();
+                                        inner.AutoItem().Text(text =>
+                                        {
+                                            text.Span(PadValue(group, 20)).Underline();
+                                        });
+                                        inner.AutoItem().Text(text =>
+                                        {
+                                            text.Span("  :الفوج").SemiBold();
+                                        });
                                     });
-                                    row.RelativeItem(1.5f).AlignRight().Text(text =>
+                                    row.RelativeItem(1.5f).Row(inner =>
                                     {
-                                        text.Span("المستوى:  ").SemiBold();
-                                        text.Span(PadValue(level, 25)).Underline();
+                                        inner.RelativeItem();
+                                        inner.AutoItem().Text(text =>
+                                        {
+                                            text.Span(PadValue(level, 25)).Underline();
+                                        });
+                                        inner.AutoItem().Text(text =>
+                                        {
+                                            text.Span("  :المستوى").SemiBold();
+                                        });
                                     });
-                                    row.RelativeItem(2).AlignRight().Text(text =>
+                                    row.RelativeItem(2).Row(inner =>
                                     {
-                                        text.Span("السيد(ة):  ").SemiBold();
-                                        text.Span(PadValue(studentName, 40)).Underline();
+                                        inner.RelativeItem();
+                                        inner.AutoItem().Text(text =>
+                                        {
+                                            text.Span(PadValue(studentName, 40)).Underline();
+                                        });
+                                        inner.AutoItem().Text(text =>
+                                        {
+                                            text.Span("  :السيد(ة)").SemiBold();
+                                        });
                                     });
                                 });
 
                                 // Row 2: Absence date/time
                                 column.Item().PaddingTop(12).Row(row =>
                                 {
-                                    row.RelativeItem(1).AlignRight().Text(text =>
+                                    row.RelativeItem(1).Row(inner =>
                                     {
-                                        text.Span("إلى:  ").SemiBold();
-                                        text.Span(PadValue($"{compensation.AbsenceTo:hh\\:mm}", 15)).Underline();
+                                        inner.RelativeItem();
+                                        inner.AutoItem().Text(text =>
+                                        {
+                                            text.Span(PadValue($"{compensation.AbsenceTo:hh\\:mm}", 15)).Underline();
+                                        });
+                                        inner.AutoItem().Text(text =>
+                                        {
+                                            text.Span("  :إلى").SemiBold();
+                                        });
                                     });
-                                    row.RelativeItem(1).AlignRight().Text(text =>
+                                    row.RelativeItem(1).Row(inner =>
                                     {
-                                        text.Span("من:  ").SemiBold();
-                                        text.Span(PadValue($"{compensation.AbsenceFrom:hh\\:mm}", 15)).Underline();
+                                        inner.RelativeItem();
+                                        inner.AutoItem().Text(text =>
+                                        {
+                                            text.Span(PadValue($"{compensation.AbsenceFrom:hh\\:mm}", 15)).Underline();
+                                        });
+                                        inner.AutoItem().Text(text =>
+                                        {
+                                            text.Span("  :من").SemiBold();
+                                        });
                                     });
-                                    row.RelativeItem(2).AlignRight().Text(text =>
+                                    row.RelativeItem(2).Row(inner =>
                                     {
-                                        text.Span("قد تغيب(ت) بتاريخ:  ").SemiBold();
-                                        text.Span(PadValue($"{compensation.AbsenceDate:dd/MM/yyyy}", 20)).Underline();
+                                        inner.RelativeItem();
+                                        inner.AutoItem().Text(text =>
+                                        {
+                                            text.Span(PadValue($"{compensation.AbsenceDate:dd/MM/yyyy}", 20)).Underline();
+                                        });
+                                        inner.AutoItem().Text(text =>
+                                        {
+                                            text.Span("  :قد تغيب(ت) بتاريخ").SemiBold();
+                                        });
                                     });
                                 });
 
                                 // Row 3: Makeup date/time
                                 column.Item().PaddingTop(12).Row(row =>
                                 {
-                                    row.RelativeItem(1).AlignRight().Text(text =>
+                                    row.RelativeItem(1).Row(inner =>
                                     {
-                                        text.Span("إلى:  ").SemiBold();
-                                        text.Span(PadValue($"{compensation.MakeupTo:hh\\:mm}", 15)).Underline();
+                                        inner.RelativeItem();
+                                        inner.AutoItem().Text(text =>
+                                        {
+                                            text.Span(PadValue($"{compensation.MakeupTo:hh\\:mm}", 15)).Underline();
+                                        });
+                                        inner.AutoItem().Text(text =>
+                                        {
+                                            text.Span("  :إلى").SemiBold();
+                                        });
                                     });
-                                    row.RelativeItem(1).AlignRight().Text(text =>
+                                    row.RelativeItem(1).Row(inner =>
                                     {
-                                        text.Span("من:  ").SemiBold();
-                                        text.Span(PadValue($"{compensation.MakeupFrom:hh\\:mm}", 15)).Underline();
+                                        inner.RelativeItem();
+                                        inner.AutoItem().Text(text =>
+                                        {
+                                            text.Span(PadValue($"{compensation.MakeupFrom:hh\\:mm}", 15)).Underline();
+                                        });
+                                        inner.AutoItem().Text(text =>
+                                        {
+                                            text.Span("  :من").SemiBold();
+                                        });
                                     });
-                                    row.RelativeItem(2).AlignRight().Text(text =>
+                                    row.RelativeItem(2).Row(inner =>
                                     {
-                                        text.Span("وقد حضر(ت) حصة تعويضية بتاريخ:  ").SemiBold();
-                                        text.Span(PadValue($"{compensation.MakeupDate:dd/MM/yyyy}", 20)).Underline();
+                                        inner.RelativeItem();
+                                        inner.AutoItem().Text(text =>
+                                        {
+                                            text.Span(PadValue($"{compensation.MakeupDate:dd/MM/yyyy}", 20)).Underline();
+                                        });
+                                        inner.AutoItem().Text(text =>
+                                        {
+                                            text.Span("  :وقد حضر(ت) حصة تعويضية بتاريخ").SemiBold();
+                                        });
                                     });
                                 });
 
                                 // Row 4: Teacher
-                                column.Item().PaddingTop(12).AlignRight().Text(text =>
+                                column.Item().PaddingTop(12).Row(inner =>
                                 {
-                                    text.Span("  :مع الأستاذ(ة)").SemiBold();
-                                    text.Span(PadValue(teacherName, 50)).Underline();
-                                    
+                                    inner.RelativeItem();
+                                    inner.AutoItem().Text(text =>
+                                    {
+                                        text.Span(PadValue(teacherName, 50)).Underline();
+                                    });
+                                    inner.AutoItem().Text(text =>
+                                    {
+                                        text.Span("  :مع الأستاذ(ة)").SemiBold();
+                                    });
                                 });
 
                                 // ── Closing statement ──

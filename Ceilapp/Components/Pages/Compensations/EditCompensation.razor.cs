@@ -124,5 +124,37 @@ namespace Ceilapp.Components.Pages.Compensations
             compensation.MakeupFrom = new TimeSpan(fromHour, 0, 0);
             compensation.MakeupTo = new TimeSpan(toHour, 0, 0);
         }
+
+        protected async Task PrintCompensationPdf()
+        {
+            try
+            {
+                errorVisible = false;
+
+                if (compensation.IsApproved)
+                {
+                    var approvedCount = await ceilappService.dbContext.Compensations
+                        .CountAsync(c => c.CourseRegistrationId == compensation.CourseRegistrationId
+                            && c.IsApproved && c.Id != Id);
+
+                    if (approvedCount >= maxCompensationsPerCourse)
+                    {
+                        errorVisible = true;
+                        errorMessage = $"Cet étudiant a atteint le nombre maximum de séances de rattrapage approuvées ({maxCompensationsPerCourse}) pour ce cours.";
+                        return;
+                    }
+                }
+
+                await ceilappService.UpdateCompensation(Id, compensation);
+            }
+            catch (Exception)
+            {
+                errorVisible = true;
+                errorMessage = "Impossible d'enregistrer la séance de rattrapage.";
+                return;
+            }
+
+            await JSRuntime.InvokeVoidAsync("open", $"/Document/CompensationPdf?id={Id}", "_blank");
+        }
     }
 }
