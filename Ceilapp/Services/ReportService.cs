@@ -1,4 +1,5 @@
-﻿using QuestPDF.Fluent;
+﻿using QuestPDF.Drawing;
+using QuestPDF.Fluent;
 using QuestPDF.Helpers;
 using QuestPDF.Infrastructure;
 using PuppeteerSharp;
@@ -7,6 +8,7 @@ using ScottPlot.Plottables;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using Ceilapp.Models.ceilapp;
 using System.Threading.Tasks;
@@ -19,9 +21,42 @@ namespace Ceilapp
     {
         private ceilappService ceilappService;
 
+        private static readonly object _fontLock = new object();
+        private static bool _fontsRegistered;
+
         public ReportService(ceilappService ceilappService)
         {
             this.ceilappService = ceilappService;
+        }
+
+        private static void EnsureFontsRegistered()
+        {
+            if (_fontsRegistered) return;
+            lock (_fontLock)
+            {
+                if (_fontsRegistered) return;
+
+                var fontsDir = Path.Combine(AppContext.BaseDirectory, "Fonts");
+                if (Directory.Exists(fontsDir))
+                {
+                    foreach (var fontFile in Directory.EnumerateFiles(fontsDir, "*.*", SearchOption.AllDirectories)
+                                 .Where(f => f.EndsWith(".ttf", StringComparison.OrdinalIgnoreCase)
+                                          || f.EndsWith(".otf", StringComparison.OrdinalIgnoreCase)))
+                    {
+                        try
+                        {
+                            using var stream = File.OpenRead(fontFile);
+                            FontManager.RegisterFont(stream);
+                        }
+                        catch
+                        {
+                            // ignore individual font load errors
+                        }
+                    }
+                }
+
+                _fontsRegistered = true;
+            }
         }
         
         public async Task<byte[]> GenererFicheInscriptionAsync(int registrationId)
@@ -992,6 +1027,7 @@ namespace Ceilapp
                 var borderColor = "#C8A415";
 
                 QuestPDF.Settings.License = LicenseType.Community;
+                EnsureFontsRegistered();
 
                 return Document.Create(document =>
                 {
@@ -1000,7 +1036,7 @@ namespace Ceilapp
                         page.Size(PageSizes.A4.Landscape());
                         page.Margin(1.2f, Unit.Centimetre);
                         page.PageColor(Colors.White);
-                        page.DefaultTextStyle(x => x.FontSize(14).LineHeight(1.3f));
+                        page.DefaultTextStyle(x => x.FontFamily("Amiri").FontSize(14).LineHeight(1.3f));
 
                         page.Content()
                             .Border(2.5f)

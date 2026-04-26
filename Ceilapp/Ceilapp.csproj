@@ -7,6 +7,10 @@
 	 <EnableStaticWebAssetCompression>false</EnableStaticWebAssetCompression>
   </PropertyGroup>
   <ItemGroup>
+    <None Include="Fonts\**\*.ttf" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+    <None Include="Fonts\**\*.otf" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+  </ItemGroup>
+  <ItemGroup>
     <PackageReference Include="PuppeteerSharp" Version="24.40.0" />
     <PackageReference Include="QuestPDF" Version="2026.2.4" />
     <PackageReference Include="ScottPlot" Version="5.1.58" />
