@@ -1,0 +1,305 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema#",
+  "$id": "https://ceilapp.org/schemas/datamodel.json",
+  "title": "CeilApp Data Model",
+  "description": "JSON Schema for the CeilApp ApplicationDbContext data model (PostgreSQL / EF Core). Generated from C# entity classes.",
+  "type": "object",
+  "definitions": {
+    "Session": {
+      "title": "Session",
+      "description": "A session (semester/term) for course offerings.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "integer", "description": "Primary key, auto-generated" },
+        "sessionCode": { "type": "string", "maxLength": 30 },
+        "sessionName": { "type": "string", "maxLength": 250 },
+        "sessionNameAr": { "type": "string", "maxLength": 250 },
+        "startDate": { "type": "string", "format": "date-time", "description": "ISO 8601 timestamp with timezone" },
+        "endDate": { "type": "string", "format": "date-time", "description": "ISO 8601 timestamp with timezone" }
+      },
+      "required": ["id", "sessionCode", "sessionName", "sessionNameAr", "startDate", "endDate"]
+    },
+    "AppSetting": {
+      "title": "AppSetting",
+      "description": "Application-wide settings (singleton-like row). References the current Session.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "integer", "description": "Primary key, auto-generated" },
+        "organizationName": { "type": "string", "maxLength": 250 },
+        "address": { "type": "string", "maxLength": 250 },
+        "tel": { "type": "string", "maxLength": 100 },
+        "email": { "type": "string", "maxLength": 100, "format": "email" },
+        "webSite": { "type": "string", "maxLength": 250 },
+        "fb": { "type": "string", "maxLength": 250 },
+        "linkedIn": { "type": "string", "maxLength": 250 },
+        "youtube": { "type": "string", "maxLength": 250 },
+        "instagram": { "type": "string", "maxLength": 250 },
+        "x": { "type": "string", "maxLength": 250 },
+        "logo": { "type": "string", "description": "Base64-encoded image or URL" },
+        "termsAndConditions": { "type": "string" },
+        "currentSessionId": { "type": "integer", "description": "FK -> Session.Id, nullable" },
+        "isRegistrationOpened": { "type": "boolean" },
+        "maxRegistrationPerSession": { "type": "integer", "minimum": 0 },
+        "maxComponsationsPerCourse": { "type": "integer", "minimum": 0 }
+      },
+      "required": [
+        "id", "organizationName", "address", "tel", "email", "webSite",
+        "fb", "linkedIn", "youtube", "instagram", "x", "logo",
+        "termsAndConditions", "isRegistrationOpened",
+        "maxRegistrationPerSession", "maxComponsationsPerCourse"
+      ]
+    },
+    "CourseType": {
+      "title": "CourseType",
+      "description": "Categorization of courses (e.g. Language, IT, etc.).",
+      "type": "object",
+      "properties": {
+        "id": { "type": "integer", "description": "Primary key, auto-generated" },
+        "name": { "type": "string", "maxLength": 250 },
+        "nameAr": { "type": "string", "maxLength": 250 },
+        "description": { "type": "string", "description": "nullable" }
+      },
+      "required": ["id", "name", "nameAr"]
+    },
+    "Course": {
+      "title": "Course",
+      "description": "A specific course offering belonging to a CourseType.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "integer", "description": "Primary key, auto-generated" },
+        "code": { "type": "string", "maxLength": 30 },
+        "name": { "type": "string", "maxLength": 250 },
+        "nameAr": { "type": "string", "maxLength": 250 },
+        "isActive": { "type": "boolean" },
+        "image": { "type": "string", "description": "URL or path to course image" },
+        "courseTypeId": { "type": "integer", "description": "FK -> CourseType.Id (required)" },
+        "order": { "type": "integer" }
+      },
+      "required": ["id", "code", "name", "nameAr", "isActive", "image", "courseTypeId", "order"]
+    },
+    "CourseLevel": {
+      "title": "CourseLevel",
+      "description": "A level within a Course (e.g. A1.1, A1.2). Can optionally reference a NextLevel for progression.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "integer", "description": "Primary key, auto-generated" },
+        "name": { "type": "string", "maxLength": 250 },
+        "nameAr": { "type": "string", "maxLength": 250 },
+        "duration": { "type": "integer", "description": "Duration in hours or sessions" },
+        "isActive": { "type": "boolean" },
+        "courseId": { "type": "integer", "description": "FK -> Course.Id (required)" },
+        "nextLevelId": { "type": "integer", "description": "FK -> CourseLevel.Id, nullable (self-referencing)" },
+        "levelOrder": { "type": "integer", "description": "Display ordering within the course" }
+      },
+      "required": ["id", "name", "nameAr", "duration", "isActive", "courseId", "levelOrder"]
+    },
+    "CourseComponent": {
+      "title": "CourseComponent",
+      "description": "An evaluable component of a Course (e.g. Oral, Written, Homework) with a weighting coefficient.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "integer", "description": "Primary key, auto-generated" },
+        "name": { "type": "string", "maxLength": 250 },
+        "coeff": { "type": "number", "description": "Weighting coefficient for grade calculation" },
+        "courseId": { "type": "integer", "description": "FK -> Course.Id (required)" }
+      },
+      "required": ["id", "name", "coeff", "courseId"]
+    },
+    "CourseFee": {
+      "title": "CourseFee",
+      "description": "Fee amount for a Course, specific to a Profession.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "integer", "description": "Primary key, auto-generated" },
+        "professionId": { "type": "integer", "description": "FK -> Profession.Id (required)" },
+        "courseId": { "type": "integer", "description": "FK -> Course.Id (required)" },
+        "feeValue": { "type": "number", "description": "Fee amount (decimal(18,2))" }
+      },
+      "required": ["id", "professionId", "courseId", "feeValue"]
+    },
+    "Profession": {
+      "title": "Profession",
+      "description": "A professional category (used for fee differentiation).",
+      "type": "object",
+      "properties": {
+        "id": { "type": "integer", "description": "Primary key, auto-generated" },
+        "name": { "type": "string", "maxLength": 300 },
+        "nameAr": { "type": "string", "maxLength": 300 },
+        "feeValue": { "type": "number", "description": "Default fee value (decimal(18,2))" }
+      },
+      "required": ["id", "name", "nameAr", "feeValue"]
+    },
+    "State": {
+      "title": "State",
+      "description": "Algerian state (wilaya). PK is a string code (e.g. '19' for Setif).",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 10, "description": "State code (e.g. '01'-'58', '0' for Other)" },
+        "name": { "type": "string", "maxLength": 250 },
+        "nameAr": { "type": "string", "maxLength": 250 }
+      },
+      "required": ["id", "name", "nameAr"]
+    },
+    "Municipality": {
+      "title": "Municipality",
+      "description": "A municipality (commune) within a State.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "integer", "description": "Primary key, auto-generated" },
+        "name": { "type": "string", "maxLength": 250 },
+        "nameAr": { "type": "string", "maxLength": 250 },
+        "stateId": { "type": "string", "maxLength": 10, "description": "FK -> State.Id (required)" }
+      },
+      "required": ["id", "name", "nameAr", "stateId"]
+    },
+    "CourseRegistration": {
+      "title": "CourseRegistration",
+      "description": "A student's registration for a specific course, level, and session.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "integer", "description": "Primary key, auto-generated" },
+        "userId": { "type": "string", "description": "ASP.NET Identity UserId" },
+        "inscriptionCode": { "type": "string", "maxLength": 20, "description": "Unique registration/invoice code" },
+        "firstName": { "type": "string", "maxLength": 100 },
+        "lastName": { "type": "string", "maxLength": 100 },
+        "firstNameAr": { "type": "string", "maxLength": 100 },
+        "lastNameAr": { "type": "string", "maxLength": 100 },
+        "birthDate": { "type": "string", "format": "date", "description": "Date only (yyyy-MM-dd)" },
+        "birthStateId": { "type": "string", "maxLength": 10, "description": "FK -> State.Id (state of birth)" },
+        "birthMunicipalityId": { "type": "integer", "description": "FK -> Municipality.Id (municipality of birth)" },
+        "address": { "type": "string", "maxLength": 250 },
+        "tel": { "type": "string", "maxLength": 20 },
+        "professionId": { "type": "integer", "description": "FK -> Profession.Id, nullable" },
+        "courseId": { "type": "integer", "description": "FK -> Course.Id (required)" },
+        "courseLevelId": { "type": "integer", "description": "FK -> CourseLevel.Id, nullable" },
+        "sessionId": { "type": "integer", "description": "FK -> Session.Id, nullable" },
+        "registrationDate": { "type": "string", "format": "date-time", "description": "ISO 8601 timestamp" },
+        "notes": { "type": "string", "maxLength": 250, "description": "nullable" },
+        "feeValue": { "type": "number", "description": "Total fee (decimal(18,2))" },
+        "paidFeeValue": { "type": "number", "description": "Amount paid (decimal(18,2))" },
+        "isReregistration": { "type": "boolean" },
+        "registrationTermsAccepted": { "type": "boolean" },
+        "registrationValidated": { "type": "boolean" },
+        "groupId": { "type": "integer", "description": "FK -> Groupe.Id, nullable" }
+      },
+      "required": [
+        "id", "userId", "inscriptionCode", "firstName", "lastName",
+        "firstNameAr", "lastNameAr", "birthDate", "birthStateId",
+        "birthMunicipalityId", "address", "tel", "courseId",
+        "registrationDate", "feeValue", "paidFeeValue",
+        "isReregistration", "registrationTermsAccepted", "registrationValidated"
+      ]
+    },
+    "Evaluation": {
+      "title": "Evaluation",
+      "description": "A student's grade for a specific CourseComponent within a CourseRegistration.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "integer", "description": "Primary key, auto-generated" },
+        "courseRegistrationId": { "type": "integer", "description": "FK -> CourseRegistration.Id (required)" },
+        "courseComponentId": { "type": "integer", "description": "FK -> CourseComponent.Id (required)" },
+        "eval": { "type": "number", "description": "Grade value (double)" }
+      },
+      "required": ["id", "courseRegistrationId", "courseComponentId", "eval"]
+    },
+    "Groupe": {
+      "title": "Groupe",
+      "description": "A class group within a Course and CourseLevel, assigned to a teacher.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "integer", "description": "Primary key, auto-generated" },
+        "groupeName": { "type": "string", "maxLength": 250 },
+        "teacherId": { "type": "string", "description": "ASP.NET Identity UserId of the teacher" },
+        "courseId": { "type": "integer", "description": "FK -> Course.Id (required)" },
+        "courseLevelId": { "type": "integer", "description": "FK -> CourseLevel.Id (required)" },
+        "currentSessionId": { "type": "integer", "description": "FK -> Session.Id, nullable" },
+        "nbrPlaces": { "type": "integer", "description": "Maximum number of seats" },
+        "description": { "type": "string" }
+      },
+      "required": ["id", "groupeName", "teacherId", "courseId", "courseLevelId", "nbrPlaces", "description"]
+    },
+    "Compensation": {
+      "title": "Compensation",
+      "description": "A makeup session for an absence tied to a CourseRegistration.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "integer", "description": "Primary key, auto-generated" },
+        "courseRegistrationId": { "type": "integer", "description": "FK -> CourseRegistration.Id (required)" },
+        "absenceDate": { "type": "string", "format": "date", "description": "Date of the original absence" },
+        "absenceFrom": { "type": "string", "description": "Absence start time (ISO 8601 time / duration format)" },
+        "absenceTo": { "type": "string", "description": "Absence end time (ISO 8601 time / duration format)" },
+        "makeupDate": { "type": "string", "format": "date", "description": "Date of the makeup session" },
+        "makeupFrom": { "type": "string", "description": "Makeup start time" },
+        "makeupTo": { "type": "string", "description": "Makeup end time" },
+        "makeupTeacherId": { "type": "string", "maxLength": 100, "description": "Teacher conducting the makeup" },
+        "isApproved": { "type": "boolean" },
+        "originGroup": { "type": "string", "maxLength": 100 },
+        "recipientGroup": { "type": "string", "maxLength": 100 },
+        "courseLevel": { "type": "string", "maxLength": 100 }
+      },
+      "required": [
+        "id", "courseRegistrationId", "absenceDate", "absenceFrom", "absenceTo",
+        "makeupDate", "makeupFrom", "makeupTo", "makeupTeacherId",
+        "isApproved", "originGroup", "recipientGroup", "courseLevel"
+      ]
+    }
+  },
+  "properties": {
+    "sessions": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/Session" }
+    },
+    "appSettings": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/AppSetting" }
+    },
+    "courseTypes": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/CourseType" }
+    },
+    "courses": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/Course" }
+    },
+    "courseLevels": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/CourseLevel" }
+    },
+    "courseComponents": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/CourseComponent" }
+    },
+    "courseFees": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/CourseFee" }
+    },
+    "professions": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/Profession" }
+    },
+    "states": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/State" }
+    },
+    "municipalities": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/Municipality" }
+    },
+    "courseRegistrations": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/CourseRegistration" }
+    },
+    "evaluations": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/Evaluation" }
+    },
+    "groupes": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/Groupe" }
+    },
+    "compensations": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/Compensation" }
+    }
+  }
+}

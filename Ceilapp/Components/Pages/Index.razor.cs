@@ -65,7 +65,7 @@ namespace Ceilapp.Components.Pages
 
         protected override async Task OnInitializedAsync()
         {
-            courses = await ceilappService.GetCourses(new Radzen.Query { OrderBy = "Order asc", Expand = "CourseType" });
+            courses = await ceilappService.GetCourses(new Radzen.Query { OrderBy = "Order asc", Expand = "CourseType", Filter = "i => i.IsActive == true" });
 
              var query = System.Web.HttpUtility.ParseQueryString(new Uri(NavigationManager.ToAbsoluteUri(NavigationManager.Uri).ToString()).Query);
 

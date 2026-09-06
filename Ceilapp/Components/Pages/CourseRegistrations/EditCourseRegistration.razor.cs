@@ -110,7 +110,7 @@ namespace Ceilapp.Components.Pages.CourseRegistrations
 
             professionsForProfessionId = await ceilappService.GetProfessions();
 
-            coursesForCourseId = await ceilappService.GetCourses(new Radzen.Query { Expand = "CourseType" });
+            coursesForCourseId = await ceilappService.GetCourses(new Radzen.Query { Expand = "CourseType", Filter = "i => i.IsActive == true" });
 
            
             sessionsForSessionId = await ceilappService.GetSessions();
