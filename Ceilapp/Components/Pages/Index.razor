@@ -3,6 +3,19 @@
 <PageTitle>Ceil UFAS1</PageTitle>
 @inject Microsoft.Extensions.Localization.IStringLocalizer<Index> L
 
+@if (!registrationOpened)
+{
+    <div class="closed-banner" style="margin-bottom: 1.5rem">
+        <RadzenIcon Icon="event_busy" Style="font-size: 2.75rem; color: #fff; flex-shrink: 0" />
+        <div class="closed-banner-text">
+            <div class="closed-banner-title">Les inscriptions sont clôturées</div>
+            <div class="closed-banner-subtitle">Merci de revenir lors de la prochaine période d'inscription.</div>
+            <div class="closed-banner-title" dir="rtl" style="margin-top: 0.75rem">التسجيلات مغلقة</div>
+            <div class="closed-banner-subtitle" dir="rtl">يرجى العودة خلال فترة التسجيل القادمة.</div>
+        </div>
+    </div>
+}
+
 
 <RadzenCard Style="text-align: center; padding-top: 0px">
     <RadzenImage Path="images/ceillogo.png" Style="width: 150px"></RadzenImage>
@@ -23,10 +36,6 @@
                     {
                         <RadzenHeading Text="Vous n'avez pas encore de compte ?" Size="H2"></RadzenHeading>
                         <RadzenButton Text="Inscription" Icon="app_registration" Size="Radzen.ButtonSize.Medium" ButtonStyle="Radzen.ButtonStyle.Success" Click="@InscriptionClick" Style="border-radius: 8px"></RadzenButton>
-                    }
-                    else
-                    {
-                        <RadzenAlert Variant="Radzen.Variant.Flat" Shade="Radzen.Shade.Lighter" AlertStyle="Radzen.AlertStyle.Warning" Icon="event_busy" Text="Les inscriptions sont clôturées"></RadzenAlert>
                     }
              </RadzenStack>
         </RadzenColumn>
@@ -96,5 +105,44 @@
 
     .learn-more-btn:hover {
         transform: scale(1.02);
+    }
+
+    .closed-banner {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        width: 100%;
+        padding: 1.25rem 1.5rem;
+        border-radius: 16px;
+        color: #fff;
+        text-align: center;
+        background: linear-gradient(135deg, #ff9800, #e31c65);
+        box-shadow: 0 10px 24px rgba(227, 28, 101, 0.35);
+        animation: bannerPulse 2.5s ease-in-out infinite;
+    }
+
+    .closed-banner-text {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        flex: 1;
+    }
+
+    .closed-banner-title {
+        font-weight: 700;
+        font-size: 1.15rem;
+        font-family: 'Comic Sans MS', sans-serif;
+    }
+
+    .closed-banner-subtitle {
+        font-size: 0.85rem;
+        opacity: 0.92;
+        margin-top: 2px;
+    }
+
+    @@keyframes bannerPulse {
+        0%, 100% { box-shadow: 0 10px 24px rgba(227, 28, 101, 0.35); transform: scale(1); }
+        50% { box-shadow: 0 14px 32px rgba(227, 28, 101, 0.6); transform: scale(1.015); }
     }
 </style>
