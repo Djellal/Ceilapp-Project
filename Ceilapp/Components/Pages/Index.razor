@@ -19,8 +19,15 @@
         </RadzenColumn>
         <RadzenColumn Size="12" SizeXS="6">
             <RadzenStack Orientation="Radzen.Orientation.Vertical" AlignItems="Radzen.AlignItems.Center" JustifyContent="Radzen.JustifyContent.SpaceBetween" Reverse="false" Style="margin-top: 2em">
-                    <RadzenHeading Text="Vous n'avez pas encore de compte ?" Size="H2"></RadzenHeading>
-                    <RadzenButton Text="Inscription" Icon="app_registration" Size="Radzen.ButtonSize.Medium" ButtonStyle="Radzen.ButtonStyle.Success" Click="@InscriptionClick" Style="border-radius: 8px"></RadzenButton>
+                    @if (registrationOpened)
+                    {
+                        <RadzenHeading Text="Vous n'avez pas encore de compte ?" Size="H2"></RadzenHeading>
+                        <RadzenButton Text="Inscription" Icon="app_registration" Size="Radzen.ButtonSize.Medium" ButtonStyle="Radzen.ButtonStyle.Success" Click="@InscriptionClick" Style="border-radius: 8px"></RadzenButton>
+                    }
+                    else
+                    {
+                        <RadzenAlert Variant="Radzen.Variant.Flat" Shade="Radzen.Shade.Lighter" AlertStyle="Radzen.AlertStyle.Warning" Icon="event_busy" Text="Les inscriptions sont clôturées"></RadzenAlert>
+                    }
              </RadzenStack>
         </RadzenColumn>
     </RadzenRow>
@@ -38,8 +45,11 @@
                     </div>
                     <RadzenHeading Text="@(context.Name +" - "+ context.NameAr)" Size="H5" Style="margin: 0; font-weight: 600; text-align: center" />
 
-                    <RadzenLink Text="Inscription" Icon="app_registration" Path="@($"/edit-course-registration/true/{context.Id}/false")" Style="font-weight: 600; font-style: italic; font-family: 'Comic Sans MS'; border-radius: 5px; border: 1px solid #e31c65; padding: 5px; width: 100%; text-align: center"></RadzenLink>
-                    <RadzenLink Text="Réinscription" Icon="app_registration" Path="@($"/edit-course-registration/true/{context.Id}/true")" Style="font-weight: 600; font-style: italic; font-family: 'Comic Sans MS'; border-radius: 5px; border: 1px solid #e31200; padding: 5px; width: 100%; text-align: center"></RadzenLink>
+                    @if (registrationOpened)
+                    {
+                        <RadzenLink Text="Inscription" Icon="app_registration" Path="@($"/edit-course-registration/true/{context.Id}/false")" Style="font-weight: 600; font-style: italic; font-family: 'Comic Sans MS'; border-radius: 5px; border: 1px solid #e31c65; padding: 5px; width: 100%; text-align: center"></RadzenLink>
+                        <RadzenLink Text="Réinscription" Icon="app_registration" Path="@($"/edit-course-registration/true/{context.Id}/true")" Style="font-weight: 600; font-style: italic; font-family: 'Comic Sans MS'; border-radius: 5px; border: 1px solid #e31200; padding: 5px; width: 100%; text-align: center"></RadzenLink>
+                    }
                 </RadzenStack>
             </RadzenCard>
         </Template>

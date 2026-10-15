@@ -40,6 +40,8 @@ namespace Ceilapp.Components.Pages
 
         protected System.Linq.IQueryable<Ceilapp.Models.ceilapp.Course> courses;
 
+        protected bool registrationOpened = true;
+
          protected string redirectUrl;
         protected string error;
         protected string info;
@@ -66,6 +68,9 @@ namespace Ceilapp.Components.Pages
         protected override async Task OnInitializedAsync()
         {
             courses = await ceilappService.GetCourses(new Radzen.Query { OrderBy = "Order asc", Expand = "CourseType", Filter = "i => i.IsActive == true" });
+
+            var appSetting = await ceilappService.GetAppSettingById(1);
+            registrationOpened = appSetting?.IsRegistrationOpened ?? true;
 
              var query = System.Web.HttpUtility.ParseQueryString(new Uri(NavigationManager.ToAbsoluteUri(NavigationManager.Uri).ToString()).Query);
 
